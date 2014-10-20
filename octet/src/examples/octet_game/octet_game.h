@@ -1,3 +1,4 @@
+//#include "game_world.h"
 namespace octet {
 	class octet_game : public app {
 		ref<visual_scene> app_scene;
@@ -11,6 +12,9 @@ namespace octet {
 		{
 			app_scene = new visual_scene();
 			app_scene->create_default_camera_and_lights();
+			//app_scene->add_child(game_world::node);
+			//app_scene->add_mesh_instance(new mesh_instance(game_world::node, game_world::box, game_world::ground));
+
 		}
 
 		void draw_world(int x, int y, int w, int h)
