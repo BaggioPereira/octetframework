@@ -29,12 +29,12 @@ namespace octet {
 
 			if (meshes.size())
 			{
-				material *sky = new material(new image("assets/outUV.gif"));
+				material *sky = new material(new image("assets/outUV.jpg"));
 				material *blue = new material(vec4(0, 0, 1, 1));
 				mesh *skyBox = meshes[0]->get_mesh();
 				mesh *skyBox2 = new mesh_box(vec3(100, 100, 100));
 				scene_node *node = new scene_node();
-				node->scale(100);
+				//node->scale(100);
 				app_scene->add_child(node);
 				app_scene->add_mesh_instance(new mesh_instance(node, skyBox, sky));
 			}
