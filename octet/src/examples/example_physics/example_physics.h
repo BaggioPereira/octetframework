@@ -65,20 +65,22 @@ namespace octet {
     void app_init() {
       app_scene =  new visual_scene();
       app_scene->create_default_camera_and_lights();
-      app_scene->get_camera_instance(0)->get_node()->translate(vec3(0, 5, 0));
+      app_scene->get_camera_instance(0)->get_node()->translate(vec3(0, 5, 20));
 
       mat4t modelToWorld;
       material *floor_mat = new material(vec4(0, 1, 0, 1));
 
       // add the ground (as a static object)
-      add_box(modelToWorld, vec3(200.0f, 0.5f, 200.0f), floor_mat, false);
-
+      modelToWorld.rotateX(-30);
+	  add_box(modelToWorld, vec3(20.0f, 0, 20.0f), floor_mat, false);
+	  
       // add the boxes (as dynamic objects)
-      modelToWorld.translate(-4.5f, 10.0f, 0);
+	  modelToWorld.rotateX(30);
+      modelToWorld.translate(-4.5f, 0.0f, 0);
       material *mat = new material(vec4(0, 1, 1, 1));
-      for (int i = 0; i != 20; ++i) {
-        modelToWorld.translate(3, 0, 0);
-        modelToWorld.rotateZ(360/20);
+      for (int i = 0; i != 1000; ++i) {
+        modelToWorld.translate(0, 3, 0);
+        //modelToWorld.rotateZ(360/20);
         add_box(modelToWorld, vec3(0.5f), mat);
       }
 

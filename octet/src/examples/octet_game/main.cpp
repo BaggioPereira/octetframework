@@ -6,7 +6,7 @@
 //
 // Text overlay
 //
-
+#define OCTET_BULLET 1
 #include "../../octet.h"
 
 #include "octet_game.h"
