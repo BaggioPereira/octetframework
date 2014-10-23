@@ -39,6 +39,32 @@ namespace octet {
 			app_scene->add_mesh_instance(new mesh_instance(node, box, mat));
 		}
 
+		void add_ball(mat4t_in modelToWorld, vec3_in size, material *mat, bool is_dynamic = true)
+		{
+			btMatrix3x3 matrix(get_btMatrix3x3(modelToWorld));
+			btVector3 pos(get_btVector3(modelToWorld[3].xyz()));
+
+			btCollisionShape *shape = new btBoxShape(get_btVector3(size));
+
+			btTransform transform(matrix, pos);
+			btDefaultMotionState *motionState = new btDefaultMotionState(transform);
+			btScalar mass = is_dynamic ? 1.0f : 0.0f;
+			btVector3 inertiaTensor;
+			
+			shape->calculateLocalInertia(mass, inertiaTensor);
+
+			btRigidBody * rigid_body = new btRigidBody(mass, motionState, shape, inertiaTensor);
+			world->addRigidBody(rigid_body);
+			rigid_bodies.push_back(rigid_body);
+
+			mesh_sphere *ball = new mesh_sphere();
+			scene_node *node = new scene_node(modelToWorld, atom_);
+			nodes.push_back(node);
+
+			app_scene->add_child(node);
+			app_scene->add_mesh_instance(new mesh_instance(node, ball, mat));
+		}
+
 	public:
 		octet_game(int argc, char **argv) : app(argc, argv) 
 		{
