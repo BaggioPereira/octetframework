@@ -61,6 +61,8 @@ namespace octet {
 			app_scene = new visual_scene();
 			app_scene->create_default_camera_and_lights();
 			app_scene->get_camera_instance(0)->get_node()->translate(vec3(0, 5, 20));
+			app_scene->get_camera_instance(0)->set_near_plane(1);
+			app_scene->get_camera_instance(0)->set_far_plane(20000);
 
 			mat4t modelToWorld;
 			material *ground = new material(vec4(1, 1, 0, 0));
@@ -223,9 +225,27 @@ namespace octet {
 				modelToWorld[3] = vec4(pos[0], pos[1], pos[2], 1);
 				nodes[i]->access_nodeToParent() = modelToWorld;
 			}
-
+			scene_node *cam_node = app_scene->get_camera_instance(0)->get_node();
 			app_scene->update(1.0f / 30);
 			app_scene->render((float)vx / vy);
+
+			if (is_key_down('A'))
+			{
+				cam_node->rotate(-1, vec3(0, 1, 0));
+			}
+			else if (is_key_down('D'))
+			{
+				cam_node->rotate(1, vec3(0, 1, 0));
+			}
+
+			else if (is_key_down(key_left))
+			{
+				cam_node->translate(vec3(-1, 0, 0));
+			}
+			else if (is_key_down(key_right))
+			{
+				cam_node->translate(vec3(1, 0, 0));
+			}
 		}
 	};
 }
