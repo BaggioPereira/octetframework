@@ -71,15 +71,15 @@ namespace octet {
       material *floor_mat = new material(vec4(0, 1, 0, 1));
 
       // add the ground (as a static object)
-      modelToWorld.rotateX(-30);
+      //modelToWorld.rotateX(-30);
 	  add_box(modelToWorld, vec3(20.0f, 0, 20.0f), floor_mat, false);
 	  
       // add the boxes (as dynamic objects)
-	  modelToWorld.rotateX(30);
+	  //modelToWorld.rotateX(30);
       modelToWorld.translate(-4.5f, 0.0f, 0);
       material *mat = new material(vec4(0, 1, 1, 1));
-      for (int i = 0; i != 1000; ++i) {
-        modelToWorld.translate(0, 3, 0);
+      for (int i = 0; i != 10; ++i) {
+        modelToWorld.translate(0, 1, 0);
         //modelToWorld.rotateZ(360/20);
         add_box(modelToWorld, vec3(0.5f), mat);
       }
