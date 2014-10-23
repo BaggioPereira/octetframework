@@ -64,15 +64,146 @@ namespace octet {
 
 			mat4t modelToWorld;
 			material *ground = new material(vec4(1, 1, 0, 0));
+			material *border = new material(vec4(1, 0, 1, 1));
 
 			add_box(modelToWorld, vec3(20.0f, 0.0f, 20.0f), ground, false);
 
+			modelToWorld.translate(-11.5f, 5, 0);
+			add_box(modelToWorld, vec3(1.0f, 5.0f, 1.0f), border, false);
+			modelToWorld.translate(11.5f, -5, 0);
+
+			modelToWorld.translate(11.5f, 5, 0);
+			add_box(modelToWorld, vec3(1.0f, 5.0f, 1.0f), border, false);
+			modelToWorld.translate(-11.5f, -5, 0);
+			
 			material *box = new material(vec4(1, 1, 1, 1));
+			modelToWorld.translate(-10.0f, 0, 0);
 			for (int i = 0; i != 10; ++i)
 			{
 				modelToWorld.translate(0, 1.0f, 0);
 				add_box(modelToWorld, vec3(0.5f), box);
 			}
+			modelToWorld.translate(1.0f,-10.0f, 0);
+			for (int i = 0; i != 10; ++i)
+			{
+				modelToWorld.translate(0, 1.0f, 0);
+				add_box(modelToWorld, vec3(0.5f), box);
+			}
+			modelToWorld.translate(1.0f, -10.0f, 0);
+			for (int i = 0; i != 10; ++i)
+			{
+				modelToWorld.translate(0, 1.0f, 0);
+				add_box(modelToWorld, vec3(0.5f), box);
+			}
+			modelToWorld.translate(1.0f, -10.0f, 0);
+			for (int i = 0; i != 10; ++i)
+			{
+				modelToWorld.translate(0, 1.0f, 0);
+				add_box(modelToWorld, vec3(0.5f), box);
+			}
+			modelToWorld.translate(1.0f, -10.0f, 0);
+			for (int i = 0; i != 10; ++i)
+			{
+				modelToWorld.translate(0, 1.0f, 0);
+				add_box(modelToWorld, vec3(0.5f), box);
+			}
+			modelToWorld.translate(1.0f, -10.0f, 0);
+			for (int i = 0; i != 10; ++i)
+			{
+				modelToWorld.translate(0, 1.0f, 0);
+				add_box(modelToWorld, vec3(0.5f), box);
+			}
+			modelToWorld.translate(1.0f, -10.0f, 0);
+			for (int i = 0; i != 10; ++i)
+			{
+				modelToWorld.translate(0, 1.0f, 0);
+				add_box(modelToWorld, vec3(0.5f), box);
+			}
+			modelToWorld.translate(1.0f, -10.0f, 0);
+			for (int i = 0; i != 10; ++i)
+			{
+				modelToWorld.translate(0, 1.0f, 0);
+				add_box(modelToWorld, vec3(0.5f), box);
+			}
+			modelToWorld.translate(1.0f, -10.0f, 0);
+			for (int i = 0; i != 10; ++i)
+			{
+				modelToWorld.translate(0, 1.0f, 0);
+				add_box(modelToWorld, vec3(0.5f), box);
+			}
+			modelToWorld.translate(1.0f, -10.0f, 0);
+			for (int i = 0; i != 10; ++i)
+			{
+				modelToWorld.translate(0, 1.0f, 0);
+				add_box(modelToWorld, vec3(0.5f), box);
+			}
+			modelToWorld.translate(1.0f, -10.0f, 0);
+			for (int i = 0; i != 10; ++i)
+			{
+				modelToWorld.translate(0, 1.0f, 0);
+				add_box(modelToWorld, vec3(0.5f), box);
+			}
+			modelToWorld.translate(1.0f, -10.0f, 0);
+			for (int i = 0; i != 10; ++i)
+			{
+				modelToWorld.translate(0, 1.0f, 0);
+				add_box(modelToWorld, vec3(0.5f), box);
+			}
+			modelToWorld.translate(1.0f, -10.0f, 0);
+			for (int i = 0; i != 10; ++i)
+			{
+				modelToWorld.translate(0, 1.0f, 0);
+				add_box(modelToWorld, vec3(0.5f), box);
+			}
+			modelToWorld.translate(1.0f, -10.0f, 0);
+			for (int i = 0; i != 10; ++i)
+			{
+				modelToWorld.translate(0, 1.0f, 0);
+				add_box(modelToWorld, vec3(0.5f), box);
+			}
+			modelToWorld.translate(1.0f, -10.0f, 0);
+			for (int i = 0; i != 10; ++i)
+			{
+				modelToWorld.translate(0, 1.0f, 0);
+				add_box(modelToWorld, vec3(0.5f), box);
+			}
+			modelToWorld.translate(1.0f, -10.0f, 0);
+			for (int i = 0; i != 10; ++i)
+			{
+				modelToWorld.translate(0, 1.0f, 0);
+				add_box(modelToWorld, vec3(0.5f), box);
+			}
+			modelToWorld.translate(1.0f, -10.0f, 0);
+			for (int i = 0; i != 10; ++i)
+			{
+				modelToWorld.translate(0, 1.0f, 0);
+				add_box(modelToWorld, vec3(0.5f), box);
+			}
+			modelToWorld.translate(1.0f, -10.0f, 0);
+			for (int i = 0; i != 10; ++i)
+			{
+				modelToWorld.translate(0, 1.0f, 0);
+				add_box(modelToWorld, vec3(0.5f), box);
+			}
+			modelToWorld.translate(1.0f, -10.0f, 0);
+			for (int i = 0; i != 10; ++i)
+			{
+				modelToWorld.translate(0, 1.0f, 0);
+				add_box(modelToWorld, vec3(0.5f), box);
+			}
+			modelToWorld.translate(1.0f, -10.0f, 0);
+			for (int i = 0; i != 10; ++i)
+			{
+				modelToWorld.translate(0, 1.0f, 0);
+				add_box(modelToWorld, vec3(0.5f), box);
+			}
+			modelToWorld.translate(1.0f, -10.0f, 0);
+			for (int i = 0; i != 10; ++i)
+			{
+				modelToWorld.translate(0, 1.0f, 0);
+				add_box(modelToWorld, vec3(0.5f), box);
+			}
+			
 		}
 
 		void draw_world(int x, int y, int w, int h)
