@@ -106,132 +106,16 @@ namespace octet {
 			
 			material *box = new material(vec4(1, 1, 1, 1));
 			modelToWorld.translate(-10.0f, 0, 0);
-			for (int i = 0; i != 10; ++i)
+
+			for (int j = -10; j != 11; ++j)
 			{
-				modelToWorld.translate(0, 1.0f, 0);
-				add_box(modelToWorld, vec3(0.5f), box);
-			}
-			modelToWorld.translate(1.0f,-10.0f, 0);
-			for (int i = 0; i != 10; ++i)
-			{
-				modelToWorld.translate(0, 1.0f, 0);
-				add_box(modelToWorld, vec3(0.5f), box);
-			}
-			modelToWorld.translate(1.0f, -10.0f, 0);
-			for (int i = 0; i != 10; ++i)
-			{
-				modelToWorld.translate(0, 1.0f, 0);
-				add_box(modelToWorld, vec3(0.5f), box);
-			}
-			modelToWorld.translate(1.0f, -10.0f, 0);
-			for (int i = 0; i != 10; ++i)
-			{
-				modelToWorld.translate(0, 1.0f, 0);
-				add_box(modelToWorld, vec3(0.5f), box);
-			}
-			modelToWorld.translate(1.0f, -10.0f, 0);
-			for (int i = 0; i != 10; ++i)
-			{
-				modelToWorld.translate(0, 1.0f, 0);
-				add_box(modelToWorld, vec3(0.5f), box);
-			}
-			modelToWorld.translate(1.0f, -10.0f, 0);
-			for (int i = 0; i != 10; ++i)
-			{
-				modelToWorld.translate(0, 1.0f, 0);
-				add_box(modelToWorld, vec3(0.5f), box);
-			}
-			modelToWorld.translate(1.0f, -10.0f, 0);
-			for (int i = 0; i != 10; ++i)
-			{
-				modelToWorld.translate(0, 1.0f, 0);
-				add_box(modelToWorld, vec3(0.5f), box);
-			}
-			modelToWorld.translate(1.0f, -10.0f, 0);
-			for (int i = 0; i != 10; ++i)
-			{
-				modelToWorld.translate(0, 1.0f, 0);
-				add_box(modelToWorld, vec3(0.5f), box);
-			}
-			modelToWorld.translate(1.0f, -10.0f, 0);
-			for (int i = 0; i != 10; ++i)
-			{
-				modelToWorld.translate(0, 1.0f, 0);
-				add_box(modelToWorld, vec3(0.5f), box);
-			}
-			modelToWorld.translate(1.0f, -10.0f, 0);
-			for (int i = 0; i != 10; ++i)
-			{
-				modelToWorld.translate(0, 1.0f, 0);
-				add_box(modelToWorld, vec3(0.5f), box);
-			}
-			modelToWorld.translate(1.0f, -10.0f, 0);
-			for (int i = 0; i != 10; ++i)
-			{
-				modelToWorld.translate(0, 1.0f, 0);
-				add_box(modelToWorld, vec3(0.5f), box);
-			}
-			modelToWorld.translate(1.0f, -10.0f, 0);
-			for (int i = 0; i != 10; ++i)
-			{
-				modelToWorld.translate(0, 1.0f, 0);
-				add_box(modelToWorld, vec3(0.5f), box);
-			}
-			modelToWorld.translate(1.0f, -10.0f, 0);
-			for (int i = 0; i != 10; ++i)
-			{
-				modelToWorld.translate(0, 1.0f, 0);
-				add_box(modelToWorld, vec3(0.5f), box);
-			}
-			modelToWorld.translate(1.0f, -10.0f, 0);
-			for (int i = 0; i != 10; ++i)
-			{
-				modelToWorld.translate(0, 1.0f, 0);
-				add_box(modelToWorld, vec3(0.5f), box);
-			}
-			modelToWorld.translate(1.0f, -10.0f, 0);
-			for (int i = 0; i != 10; ++i)
-			{
-				modelToWorld.translate(0, 1.0f, 0);
-				add_box(modelToWorld, vec3(0.5f), box);
-			}
-			modelToWorld.translate(1.0f, -10.0f, 0);
-			for (int i = 0; i != 10; ++i)
-			{
-				modelToWorld.translate(0, 1.0f, 0);
-				add_box(modelToWorld, vec3(0.5f), box);
-			}
-			modelToWorld.translate(1.0f, -10.0f, 0);
-			for (int i = 0; i != 10; ++i)
-			{
-				modelToWorld.translate(0, 1.0f, 0);
-				add_box(modelToWorld, vec3(0.5f), box);
-			}
-			modelToWorld.translate(1.0f, -10.0f, 0);
-			for (int i = 0; i != 10; ++i)
-			{
-				modelToWorld.translate(0, 1.0f, 0);
-				add_box(modelToWorld, vec3(0.5f), box);
-			}
-			modelToWorld.translate(1.0f, -10.0f, 0);
-			for (int i = 0; i != 10; ++i)
-			{
-				modelToWorld.translate(0, 1.0f, 0);
-				add_box(modelToWorld, vec3(0.5f), box);
-			}
-			modelToWorld.translate(1.0f, -10.0f, 0);
-			for (int i = 0; i != 10; ++i)
-			{
-				modelToWorld.translate(0, 1.0f, 0);
-				add_box(modelToWorld, vec3(0.5f), box);
-			}
-			modelToWorld.translate(1.0f, -10.0f, 0);
-			for (int i = 0; i != 10; ++i)
-			{
-				modelToWorld.translate(0, 1.0f, 0);
-				add_box(modelToWorld, vec3(0.5f), box);
-			}
-			
+				for (int i = 0; i != 10; ++i)
+				{
+					modelToWorld.translate(0, 1.0f, 0);
+					add_box(modelToWorld, vec3(0.5f), box);
+				}
+				modelToWorld.translate(1.0f, -10.0f, 0);
+			}			
 		}
 
 		void draw_world(int x, int y, int w, int h)
