@@ -1,5 +1,4 @@
 namespace octet {
-
 	class octet_game : public app {
 
 		ref <visual_scene> app_scene;

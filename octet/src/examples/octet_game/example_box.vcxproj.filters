@@ -49,9 +49,6 @@
     <ClInclude Include="..\..\helpers\object_picker.h">
       <Filter>helpers</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\helpers\text_overlay.h">
-      <Filter>helpers</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\math\aabb.h">
       <Filter>math</Filter>
     </ClInclude>
@@ -432,6 +429,9 @@
     </ClInclude>
     <ClInclude Include="game_world.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\helpers\text_overlay.h">
+      <Filter>helpers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
