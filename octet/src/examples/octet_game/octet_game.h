@@ -140,7 +140,7 @@ namespace octet {
 
 			if (is_key_down('A'))
 			{
-				cam_node->rotate(-5, vec3(0, 1, 0));
+				cam_node->rotate(-1, vec3(0, 1, 0));
 			}
 			else if (is_key_down('D'))
 			{
