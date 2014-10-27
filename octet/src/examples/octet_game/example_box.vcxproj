@@ -222,6 +222,7 @@
     <ClInclude Include="..\..\shaders\texture_shader.h" />
     <ClInclude Include="game_world.h" />
     <ClInclude Include="octet_game.h" />
+    <ClInclude Include="simple_collision.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\resources\mesh_builder.inl" />
