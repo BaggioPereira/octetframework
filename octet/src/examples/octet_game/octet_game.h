@@ -7,6 +7,9 @@ namespace octet {
 		btDbvtBroadphase *broadphase;
 		btSequentialImpulseConstraintSolver *solver;
 		btDiscreteDynamicsWorld *world;
+		material *ground = new material(vec4(1, 1, 0, 0));
+		material *border = new material(vec4(1, 0, 1, 1));
+		material *box = new material(vec4(1, 1, 1, 1));
 
 		void add_shape(mat4t_in mat, mesh *msh, material *mtl, bool is_dynamic)
 		{
@@ -61,9 +64,7 @@ namespace octet {
 			app_scene->get_camera_instance(0)->set_far_plane(20000);
 
 			mat4t modelToWorld;
-			material *ground = new material(vec4(1, 1, 0, 0));
-			material *border = new material(vec4(1, 0, 1, 1));
-			material *box = new material(vec4(1, 1, 1, 1));
+			
 
 			add_shape(modelToWorld, new mesh_box(vec3(20.0f, 0.0f, 20.0f)), ground, false);
 
@@ -101,6 +102,7 @@ namespace octet {
 
 		void draw_world(int x, int y, int w, int h)
 		{
+			;
 			int vx = 0, vy = 0;
 			get_viewport_size(vx, vy);
 			app_scene->begin_render(vx, vy);
@@ -118,6 +120,7 @@ namespace octet {
 				}
 			}
 			scene_node *cam_node = app_scene->get_camera_instance(0)->get_node();
+			mat4t camPos = vec4(0, 15, 20,1);
 			app_scene->update(1.0f / 30);
 			app_scene->render((float)vx / vy);
 
@@ -145,6 +148,7 @@ namespace octet {
 			else if (is_key_down(key_down))
 			{
 				cam_node->translate(vec3(0, 0, 1));
+				
 			}
 		}
 	};
