@@ -8,6 +8,8 @@ namespace octet {
 		btSequentialImpulseConstraintSolver *solver;
 		btDiscreteDynamicsWorld *world;
 
+		dynarray<btRigidBody*> rigid_bodies;
+
 		void add_shape(mat4t_in mat, mesh *msh, material *mtl, bool is_dynamic)
 		{
 			scene_node *node = new scene_node();
@@ -24,14 +26,16 @@ namespace octet {
 				btTransform transform(matrix, pos);
 
 				btDefaultMotionState *motionState = new btDefaultMotionState(transform);
-				btScalar mass = is_dynamic ? 1.0f : 0.0f;
+				btScalar mass = is_dynamic ? 0.25f : 0.0f;
 				btVector3 inertiaTensor;
 
 				shape->calculateLocalInertia(mass, inertiaTensor);
 
 				btRigidBody *rigid_body = new btRigidBody(mass, motionState, shape, inertiaTensor);
 				world->addRigidBody(rigid_body);
+				rigid_bodies.push_back(rigid_body);				
 				rigid_body->setUserPointer(node);
+
 			}
 		}
 
@@ -54,6 +58,7 @@ namespace octet {
 
 		void app_init()
 		{
+			int count = 0;
 			app_scene = new visual_scene();
 			app_scene->create_default_camera_and_lights();
 			app_scene->get_camera_instance(0)->get_node()->translate(vec3(0, 15, 20));
@@ -77,7 +82,6 @@ namespace octet {
 			add_shape(modelToWorld, new mesh_box(vec3(1.0f, 5.0f, 1.0f)), border, false);
 			modelToWorld.translate(-11.5f, -5, 0);
 			
-			
 			modelToWorld.translate(-10.0f, 0, 0);
 
 			for (int j = -10; j != 11; ++j)
@@ -86,6 +90,9 @@ namespace octet {
 				{
 					modelToWorld.translate(0, 1.0f, 0);
 					add_shape(modelToWorld, new mesh_box(0.5f), box,true);
+					count++;
+					printf("count %d", count);
+
 				}
 				modelToWorld.translate(1.0f, -10.0f, 0);
 			}
@@ -95,17 +102,20 @@ namespace octet {
 			add_shape(modelToWorld, new mesh_box(vec3(20.0f, 0.0f, 20.0f)), ground, false);
 
 			modelToWorld.rotate(45, 1, 0, 0);
-			modelToWorld.translate(0,500,-10);
+			modelToWorld.translate(0,250,-10);
 			add_shape(modelToWorld, new mesh_sphere(vec3(2), 2), ball, true);
+			rigid_bodies[214]->setMassProps(2.0f, btVector3(0, 0, 0));
 
 			modelToWorld.translate(-5, 0, 0);
 			add_shape(modelToWorld, new mesh_sphere(vec3(2), 2), ball, true);
+			rigid_bodies[215]->setMassProps(2.0f, btVector3(0, 0, 0));
 
 			modelToWorld.translate(10, 0, 0);
 			add_shape(modelToWorld, new mesh_sphere(vec3(2), 2), ball, true);
+			rigid_bodies[216]->setMassProps(2.0f, btVector3(0, 0, 0));
 
 
-			modelToWorld.translate(-20, -500, 10);
+			modelToWorld.translate(-20, -250, 10);
 		}
 
 		void draw_world(int x, int y, int w, int h)
