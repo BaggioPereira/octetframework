@@ -6,17 +6,18 @@
 //
 namespace octet {
   /// Scene containing a box with octet.
-  class example_shader : public app {
+  class example_multitexture : public app {
     // scene for drawing box
     ref<visual_scene> app_scene;
 
     ref<material> custom_mat;
 
-    ref<param_uniform> num_spots;
+    ref<image> jupiter;
+    ref<image> jupiter_mask;
 
   public:
     /// this is called when we construct the class before everything is initialised.
-    example_shader(int argc, char **argv) : app(argc, argv) {
+    example_multitexture(int argc, char **argv) : app(argc, argv) {
     }
 
     /// this is called once OpenGL is initialized
@@ -24,11 +25,13 @@ namespace octet {
       app_scene =  new visual_scene();
       app_scene->create_default_camera_and_lights();
 
-      param_shader *shader = new param_shader("shaders/default.vs", "shaders/spots.fs");
+      jupiter = new image("assets/NASA-Jupiter-512.jpg");
+      jupiter_mask = new image("assets/NASA-Jupiter-512-mask.gif");
+
+      param_shader *shader = new param_shader("shaders/default.vs", "shaders/multitexture.fs");
       custom_mat = new material(vec4(1, 1, 1, 1), shader);
-      atom_t atom_num_spots = app_utils::get_atom("num_spots");
-      float val = 4;
-      num_spots = custom_mat->add_uniform(&val, atom_num_spots, GL_FLOAT, 1, param::stage_fragment);
+      custom_mat->add_sampler(0, app_utils::get_atom("jupiter"), jupiter, new sampler());
+      custom_mat->add_sampler(1, app_utils::get_atom("jupiter_mask"), jupiter_mask, new sampler());
 
       mesh_box *box = new mesh_box(vec3(4));
       scene_node *node = new scene_node();
