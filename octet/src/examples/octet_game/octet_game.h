@@ -1,5 +1,10 @@
 namespace octet
 {
+	class player : public resource
+	{
+
+	};
+
 	class octet_game : public app
 	{
 		ref <visual_scene> app_scene;
@@ -31,11 +36,11 @@ namespace octet
 			app_scene = new visual_scene();
 			app_scene->create_default_camera_and_lights();
 			app_scene->get_camera_instance(0)->get_node()->translate(vec3(0, 5, 20));
-			app_scene->get_camera_instance(0)->set_far_plane(20000);
+			app_scene->get_camera_instance(0)->set_far_plane(200);
 			app_scene->get_camera_instance(0)->set_near_plane(1);
 
 			scene_node *cam = app_scene->get_camera_instance(0)->get_node();
-			cam->translate(vec3(0, 0, 950));
+			cam->translate(vec3(0, -5, 950));
 
 			material *groundMat = new material(vec4(1, 1, 0, 1));
 			material *wall = new material(vec4(1, 0, 0, 1));
@@ -43,7 +48,7 @@ namespace octet
 			material *playerMat = new material(vec4(1, 0, 1, 1));
 
 			mesh *groundMesh = new mesh_box(vec3(10, 0, 1000));
-			mesh *skyMesh = new mesh_box(vec3(25, 0, 1000));
+			mesh *skyMesh = new mesh_box(vec3(10, 0, 1000));
 
 			scene_node *floorNode = new scene_node();
 			scene_node *leftWallNode = new scene_node();
@@ -55,11 +60,12 @@ namespace octet
 			app_scene->add_child(rightWallNode);
 			app_scene->add_child(skyNode);
 			
-			leftWallNode->translate(vec3(-15, 7.5, 0));
-			rightWallNode->translate(vec3(15, 7.5, 0));
-			leftWallNode->rotate(-45, vec3(0, 0, 1));
-			rightWallNode->rotate(45, vec3(0, 0, 1));
-			skyNode->translate(vec3(0, 15, 0));
+			floorNode->translate(vec3(0, -10, 0));
+			leftWallNode->translate(vec3(-10, 0, 0));
+			rightWallNode->translate(vec3(10,0, 0));
+			leftWallNode->rotate(-90, vec3(0, 0, 1));
+			rightWallNode->rotate(90, vec3(0, 0, 1));
+			skyNode->translate(vec3(0, 10, 0));
 			
 
 			app_scene->add_mesh_instance(new mesh_instance(floorNode, groundMesh, groundMat));
@@ -76,6 +82,8 @@ namespace octet
 			app_scene->begin_render(vx, vy);
 
 			scene_node *cam = app_scene->get_camera_instance(0)->get_node();
+			scene_node *skyNode = 
+			//scene_node *ground
 
 			if (is_key_down(key_down))
 			{

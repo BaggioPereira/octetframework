@@ -424,9 +424,6 @@
     <ClInclude Include="..\..\containers\string.h">
       <Filter>containers</Filter>
     </ClInclude>
-    <ClInclude Include="game_world.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\helpers\text_overlay.h">
       <Filter>helpers</Filter>
     </ClInclude>
@@ -434,6 +431,9 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="octet_game.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="breakout.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
