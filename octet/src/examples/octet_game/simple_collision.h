@@ -42,6 +42,7 @@ namespace octet {
 		void mouse()
 		{
 			int x, y;
+			int camX, camY;
 			int vx = 0, vy = 0;
 
 			mat4t mouseToWorld;
@@ -53,7 +54,7 @@ namespace octet {
 			mouseToWorld.rotateY((float)-x*2.0f);
 			if (vy / 2 - y<40 && vy / 2 - y>-40)
 			{
-				mouseToWorld.rotateX((float)vy / 2 - y);
+				mouseToWorld.rotateX(vy / 2 - y);
 			}
 			else if (vy / 2 - y >= 40)
 			{
@@ -63,7 +64,8 @@ namespace octet {
 			{
 				mouseToWorld.rotateX(40);
 			}
-			
+			app_scene->get_camera_instance(0)->get_node()->access_nodeToParent() = mouseToWorld;
+
 			if (is_key_down(key_lmb))
 			{
 				add_shape(mouseToWorld, new mesh_sphere(vec3(2), 2), new material(vec4(0, 1, 0, 1)), true);
@@ -71,7 +73,7 @@ namespace octet {
 				rigid_bodies.back()->setMassProps(20.0f, btVector3(0, 0, 0));
 			}
 
-			app_scene->get_camera_instance(0)->get_node()->access_nodeToParent() = mouseToWorld;
+			
 		}
 
 	public:
