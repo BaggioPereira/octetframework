@@ -95,7 +95,6 @@ namespace octet {
 
 		void app_init()
 		{
-			int count = 0;
 			app_scene = new visual_scene();
 			app_scene->create_default_camera_and_lights();
 			app_scene->get_camera_instance(0)->get_node()->translate(vec3(0, 15, 20));
@@ -127,9 +126,6 @@ namespace octet {
 				{
 					modelToWorld.translate(0, 1.0f, 0);
 					add_shape(modelToWorld, new mesh_box(0.5f), box,true);
-					count++;
-					//printf("count %d", count);
-
 				}
 				modelToWorld.translate(1.0f, -10.0f, 0);
 			}
