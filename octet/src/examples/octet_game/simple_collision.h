@@ -39,6 +39,41 @@ namespace octet {
 			}
 		}
 
+		void mouse()
+		{
+			int x, y;
+			int vx = 0, vy = 0;
+
+			mat4t mouseToWorld;
+			get_viewport_size(vx, vy);
+			get_mouse_pos(x, y);
+			mouseToWorld.loadIdentity();
+			mouseToWorld.translate(vec3(0, 15, 50));
+			
+			mouseToWorld.rotateY((float)-x*2.0f);
+			if (vy / 2 - y<40 && vy / 2 - y>-40)
+			{
+				mouseToWorld.rotateX((float)vy / 2 - y);
+			}
+			else if (vy / 2 - y >= 40)
+			{
+				mouseToWorld.rotateX(40);
+			}
+			else if (vy / 2 - y <= -40)
+			{
+				mouseToWorld.rotateX(40);
+			}
+			
+			if (is_key_down(key_lmb))
+			{
+				add_shape(mouseToWorld, new mesh_sphere(vec3(2), 2), new material(vec4(0, 1, 0, 1)), true);
+				rigid_bodies.back()->applyCentralImpulse(btVector3(0, 0, -10));
+				rigid_bodies.back()->setMassProps(20.0f, btVector3(0, 0, 0));
+			}
+
+			app_scene->get_camera_instance(0)->get_node()->access_nodeToParent() = mouseToWorld;
+		}
+
 	public:
 		simple_collision(int argc, char **argv) : app(argc, argv) 
 		{
@@ -91,7 +126,7 @@ namespace octet {
 					modelToWorld.translate(0, 1.0f, 0);
 					add_shape(modelToWorld, new mesh_box(0.5f), box,true);
 					count++;
-					printf("count %d", count);
+					//printf("count %d", count);
 
 				}
 				modelToWorld.translate(1.0f, -10.0f, 0);
@@ -102,7 +137,7 @@ namespace octet {
 			add_shape(modelToWorld, new mesh_box(vec3(20.0f, 0.0f, 20.0f)), ground, false);
 
 			modelToWorld.rotate(45, 1, 0, 0);
-			modelToWorld.translate(0,250,-10);
+			/*modelToWorld.translate(0,250,-10);
 			add_shape(modelToWorld, new mesh_sphere(vec3(2), 2), ball, true);
 			rigid_bodies[214]->setMassProps(2.0f, btVector3(0, 0, 0));
 
@@ -115,7 +150,7 @@ namespace octet {
 			rigid_bodies[216]->setMassProps(2.0f, btVector3(0, 0, 0));
 
 
-			modelToWorld.translate(-20, -250, 10);
+			modelToWorld.translate(-20, -250, 10);*/
 		}
 
 		void draw_world(int x, int y, int w, int h)
@@ -164,8 +199,9 @@ namespace octet {
 			else if (is_key_down(key_down))
 			{
 				cam_node->translate(vec3(0, 0, 1));
-				
 			}
+
+			mouse();
 		}
 	};
 }

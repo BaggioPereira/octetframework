@@ -40,15 +40,15 @@ namespace octet
 			app_scene->get_camera_instance(0)->set_near_plane(1);
 
 			scene_node *cam = app_scene->get_camera_instance(0)->get_node();
-			cam->translate(vec3(0, -5, 950));
+			cam->translate(vec3(0, -5, -25));
 
 			material *groundMat = new material(vec4(1, 1, 0, 1));
 			material *wall = new material(vec4(1, 0, 0, 1));
 			material *sky = new material(vec4(0, 0, 128, 1));
 			material *playerMat = new material(vec4(1, 0, 1, 1));
 
-			mesh *groundMesh = new mesh_box(vec3(10, 0, 1000));
-			mesh *skyMesh = new mesh_box(vec3(10, 0, 1000));
+			mesh *groundMesh = new mesh_box(vec3(10, 0, 10));
+			mesh *skyMesh = new mesh_box(vec3(10, 0, 10));
 
 			scene_node *floorNode = new scene_node();
 			scene_node *leftWallNode = new scene_node();
@@ -82,7 +82,7 @@ namespace octet
 			app_scene->begin_render(vx, vy);
 
 			scene_node *cam = app_scene->get_camera_instance(0)->get_node();
-			scene_node *skyNode = 
+			//scene_node *skyNode = 
 			//scene_node *ground
 
 			if (is_key_down(key_down))
