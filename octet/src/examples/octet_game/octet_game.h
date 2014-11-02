@@ -11,11 +11,16 @@ namespace octet
 
 		dynarray<btRigidBody*> rigid_bodies;
 
+		
+		collada_builder loader;
+
+
 		scene_node *top;
 		scene_node *bottom;
 		scene_node *left;
 		scene_node *right;
 		scene_node *scene;
+		scene_node *ship;
 
 		void add_shape(mat4t_in worldMat, mesh *mesh, material *mat, bool is_dynamic)
 		{
@@ -47,7 +52,7 @@ namespace octet
 
 		void world_rot()
 		{
-			bottom->translate(vec3(0, 10, 0));
+			/*bottom->translate(vec3(0, 10, 0));
 			bottom->rotate(1, vec3(0, 0, 1));
 			bottom->translate(vec3(0, -10, 0));
 
@@ -70,7 +75,7 @@ namespace octet
 			bottom->translate(vec3(0, 0, -0.1f));
 			top->translate(vec3(0, 0, -0.1f));
 			left->translate(vec3(0, 0, -0.1f));
-			right->translate(vec3(0, 0, -0.1f));
+			right->translate(vec3(0, 0, -0.1f));*/
 		}
 
 	public:
@@ -80,6 +85,7 @@ namespace octet
 			broadphase = new btDbvtBroadphase();
 			solver = new btSequentialImpulseConstraintSolver();
 			world = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, &config);
+			
 
 		}
 
@@ -95,15 +101,24 @@ namespace octet
 		{
 			app_scene = new visual_scene();
 			app_scene->create_default_camera_and_lights();
-			//app_scene->get_camera_instance(0)->get_node()->translate(vec3(0, 0, 20));
 			app_scene->get_camera_instance(0)->set_near_plane(1);
 			app_scene->get_camera_instance(0)->set_far_plane(200);
 
-			mat4t modelToWorld;
+			//mat4t modelToWorld;
+			
+			/*if (meshes.size())
+			{
+				material *shipMat = new material(new image("assets/ship.gif"));
+				mesh *ship = meshes[0]->get_mesh();
+				scene_node *shipNode = new scene_node();
+				app_scene->add_child(shipNode);
+				app_scene->add_mesh_instance(new mesh_instance(shipNode, ship, shipMat));
+			}*/
 
 			material *wall = new material(new image("src/examples/octet_game/material.gif"));
+			material *blocks = new material(vec4(1, 1, 1, 1));
 			mesh_box *wallMesh = new mesh_box(vec3(10.0f, 0.0f, 10.0f));
-			bottom = new scene_node();
+			/*bottom = new scene_node();
 			bottom->translate(vec3(0, -10, 0));
 			app_scene->add_child(bottom);
 			app_scene->add_mesh_instance(new mesh_instance(bottom, wallMesh, wall));
@@ -126,7 +141,29 @@ namespace octet
 			scene->rotate(90, vec3(1, 0, 0));
 			scene->scale(10);
 			app_scene->add_child(scene);
-			app_scene->add_mesh_instance(new mesh_instance(scene, wallMesh, wall));
+			app_scene->add_mesh_instance(new mesh_instance(scene, wallMesh, wall));*/
+
+			resource_dict dict;
+			if (!loader.load_xml("assets/shipMat.dae"))
+			{
+				return;
+			}
+			loader.get_resources(dict);
+
+			dynarray<resource*> meshes;
+			dict.find_all(meshes, atom_mesh);
+
+			if (meshes.size())
+			{
+				material *shipMat = new material(new image("assets/ShipUV2.gif"));
+				mesh *shipMesh = meshes[0]->get_mesh();
+				ship = new scene_node();
+				ship->translate(vec3(-50, -50, -100));
+				ship->scale(0.1);
+				app_scene->add_child(ship);
+				app_scene->add_mesh_instance(new mesh_instance(ship, shipMesh, shipMat));
+			}
+
 		}
 
 		void draw_world(int x, int y, int w, int h)
@@ -135,9 +172,11 @@ namespace octet
 			get_viewport_size(vx, vy);
 			app_scene->begin_render(vx, vy);
 
-			world_rot();
 			
-			world->stepSimulation(1.0f / 30, 1, 1.0f / 30);
+
+			//world_rot();
+			
+			/*world->stepSimulation(1.0f / 30, 1, 1.0f / 30);
 			btCollisionObjectArray &colArray = world->getCollisionObjectArray();
 			for (unsigned i = 0; i != colArray.size(); ++i)
 			{
@@ -148,7 +187,7 @@ namespace octet
 					mat4t &modelToWorld = node->access_nodeToParent();
 					colObj->getWorldTransform().getOpenGLMatrix(modelToWorld.get());
 				}
-			}
+			}*/
 
 			app_scene->update(1.0f / 30);
 			app_scene->render((float)vx / vy);
