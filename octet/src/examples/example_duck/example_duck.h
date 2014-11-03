@@ -21,7 +21,7 @@ namespace octet {
       app_scene =  new visual_scene();
 
       resource_dict dict;
-      if (!loader.load_xml("assets/duck_triangulate.dae")) {
+      if (!loader.load_xml("assets/redball.dae")) {
         // failed to load file
         return;
       }
@@ -35,6 +35,7 @@ namespace octet {
         mesh *duck = meshes[0]->get_mesh();
         scene_node *node = new scene_node();
         node->translate(vec3(-50, -50, 0));
+		node->scale(vec3(10));
         app_scene->add_child(node);
         app_scene->add_mesh_instance(new mesh_instance(node, duck, mat));
 
