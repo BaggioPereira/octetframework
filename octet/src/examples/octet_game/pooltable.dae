@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <COLLADA xmlns="http://www.collada.org/2005/11/COLLADASchema" version="1.4.1">
-  <asset><contributor><author></author><authoring_tool>FBX COLLADA exporter</authoring_tool><comments></comments></contributor><created>2014-11-03T15:45:34Z</created><keywords></keywords><modified>2014-11-03T15:45:34Z</modified><revision></revision><subject></subject><title></title><unit meter="1.000000" name="centimeter"></unit><up_axis>Y_UP</up_axis></asset>
+  <asset><contributor><author></author><authoring_tool>FBX COLLADA exporter</authoring_tool><comments></comments></contributor><created>2014-11-04T15:38:37Z</created><keywords></keywords><modified>2014-11-04T15:38:37Z</modified><revision></revision><subject></subject><title></title><unit meter="1.000000" name="centimeter"></unit><up_axis>Y_UP</up_axis></asset>
   <library_materials>
-    <material id="lambert1" name="lambert1">
-      <instance_effect url="#lambert1-fx"/>
+    <material id="lambert3" name="lambert3">
+      <instance_effect url="#lambert3-fx"/>
     </material>
   </library_materials>
   <library_effects>
-    <effect id="lambert1-fx" name="lambert1">
+    <effect id="lambert3-fx" name="lambert3">
       <profile_COMMON>
         <technique sid="standard">
           <lambert>
@@ -44,8 +44,8 @@
 400.000000 25.000000 -148.026443
 375.000000 0.000000 -148.026443
 400.000000 0.000000 -148.026443
--400.000000 -0.000000 200.000000
-400.000000 -0.000000 200.000000
+-400.000000 0.000000 200.000000
+400.000000 0.000000 200.000000
 -400.000000 0.000000 -200.000000
 400.000000 0.000000 -200.000000
 24.923264 0.000000 -173.926697
@@ -332,94 +332,94 @@
         </source>
         <source id="pool_table-UV0">
           <float_array id="pool_table-UV0-array" count="176">
-0.472507 -2.354168
-0.722507 -2.354168
-0.472507 -2.104168
-0.722507 -2.104168
-0.472507 -1.854168
-0.722507 -1.854168
-0.472507 -1.604168
-0.722507 -1.604168
-0.472507 -1.354168
-0.722507 -1.354168
-0.972507 -2.354168
-0.972507 -2.104168
-0.222507 -2.354168
-0.222507 -2.104168
-0.009520 0.000000
-1.009520 0.000000
-1.009520 1.000000
-0.009520 1.000000
--1.645215 0.115542
--1.395215 0.115542
--1.395215 0.365542
--1.645215 0.365542
--1.395215 0.615542
--1.645215 0.615542
--1.395215 0.865542
--1.645215 0.865542
--1.395215 1.115542
--1.645215 1.115542
--1.145215 0.115542
--1.145215 0.365542
--1.895215 0.115542
--1.895215 0.365542
--0.873279 0.115542
--0.623279 0.115542
--0.623279 0.365542
--0.873279 0.365542
--0.623279 0.615542
--0.873279 0.615542
--0.623279 0.865542
--0.873279 0.865542
--0.623279 1.115542
--0.873279 1.115542
--0.373279 0.115542
--0.373279 0.365542
--1.123279 0.115542
--1.123279 0.365542
--0.534365 -2.354168
--0.284365 -2.354168
--0.284365 -2.104168
--0.534365 -2.104168
--0.284365 -1.854168
--0.534365 -1.854168
--0.284365 -1.604168
--0.534365 -1.604168
--0.284365 -1.354168
--0.534365 -1.354168
--0.034365 -2.354168
--0.034365 -2.104168
--0.784365 -2.354168
--0.784365 -2.104168
--1.681081 -2.354168
--1.431081 -2.354168
--1.431081 -2.104168
--1.681081 -2.104168
--1.431081 -1.854168
--1.681081 -1.854168
--1.431081 -1.604168
--1.681081 -1.604168
--1.431081 -1.354168
--1.681081 -1.354168
--1.181081 -2.354168
--1.181081 -2.104168
--1.931081 -2.354168
--1.931081 -2.104168
--2.741587 0.115542
--2.491587 0.115542
--2.491587 0.365542
--2.741587 0.365542
--2.491587 0.615542
--2.741587 0.615542
--2.491587 0.865542
--2.741587 0.865542
--2.491587 1.115542
--2.741587 1.115542
--2.241587 0.115542
--2.241587 0.365542
--2.991587 0.115542
--2.991587 0.365542
+0.608283 0.303992
+0.638487 0.303992
+0.608283 0.334196
+0.638487 0.334196
+0.608283 0.364400
+0.638487 0.364400
+0.608283 0.394604
+0.638487 0.394604
+0.608283 0.424807
+0.638487 0.424807
+0.668691 0.303992
+0.668691 0.334196
+0.578080 0.303992
+0.578080 0.334196
+0.451556 0.441627
+0.572371 0.441627
+0.572371 0.562442
+0.451556 0.562442
+0.497258 0.576928
+0.527461 0.576928
+0.527461 0.607132
+0.497258 0.607132
+0.527461 0.637336
+0.497258 0.637336
+0.527461 0.667539
+0.497258 0.667539
+0.527461 0.697743
+0.497258 0.697743
+0.557665 0.576928
+0.557665 0.607132
+0.467054 0.576928
+0.467054 0.607132
+0.610090 0.576928
+0.640294 0.576928
+0.640294 0.607132
+0.610090 0.607132
+0.640294 0.637336
+0.610090 0.637336
+0.640294 0.667539
+0.610090 0.667539
+0.640294 0.697743
+0.610090 0.697743
+0.670498 0.576928
+0.670498 0.607132
+0.579887 0.576928
+0.579887 0.607132
+0.495445 0.303992
+0.525649 0.303992
+0.525649 0.334196
+0.495445 0.334196
+0.525649 0.364400
+0.495445 0.364400
+0.525649 0.394604
+0.495445 0.394604
+0.525649 0.424807
+0.495445 0.424807
+0.555853 0.303992
+0.555853 0.334196
+0.465241 0.303992
+0.465241 0.334196
+0.384304 0.303992
+0.414508 0.303992
+0.414508 0.334196
+0.384304 0.334196
+0.414508 0.364400
+0.384304 0.364400
+0.414508 0.394604
+0.384304 0.394604
+0.414508 0.424807
+0.384304 0.424807
+0.444712 0.303992
+0.444712 0.334196
+0.354100 0.303992
+0.354100 0.334196
+0.384370 0.576928
+0.414574 0.576928
+0.414574 0.607132
+0.384370 0.607132
+0.414574 0.637336
+0.384370 0.637336
+0.414574 0.667539
+0.384370 0.667539
+0.414574 0.697743
+0.384370 0.697743
+0.444778 0.576928
+0.444778 0.607132
+0.354167 0.576928
+0.354167 0.607132
 </float_array>
           <technique_common>
             <accessor source="#pool_table-UV0-array" count="88" stride="2">
@@ -431,25 +431,13 @@
         <vertices id="pool_table-VERTEX">
           <input semantic="POSITION" source="#pool_table-POSITION"/>
         </vertices>
-        <triangles count="74" material="lambert1"><input semantic="VERTEX" offset="0" source="#pool_table-VERTEX"/><input semantic="NORMAL" offset="1" source="#pool_table-Normal0"/><input semantic="TEXCOORD" offset="2" set="0" source="#pool_table-UV0"/><p> 3 0 3 2 1 2 0 2 0 3 3 3 0 4 0 1 5 1 3 6 3 5 7 5 2 8 2 2 9 2 5 10 5 4 11 4 7 12 7 6 13 6 4 14 4 7 15 7 4 16 4 5 17 5 0 18 8 6 19 6 1 20 9 1 21 9 6 22 6 7 23 7 5 24 11 3 25 3 1 26 1 1 27 1 7 28 10 5 29 11 2 30 2 6 31 12 0 32 0 6 33 12 2 34 2 4 35 13 8 36 14 9 37 15 11 38 16 8 39 14 11 40 16 10 41 17 15 42 20 14 43 21 12 44 18 15 45 20 12 46 18 13 47 19 14 48 21 15 49 20 17 50 22 14 51 21 17 52 22 16 53 23 19 54 24 18 55 25 16 56 23 19 57 24 16 58 23 17 59 22 13 60 26 12 61 27 18 62 25 13 63 26 18 64 25 19 65 24 15 66 20 13 67 19 17 68 29 13 69 19 19 70 28 17 71 29 14 72 21 18 73 30 12 74 18 18 75 30 14 76 21 16 77 31 23 78 34 22 79 35 20 80 32 23 81 34 20 82 32 21 83 33 22 84 35 23 85 34 25 86 36 22 87 35 25 88 36 24 89 37 27 90 38 26 91 39 24 92 37 27 93 38 24 94 37 25 95 36 21 96 40 20 97 41 26 98 39 21 99 40 26 100 39 27 101 38 23 102 34 21 103 33 25 104 43 21 105 33 27 106 42 25 107 43 22 108 35 26 109 44 20 110 32 26 111 44 22 112 35 24 113 45 31 114 48 30 115 49 28 116 46 31 117 48 28 118 46 29 119 47 33 120 50 30 121 49 31 122 48 30 123 49 33 124 50 32 125 51 35 126 52 34 127 53 32 128 51 35 129 52 32 130 51 33 131 50 29 132 54 28 133 55 34 134 53 29 135 54 34 136 53 35 137 52 31 138 48 29 139 47 33 140 57 29 141 47 35 142 56 33 143 57 30 144 49 34 145 58 28 146 46 34 147 58 30 148 49 32 149 59 39 150 62 38 151 63 36 152 60 39 153 62 36 154 60 37 155 61 38 156 63 39 157 62 41 158 64 38 159 63 41 160 64 40 161 65 43 162 66 42 163 67 40 164 65 43 165 66 40 166 65 41 167 64 37 168 68 36 169 69 42 170 67 37 171 68 42 172 67 43 173 66 39 174 62 37 175 61 41 176 71 37 177 61 43 178 70 41 179 71 38 180 63 42 181 72 36 182 60 42 183 72 38 184 63 40 185 73 47 186 76 46 187 77 44 188 74 47 189 76 44 190 74 45 191 75 47 192 76 49 193 78 46 194 77 46 195 77 49 196 78 48 197 79 51 198 80 50 199 81 48 200 79 51 201 80 48 202 79 49 203 78 44 204 83 50 205 81 45 206 82 45 207 82 50 208 81 51 209 80 49 210 85 47 211 76 45 212 75 45 213 75 51 214 84 49 215 85 46 216 77 50 217 86 44 218 74 50 219 86 46 220 77 48 221 87</p></triangles>
+        <triangles count="74" material="lambert3"><input semantic="VERTEX" offset="0" source="#pool_table-VERTEX"/><input semantic="NORMAL" offset="1" source="#pool_table-Normal0"/><input semantic="TEXCOORD" offset="2" set="0" source="#pool_table-UV0"/><p> 3 0 3 2 1 2 0 2 0 3 3 3 0 4 0 1 5 1 3 6 3 5 7 5 2 8 2 2 9 2 5 10 5 4 11 4 7 12 7 6 13 6 4 14 4 7 15 7 4 16 4 5 17 5 0 18 8 6 19 6 1 20 9 1 21 9 6 22 6 7 23 7 5 24 11 3 25 3 1 26 1 1 27 1 7 28 10 5 29 11 2 30 2 6 31 12 0 32 0 6 33 12 2 34 2 4 35 13 8 36 14 9 37 15 11 38 16 8 39 14 11 40 16 10 41 17 15 42 20 14 43 21 12 44 18 15 45 20 12 46 18 13 47 19 14 48 21 15 49 20 17 50 22 14 51 21 17 52 22 16 53 23 19 54 24 18 55 25 16 56 23 19 57 24 16 58 23 17 59 22 13 60 26 12 61 27 18 62 25 13 63 26 18 64 25 19 65 24 15 66 20 13 67 19 17 68 29 13 69 19 19 70 28 17 71 29 14 72 21 18 73 30 12 74 18 18 75 30 14 76 21 16 77 31 23 78 34 22 79 35 20 80 32 23 81 34 20 82 32 21 83 33 22 84 35 23 85 34 25 86 36 22 87 35 25 88 36 24 89 37 27 90 38 26 91 39 24 92 37 27 93 38 24 94 37 25 95 36 21 96 40 20 97 41 26 98 39 21 99 40 26 100 39 27 101 38 23 102 34 21 103 33 25 104 43 21 105 33 27 106 42 25 107 43 22 108 35 26 109 44 20 110 32 26 111 44 22 112 35 24 113 45 31 114 48 30 115 49 28 116 46 31 117 48 28 118 46 29 119 47 33 120 50 30 121 49 31 122 48 30 123 49 33 124 50 32 125 51 35 126 52 34 127 53 32 128 51 35 129 52 32 130 51 33 131 50 29 132 54 28 133 55 34 134 53 29 135 54 34 136 53 35 137 52 31 138 48 29 139 47 33 140 57 29 141 47 35 142 56 33 143 57 30 144 49 34 145 58 28 146 46 34 147 58 30 148 49 32 149 59 39 150 62 38 151 63 36 152 60 39 153 62 36 154 60 37 155 61 38 156 63 39 157 62 41 158 64 38 159 63 41 160 64 40 161 65 43 162 66 42 163 67 40 164 65 43 165 66 40 166 65 41 167 64 37 168 68 36 169 69 42 170 67 37 171 68 42 172 67 43 173 66 39 174 62 37 175 61 41 176 71 37 177 61 43 178 70 41 179 71 38 180 63 42 181 72 36 182 60 42 183 72 38 184 63 40 185 73 47 186 76 46 187 77 44 188 74 47 189 76 44 190 74 45 191 75 47 192 76 49 193 78 46 194 77 46 195 77 49 196 78 48 197 79 51 198 80 50 199 81 48 200 79 51 201 80 48 202 79 49 203 78 44 204 83 50 205 81 45 206 82 45 207 82 50 208 81 51 209 80 49 210 85 47 211 76 45 212 75 45 213 75 51 214 84 49 215 85 46 216 77 50 217 86 44 218 74 50 219 86 46 220 77 48 221 87</p></triangles>
       </mesh>
     </geometry>
   </library_geometries>
   <library_visual_scenes>
     <visual_scene id="pooltable" name="pooltable">
-      <node name="pPlane1" id="pPlane1" sid="pPlane1"><matrix sid="matrix">0.080000 0.000000 0.000000 0.000000 0.000000 0.010000 0.000000 0.000000 0.000000 0.000000 0.040000 0.000000 0.000000 0.000000 0.000000 1.000000</matrix><extra><technique profile="FCOLLADA"><visibility>1.000000</visibility></technique></extra><node name="transform1" id="transform1" sid="transform1"><matrix sid="matrix">1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000</matrix><extra><technique profile="FCOLLADA"><visibility>0.000000</visibility></technique></extra></node></node>
-      <node name="pCube1" id="pCube1" sid="pCube1"><matrix sid="matrix">0.032500 0.000000 0.000000 -1.855323 0.000000 0.002500 0.000000 0.125000 0.000000 0.000000 0.002500 1.875000 0.000000 0.000000 0.000000 1.000000</matrix><extra><technique profile="FCOLLADA"><visibility>1.000000</visibility></technique></extra><node name="transform9" id="transform9" sid="transform9"><matrix sid="matrix">1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000</matrix><extra><technique profile="FCOLLADA"><visibility>0.000000</visibility></technique></extra></node></node>
-      <node name="pCube2" id="pCube2" sid="pCube2"><matrix sid="matrix">0.032500 0.000000 0.000000 -1.885000 0.000000 0.002500 0.000000 0.125000 0.000000 0.000000 0.002500 -1.875000 0.000000 0.000000 0.000000 1.000000</matrix><extra><technique profile="FCOLLADA"><visibility>1.000000</visibility></technique></extra><node name="transform5" id="transform5" sid="transform5"><matrix sid="matrix">1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000</matrix><extra><technique profile="FCOLLADA"><visibility>0.000000</visibility></technique></extra></node></node>
-      <node name="group" id="group" sid="group"><matrix sid="matrix">0.010000 0.000000 0.000000 3.759233 0.000000 0.010000 0.000000 0.000000 0.000000 0.000000 0.010000 3.750069 0.000000 0.000000 0.000000 1.000000</matrix><extra><technique profile="FCOLLADA"><visibility>1.000000</visibility></technique></extra><node name="pasted__pCube2" id="pasted__pCube2" sid="pasted__pCube2"><matrix sid="matrix">3.250000 0.000000 0.000000 -188.500000 0.000000 0.250000 0.000000 12.500000 0.000000 0.000000 0.250000 -561.433533 0.000000 0.000000 0.000000 1.000000</matrix><extra><technique profile="FCOLLADA"><visibility>1.000000</visibility></technique></extra><node name="transform3" id="transform3" sid="transform3"><matrix sid="matrix">1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000</matrix><extra><technique profile="FCOLLADA"><visibility>0.000000</visibility></technique></extra></node></node></node>
-      <node name="group1" id="group1" sid="group1"><matrix sid="matrix">0.010000 0.000000 0.000000 -0.000000 0.000000 0.010000 0.000000 0.000000 0.000000 0.000000 0.010000 0.000000 0.000000 0.000000 0.000000 1.000000</matrix><extra><technique profile="FCOLLADA"><visibility>1.000000</visibility></technique></extra><node name="pasted__pCube1" id="pasted__pCube1" sid="pasted__pCube1"><matrix sid="matrix">3.250000 0.000000 0.000000 188.500000 0.000000 0.250000 0.000000 12.500000 0.000000 0.000000 0.250000 187.500000 0.000000 0.000000 0.000000 1.000000</matrix><extra><technique profile="FCOLLADA"><visibility>1.000000</visibility></technique></extra><node name="transform7" id="transform7" sid="transform7"><matrix sid="matrix">1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000</matrix><extra><technique profile="FCOLLADA"><visibility>0.000000</visibility></technique></extra></node></node></node>
-      <node name="pCube3" id="pCube3" sid="pCube3"><matrix sid="matrix">0.002500 0.000000 0.000000 -3.875000 0.000000 0.002500 0.000000 0.125000 0.000000 0.000000 0.030000 0.019736 0.000000 0.000000 0.000000 1.000000</matrix><extra><technique profile="FCOLLADA"><visibility>1.000000</visibility></technique></extra><node name="transform11" id="transform11" sid="transform11"><matrix sid="matrix">1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000</matrix><extra><technique profile="FCOLLADA"><visibility>0.000000</visibility></technique></extra></node></node>
-      <node name="group3" id="group3" sid="group3"><matrix sid="matrix">0.010000 0.000000 0.000000 0.000000 0.000000 0.010000 0.000000 0.000000 0.000000 0.000000 0.010000 0.000000 0.000000 0.000000 0.000000 1.000000</matrix><extra><technique profile="FCOLLADA"><visibility>1.000000</visibility></technique></extra><node name="pasted__pCube3" id="pasted__pCube3" sid="pasted__pCube3"><matrix sid="matrix">0.250000 0.000000 0.000000 387.500000 0.000000 0.250000 0.000000 12.500000 0.000000 0.000000 3.000000 1.973558 0.000000 0.000000 0.000000 1.000000</matrix><extra><technique profile="FCOLLADA"><visibility>1.000000</visibility></technique></extra><node name="transform2" id="transform2" sid="transform2"><matrix sid="matrix">1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000</matrix><extra><technique profile="FCOLLADA"><visibility>0.000000</visibility></technique></extra></node></node></node>
-      <node name="pasted__pCube3_ncl1_1" id="pasted__pCube3_ncl1_1" sid="pasted__pCube3_ncl1_1"><matrix sid="matrix">0.010000 0.000000 0.000000 0.000000 0.000000 0.010000 0.000000 0.000000 0.000000 0.000000 0.010000 0.000000 0.000000 0.000000 0.000000 1.000000</matrix><extra><technique profile="FCOLLADA"><visibility>1.000000</visibility></technique></extra><node name="transform4" id="transform4" sid="transform4"><matrix sid="matrix">1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000</matrix><extra><technique profile="FCOLLADA"><visibility>0.000000</visibility></technique></extra></node></node>
-      <node name="pasted__pCube4" id="pasted__pCube4" sid="pasted__pCube4"><matrix sid="matrix">0.010000 0.000000 0.000000 0.000000 0.000000 0.010000 0.000000 0.000000 0.000000 0.000000 0.010000 0.000000 0.000000 0.000000 0.000000 1.000000</matrix><extra><technique profile="FCOLLADA"><visibility>1.000000</visibility></technique></extra><node name="transform6" id="transform6" sid="transform6"><matrix sid="matrix">1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000</matrix><extra><technique profile="FCOLLADA"><visibility>0.000000</visibility></technique></extra></node></node>
-      <node name="pasted__pCube5" id="pasted__pCube5" sid="pasted__pCube5"><matrix sid="matrix">0.010000 0.000000 0.000000 0.000000 0.000000 0.010000 0.000000 0.000000 0.000000 0.000000 0.010000 0.000000 0.000000 0.000000 0.000000 1.000000</matrix><extra><technique profile="FCOLLADA"><visibility>1.000000</visibility></technique></extra><node name="transform8" id="transform8" sid="transform8"><matrix sid="matrix">1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000</matrix><extra><technique profile="FCOLLADA"><visibility>0.000000</visibility></technique></extra></node></node>
-      <node name="pasted__pCube6" id="pasted__pCube6" sid="pasted__pCube6"><matrix sid="matrix">0.010000 0.000000 0.000000 0.000000 0.000000 0.010000 0.000000 0.000000 0.000000 0.000000 0.010000 0.000000 0.000000 0.000000 0.000000 1.000000</matrix><extra><technique profile="FCOLLADA"><visibility>1.000000</visibility></technique></extra><node name="transform10" id="transform10" sid="transform10"><matrix sid="matrix">1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000</matrix><extra><technique profile="FCOLLADA"><visibility>0.000000</visibility></technique></extra></node></node>
-      <node name="pasted__pCube7" id="pasted__pCube7" sid="pasted__pCube7"><matrix sid="matrix">0.010000 0.000000 0.000000 0.000000 0.000000 0.010000 0.000000 0.000000 0.000000 0.000000 0.010000 0.000000 0.000000 0.000000 0.000000 1.000000</matrix><extra><technique profile="FCOLLADA"><visibility>1.000000</visibility></technique></extra><node name="transform12" id="transform12" sid="transform12"><matrix sid="matrix">1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000</matrix><extra><technique profile="FCOLLADA"><visibility>0.000000</visibility></technique></extra></node></node>
-      <node name="pool_table" id="pool_table" sid="pool_table"><matrix sid="matrix">0.010000 0.000000 0.000000 0.000000 0.000000 0.010000 0.000000 0.000000 0.000000 0.000000 0.010000 0.000000 0.000000 0.000000 0.000000 1.000000</matrix><instance_geometry url="#pool_table-lib"><bind_material><technique_common><instance_material symbol="lambert1" target="#lambert1"/></technique_common></bind_material></instance_geometry><extra><technique profile="FCOLLADA"><visibility>1.000000</visibility></technique></extra></node>
+      <node name="pool_table" id="pool_table" sid="pool_table"><matrix sid="matrix">0.010000 0.000000 0.000000 0.000000 0.000000 0.010000 0.000000 0.000000 0.000000 0.000000 0.010000 0.000000 0.000000 0.000000 0.000000 1.000000</matrix><instance_geometry url="#pool_table-lib"><bind_material><technique_common><instance_material symbol="lambert3" target="#lambert3"/></technique_common></bind_material></instance_geometry><extra><technique profile="FCOLLADA"><visibility>1.000000</visibility></technique></extra></node>
       <extra><technique profile="MAX3D"><frame_rate>24.000000</frame_rate></technique><technique profile="FCOLLADA"><start_time>0.041667</start_time><end_time>8.333333</end_time></technique></extra>
     </visual_scene>
   </library_visual_scenes>

@@ -50,9 +50,9 @@ namespace octet
 			}
 		}
 
-		void world_rot()
+		/*void world_rot()
 		{
-			/*bottom->translate(vec3(0, 10, 0));
+			bottom->translate(vec3(0, 10, 0));
 			bottom->rotate(1, vec3(0, 0, 1));
 			bottom->translate(vec3(0, -10, 0));
 
@@ -75,8 +75,8 @@ namespace octet
 			bottom->translate(vec3(0, 0, -0.1f));
 			top->translate(vec3(0, 0, -0.1f));
 			left->translate(vec3(0, 0, -0.1f));
-			right->translate(vec3(0, 0, -0.1f));*/
-		}
+			right->translate(vec3(0, 0, -0.1f));
+		}*/
 
 	public:
 		octet_game(int argc, char**argv) :app(argc, argv)
@@ -143,136 +143,53 @@ namespace octet
 			app_scene->add_child(scene);
 			app_scene->add_mesh_instance(new mesh_instance(scene, wallMesh, wall));*/
 			
-			resource_dict dict;
+			resource_dict poolTable;
+			resource_dict poolBalls;
+			material *shipMat = new material(new image("src/examples/octet_game/poolMat.gif"));
 
 			if (!loader.load_xml("src/examples/octet_game/pooltable.dae"))
 			{
 				return;
 			}
-			loader.get_resources(dict);
+			loader.get_resources(poolTable);
 
-			dynarray<resource*> meshes;
-			dict.find_all(meshes, atom_mesh);
+			dynarray<resource*> tablemeshes;
+			poolTable.find_all(tablemeshes, atom_mesh);
 
-			if (meshes.size())
+			if (tablemeshes.size())
 			{
-				for (int i = 0; i != meshes.size(); ++i)
-				{
-					material *shipMat = new material(new image("src/examples/octet_game/pooltableMat.gif"));
-					mesh *shipMesh = meshes[i]->get_mesh();
+					
+					mesh *shipMesh = tablemeshes[0]->get_mesh();
 					ship = new scene_node();
 					ship->translate(vec3(0, -25, -100));
 					ship->rotate(90, vec3(0, 1, 0));
-					ship->scale(0.1);
+					ship->scale((float)0.1);
 					app_scene->add_child(ship);
 					app_scene->add_mesh_instance(new mesh_instance(ship, shipMesh, shipMat));
-
-				}
 			}
-
 			
-			if (!loader.load_xml("src/examples/octet_game/redball.dae"))
+			if (!loader.load_xml("src/examples/octet_game/poolballs.dae"))
 			{
 				return;
 			}
-			loader.get_resources(dict);
+			loader.get_resources(poolBalls);
 
-			dynarray<resource*> redmeshes;
-			dict.find_all(redmeshes, atom_mesh);
+			dynarray<resource*> ballmeshes;
+			poolBalls.find_all(ballmeshes, atom_mesh);
 
-			if (redmeshes.size())
+			if (ballmeshes.size())
 			{
-				for (int i = 0; i != redmeshes.size(); ++i)
+				for (int i = 0; i != ballmeshes.size(); ++i)
 				{
-					material *shipMat = new material(new image("src/examples/octet_game/redballMat.gif"));
-					mesh *shipMesh = redmeshes[i]->get_mesh();
+					mesh *shipMesh = ballmeshes[i]->get_mesh();
 					ship = new scene_node();
 					ship->translate(vec3(0, -25, -100));
 					ship->rotate(90, vec3(0, 1, 0));
-					ship->scale(0.1);
+					ship->scale((float)0.1);
 					app_scene->add_child(ship);
 					app_scene->add_mesh_instance(new mesh_instance(ship, shipMesh, shipMat));
-
 				}
 			}
-
-			if (!loader.load_xml("src/examples/octet_game/yellowball.dae"))
-			{
-				return;
-			}
-			loader.get_resources(dict);
-
-			dynarray<resource*> yellowmeshes;
-			dict.find_all(yellowmeshes, atom_mesh);
-
-			if (yellowmeshes.size())
-			{
-				for (int i = 0; i != yellowmeshes.size(); ++i)
-				{
-					material *shipMat = new material(new image("src/examples/octet_game/yellowballMat.gif"));
-					mesh *shipMesh = yellowmeshes[i]->get_mesh();
-					ship = new scene_node();
-					ship->translate(vec3(0, -25, -100));
-					ship->rotate(90, vec3(0, 1, 0));
-					ship->scale(0.1);
-					app_scene->add_child(ship);
-					app_scene->add_mesh_instance(new mesh_instance(ship, shipMesh, shipMat));
-
-				}
-			}
-
-			/*if (!loader.load_xml("src/examples/octet_game/cueball.dae"))
-			{
-				return;
-			}
-			loader.get_resources(dict);
-
-			dynarray<resource*> cuemeshes;
-			dict.find_all(cuemeshes, atom_mesh);
-
-			if (cuemeshes.size())
-			{
-				for (int i = 0; i != cuemeshes.size(); ++i)
-				{
-					material *shipMat = new material(new image("src/examples/octet_game/cueballMat.gif"));
-					mesh *shipMesh = cuemeshes[i]->get_mesh();
-					ship = new scene_node();
-					ship->translate(vec3(0, -25, -100));
-					ship->rotate(90, vec3(0, 1, 0));
-					ship->scale(0.1);
-					app_scene->add_child(ship);
-					app_scene->add_mesh_instance(new mesh_instance(ship, shipMesh, shipMat));
-
-				}
-			}*/
-
-			if (!loader.load_xml("src/examples/octet_game/blackball.dae"))
-			{
-				return;
-			}
-			loader.get_resources(dict);
-
-			dynarray<resource*> blackmeshes;
-			dict.find_all(blackmeshes, atom_mesh);
-
-			if (blackmeshes.size())
-			{
-				for (int i = 0; i != blackmeshes.size(); ++i)
-				{
-					material *shipMat = new material(new image("src/examples/octet_game/blackballMat.gif"));
-					mesh *shipMesh = blackmeshes[i]->get_mesh();
-					ship = new scene_node();
-					ship->translate(vec3(0, -25, -100));
-					ship->rotate(90, vec3(0, 1, 0));
-					ship->scale(0.1);
-					app_scene->add_child(ship);
-					app_scene->add_mesh_instance(new mesh_instance(ship, shipMesh, shipMat));
-
-				}
-			}
-
-			
-
 		}
 
 		void draw_world(int x, int y, int w, int h)
@@ -281,6 +198,16 @@ namespace octet
 			get_viewport_size(vx, vy);
 			app_scene->begin_render(vx, vy);
 
+			scene_node *cam = app_scene->get_camera_instance(0)->get_node();
+
+			if (is_key_down(key_up))
+			{
+				cam->translate(vec3(0, 1, 0));
+			}
+			else if(is_key_down(key_down))
+			{
+				cam->translate(vec3(0, -1, 0));
+			}
 			
 
 			//world_rot();
