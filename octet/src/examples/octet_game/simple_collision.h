@@ -51,7 +51,7 @@ namespace octet {
 			mouseToWorld.loadIdentity();
 			mouseToWorld.translate(vec3(0, 15, 50));
 			
-			mouseToWorld.rotateY((float)-x*2.0f);
+			/*mouseToWorld.rotateY((float)-x*2.0f);
 			if (vy / 2 - y<40 && vy / 2 - y>-40)
 			{
 				mouseToWorld.rotateX(vy / 2 - y);
@@ -64,7 +64,7 @@ namespace octet {
 			{
 				mouseToWorld.rotateX(40);
 			}
-			app_scene->get_camera_instance(0)->get_node()->access_nodeToParent() = mouseToWorld;
+			app_scene->get_camera_instance(0)->get_node()->access_nodeToParent() = mouseToWorld;*/
 
 			if (is_key_down(key_lmb))
 			{
@@ -72,6 +72,8 @@ namespace octet {
 				rigid_bodies.back()->applyCentralImpulse(btVector3(0, 0, -10));
 				rigid_bodies.back()->setMassProps(20.0f, btVector3(0, 0, 0));
 			}
+
+			
 
 			
 		}
@@ -103,7 +105,7 @@ namespace octet {
 
 			mat4t modelToWorld;
 			
-			material *ground = new material(vec4(1, 1, 0, 0));
+			/*material *ground = new material(vec4(1, 1, 0, 0));
 			material *border = new material(vec4(1, 0, 1, 1));
 			material *box = new material(vec4(1, 1, 1, 1));
 			material *ball = new material(vec4(0, 0, 1, 1));
@@ -134,7 +136,9 @@ namespace octet {
 			modelToWorld.rotate(-45, 1,0,0);
 			add_shape(modelToWorld, new mesh_box(vec3(20.0f, 0.0f, 20.0f)), ground, false);
 
-			modelToWorld.rotate(45, 1, 0, 0);
+			modelToWorld.rotate(45, 1, 0, 0);*/
+
+			add_shape(modelToWorld, new mesh_box(vec3(2000.0f, 0.0f, 2000.0f)), new material(vec4(1, 0, 0, 1)), false);
 			/*modelToWorld.translate(0,250,-10);
 			add_shape(modelToWorld, new mesh_sphere(vec3(2), 2), ball, true);
 			rigid_bodies[214]->setMassProps(2.0f, btVector3(0, 0, 0));

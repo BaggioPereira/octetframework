@@ -50,9 +50,9 @@ namespace octet
 			}
 		}
 
-		/*void world_rot()
+		void world_rot()
 		{
-			bottom->translate(vec3(0, 10, 0));
+			/*bottom->translate(vec3(0, 10, 0));
 			bottom->rotate(1, vec3(0, 0, 1));
 			bottom->translate(vec3(0, -10, 0));
 
@@ -75,8 +75,8 @@ namespace octet
 			bottom->translate(vec3(0, 0, -0.1f));
 			top->translate(vec3(0, 0, -0.1f));
 			left->translate(vec3(0, 0, -0.1f));
-			right->translate(vec3(0, 0, -0.1f));
-		}*/
+			right->translate(vec3(0, 0, -0.1f));*/
+		}
 
 	public:
 		octet_game(int argc, char**argv) :app(argc, argv)
@@ -101,10 +101,11 @@ namespace octet
 		{
 			app_scene = new visual_scene();
 			app_scene->create_default_camera_and_lights();
+			//app_scene->get_camera_instance(0)->get_node()->translate(vec3(0, 15, 20));
 			app_scene->get_camera_instance(0)->set_near_plane(1);
-			app_scene->get_camera_instance(0)->set_far_plane(200);
-
-			//mat4t modelToWorld;
+			app_scene->get_camera_instance(0)->set_far_plane(2000);
+			
+			mat4t modelToWorld;
 			
 			/*if (meshes.size())
 			{
@@ -145,7 +146,7 @@ namespace octet
 			
 			resource_dict poolTable;
 			resource_dict poolBalls;
-			material *shipMat = new material(new image("src/examples/octet_game/poolMat.gif"));
+			material *poolMat = new material(new image("src/examples/octet_game/poolMat.gif"));
 
 			if (!loader.load_xml("src/examples/octet_game/pooltable.dae"))
 			{
@@ -156,18 +157,6 @@ namespace octet
 			dynarray<resource*> tablemeshes;
 			poolTable.find_all(tablemeshes, atom_mesh);
 
-			if (tablemeshes.size())
-			{
-					
-					mesh *shipMesh = tablemeshes[0]->get_mesh();
-					ship = new scene_node();
-					ship->translate(vec3(0, -25, -100));
-					ship->rotate(90, vec3(0, 1, 0));
-					ship->scale((float)0.1);
-					app_scene->add_child(ship);
-					app_scene->add_mesh_instance(new mesh_instance(ship, shipMesh, shipMat));
-			}
-			
 			if (!loader.load_xml("src/examples/octet_game/poolballs.dae"))
 			{
 				return;
@@ -177,7 +166,31 @@ namespace octet
 			dynarray<resource*> ballmeshes;
 			poolBalls.find_all(ballmeshes, atom_mesh);
 
+			modelToWorld.translate(0, 0, -100);
+			modelToWorld.rotate(90, 0, -1, 0);
+			modelToWorld.scale(0.1,0.1,0.1);
+
+			if (tablemeshes.size())
+			{
+				for (int i = 0; i != tablemeshes.size(); ++i)
+				{
+					add_shape(modelToWorld, tablemeshes[0]->get_mesh(), poolMat, true);
+
+				}
+				
+			}
+			
 			if (ballmeshes.size())
+			{
+				for (int i = 0; i != ballmeshes.size(); ++i)
+				{
+					add_shape(modelToWorld, ballmeshes[i]->get_mesh(), poolMat, true);
+				}
+			}
+
+
+
+			/*if (ballmeshes.size())
 			{
 				for (int i = 0; i != ballmeshes.size(); ++i)
 				{
@@ -189,7 +202,7 @@ namespace octet
 					app_scene->add_child(ship);
 					app_scene->add_mesh_instance(new mesh_instance(ship, shipMesh, shipMat));
 				}
-			}
+			}*/
 		}
 
 		void draw_world(int x, int y, int w, int h)
@@ -206,13 +219,12 @@ namespace octet
 			}
 			else if(is_key_down(key_down))
 			{
-				cam->translate(vec3(0, -1, 0));
+				cam->translate(vec3(0, -1, 0));				
 			}
-			
 
-			//world_rot();
+			world_rot();
 			
-			/*world->stepSimulation(1.0f / 30, 1, 1.0f / 30);
+			world->stepSimulation(1.0f / 30, 1, 1.0f / 30);
 			btCollisionObjectArray &colArray = world->getCollisionObjectArray();
 			for (unsigned i = 0; i != colArray.size(); ++i)
 			{
@@ -223,7 +235,7 @@ namespace octet
 					mat4t &modelToWorld = node->access_nodeToParent();
 					colObj->getWorldTransform().getOpenGLMatrix(modelToWorld.get());
 				}
-			}*/
+			}
 
 			app_scene->update(1.0f / 30);
 			app_scene->render((float)vx / vy);
