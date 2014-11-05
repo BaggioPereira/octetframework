@@ -17,6 +17,11 @@ namespace octet
 		mesh_box *leftObstacle;
 		mesh_box *rightObstacle;
 		mesh_box *bar;
+		material *blocks;
+
+		random rand;
+
+		mat4t enemy;
 
 		void add_shape(mat4t_in worldMat, mesh *mesh, material *mat, bool is_dynamic)
 		{
@@ -79,6 +84,35 @@ namespace octet
 			{
 				rigid_bodies[1]->translate(btVector3(-0.1f, 0, 0));
 			}
+			else if (is_key_going_down(key_space))
+			{
+				rigid_bodies[1]->applyCentralForce(btVector3(0.0f, 150.0f, 0.0f));
+			}
+		}
+
+		void enemies(int enemyNum)
+		{
+			enemy.translate(0, 0, -10);
+			if (enemyNum == 1)
+			{	
+				enemy.translate(-5, -5, -10);
+				add_shape(enemy, leftObstacle, blocks, true);
+				enemy.translate(5, 5, 10);
+			}
+
+			else if (enemyNum == 2)
+			{
+				enemy.translate(5, -5, -10);
+				add_shape(enemy, rightObstacle, blocks, true);
+				enemy.translate(-5, 5, 10);
+			}
+
+			else if (enemyNum == 3)
+			{
+				enemy.translate(0, 2.5, -10);
+				add_shape(enemy, bar, blocks, true);
+				enemy.translate(0, -2.5, 10);
+			}
 		}
 
 	public:
@@ -108,18 +142,19 @@ namespace octet
 			app_scene->get_camera_instance(0)->set_far_plane(200);
 			app_scene->get_camera_instance(0)->get_node()->translate(vec3(0, 0, -10));
 
+			rand.set_seed(time(NULL));
 
 			mat4t modelToWorld;
 
 			material *wall = new material(new image("src/examples/octet_game/material.gif"));
-			material *blocks = new material(vec4(1, 1, 1, 1));
+			blocks = new material(vec4(1, 1, 1, 1));
 			material *playerMat = new material(vec4(1, 0, 0, 1));
-			mesh_box *wallMesh = new mesh_box(vec3(10.0f, 0.0f, 10.0f));
+			mesh_box *wallMesh = new mesh_box(vec3(10.0f, 0.0f, 1000.0f));
 			mesh_box *player = new mesh_box(1.0f);
 
-			leftObstacle = new mesh_box(vec3(2.5f, 10.0f, 1.0f));
-			rightObstacle = new mesh_box(vec3(2.5f, 10.0f, 1.0f));
-			bar = new mesh_box(vec3(10.0f, 1.0f, 1.0f));
+			leftObstacle = new mesh_box(vec3(5.0f, 5.0f, 0.1f));
+			rightObstacle = new mesh_box(vec3(5.0f, 5.0f, 0.1f));
+			bar = new mesh_box(vec3(10.0f, 0.5f, 1.0f));
 			modelToWorld.translate(vec3(0, -7.5f, 0));
 			add_shape(modelToWorld, wallMesh, wall, false);
 			modelToWorld.translate(vec3(0, 7.5f, 0));
@@ -138,6 +173,7 @@ namespace octet
 		void draw_world(int x, int y, int w, int h)
 		{
 			int vx = 0, vy = 0;
+			
 			get_viewport_size(vx, vy);
 			app_scene->begin_render(vx, vy);
 
@@ -145,6 +181,8 @@ namespace octet
 
 			worldRotation();
 			playerMovement();
+
+
 
 			world->stepSimulation(1.0f / 30, 1, 1.0f / 30);
 			btCollisionObjectArray &colArray = world->getCollisionObjectArray();
@@ -161,6 +199,12 @@ namespace octet
 
 			app_scene->update(1.0f / 30);
 			app_scene->render((float)vx / vy);
+
+			int enemyNum;
+			enemyNum = rand.get(1, 4);
+			printf("enemy number is %d\n", enemyNum);
+
+			enemies(enemyNum);
 		}
 	};
 }
