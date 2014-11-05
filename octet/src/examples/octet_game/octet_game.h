@@ -11,14 +11,12 @@ namespace octet
 
 		dynarray<btRigidBody*> rigid_bodies;
 
-		collada_builder loader;
-
-		scene_node *top;
-		scene_node *bottom;
-		scene_node *left;
-		scene_node *right;
 		scene_node *scene;
 		scene_node *ship;
+
+		mesh_box *leftObstacle;
+		mesh_box *rightObstacle;
+		mesh_box *bar;
 
 		void add_shape(mat4t_in worldMat, mesh *mesh, material *mat, bool is_dynamic)
 		{
@@ -48,40 +46,39 @@ namespace octet
 			}
 		}
 
-		void world_rot()
+		void worldRotation()
 		{
 			scene_node *cam = app_scene->get_camera_instance(0)->get_node();
-
-			bottom->translate(vec3(0, 10, 0));
-			bottom->rotate(1, vec3(0, 0, 1));
-			bottom->translate(vec3(0, -10, 0));
-
-			top->translate(vec3(0, -10, 0));
-			top->rotate(1, vec3(0, 0, 1));
-			top->translate(vec3(0, 10, 0));
-
-			left->rotate(-90, vec3(0, 0, 1));
-			left->translate(vec3(10, 0, 0));
-			left->rotate(1, vec3(0, 0, 1));
-			left->translate(vec3(-10, 0, 0));
-			left->rotate(90, vec3(0, 0, 1));
-
-			right->rotate(-90, vec3(0, 0, 1));
-			right->translate(vec3(-10, 0, 0));
-			right->rotate(1, vec3(0, 0, 1));
-			right->translate(vec3(10, 0, 0));
-			right->rotate(90, vec3(0, 0, 1));
-
-			bottom->translate(vec3(0, 0, -0.1f));
-			top->translate(vec3(0, 0, -0.1f));
-			left->translate(vec3(0, 0, -0.1f));
-			right->translate(vec3(0, 0, -0.1f));
 
 			scene->translate(vec3(0, -0.005f, 0));
 
 			cam->translate(vec3(0, 0, -0.1f));
 
 			rigid_bodies[0]->translate(btVector3(0, 0, -0.1f));
+			rigid_bodies[1]->translate(btVector3(0, 0, -0.1f));
+		}
+
+		void  playerMovement()
+		{
+			if (is_key_going_down(key_up))
+			{
+				rigid_bodies[1]->translate(btVector3(0, 1.0f, 0));
+			}
+
+			else if (is_key_down(key_down))
+			{
+				rigid_bodies[1]->translate(btVector3(0, -1.0f, 0));
+			}
+
+			if (is_key_down(key_right))
+			{
+				rigid_bodies[1]->translate(btVector3(0.1f, 0, 0));
+			}
+
+			else if (is_key_down(key_left))
+			{
+				rigid_bodies[1]->translate(btVector3(-0.1f, 0, 0));
+			}
 		}
 
 	public:
@@ -107,9 +104,10 @@ namespace octet
 		{
 			app_scene = new visual_scene();
 			app_scene->create_default_camera_and_lights();
-			//app_scene->get_camera_instance(0)->get_node()->translate(vec3(0, 15, 20));
 			app_scene->get_camera_instance(0)->set_near_plane(1);
-			app_scene->get_camera_instance(0)->set_far_plane(2000);
+			app_scene->get_camera_instance(0)->set_far_plane(200);
+			app_scene->get_camera_instance(0)->get_node()->translate(vec3(0, 0, -10));
+
 
 			mat4t modelToWorld;
 
@@ -118,24 +116,13 @@ namespace octet
 			material *playerMat = new material(vec4(1, 0, 0, 1));
 			mesh_box *wallMesh = new mesh_box(vec3(10.0f, 0.0f, 10.0f));
 			mesh_box *player = new mesh_box(1.0f);
-			bottom = new scene_node();
-			bottom->translate(vec3(0, -10, 0));
-			app_scene->add_child(bottom);
-			app_scene->add_mesh_instance(new mesh_instance(bottom, wallMesh, wall));
-			top = new scene_node();
-			top->translate(vec3(0, 10, 0));
-			app_scene->add_child(top);
-			app_scene->add_mesh_instance(new mesh_instance(top, wallMesh, wall));
-			left = new scene_node();
-			left->translate(vec3(-10, 0, 0));
-			left->rotate(90, vec3(0, 0, 1));
-			app_scene->add_child(left);
-			app_scene->add_mesh_instance(new mesh_instance(left, wallMesh, wall));
-			right = new scene_node();
-			right->translate(vec3(10, 0, 0));
-			right->rotate(90, vec3(0, 0, 1));
-			app_scene->add_child(right);
-			app_scene->add_mesh_instance(new mesh_instance(right, wallMesh, wall));
+
+			leftObstacle = new mesh_box(vec3(2.5f, 10.0f, 1.0f));
+			rightObstacle = new mesh_box(vec3(2.5f, 10.0f, 1.0f));
+			bar = new mesh_box(vec3(10.0f, 1.0f, 1.0f));
+			modelToWorld.translate(vec3(0, -7.5f, 0));
+			add_shape(modelToWorld, wallMesh, wall, false);
+			modelToWorld.translate(vec3(0, 7.5f, 0));
 			scene = new scene_node();
 			scene->translate(vec3(0, 0, -100));
 			scene->rotate(90, vec3(1, 0, 0));
@@ -143,7 +130,9 @@ namespace octet
 			app_scene->add_child(scene);
 			app_scene->add_mesh_instance(new mesh_instance(scene, wallMesh, wall));
 
-			add_shape(modelToWorld, player, playerMat, false);
+			modelToWorld.translate(vec3(0, -5, 0));
+
+			add_shape(modelToWorld, player, playerMat, true);
 		}
 
 		void draw_world(int x, int y, int w, int h)
@@ -154,27 +143,8 @@ namespace octet
 
 			scene_node *cam = app_scene->get_camera_instance(0)->get_node();
 
-			if (is_key_down(key_up))
-			{
-				rigid_bodies[0]->translate(btVector3(0, 0.1f, 0));
-			}
-			else if (is_key_down(key_down))
-			{
-				rigid_bodies[0]->translate(btVector3(0, -0.1f, 0));
-			}
-
-			if (is_key_down(key_right))
-			{
-				rigid_bodies[0]->translate(btVector3(0.1f, 0, 0));
-			}
-
-			else if (is_key_down(key_left))
-			{
-				rigid_bodies[0]->translate(btVector3(-0.1f, 0, 0));
-			}
-
-
-			world_rot();
+			worldRotation();
+			playerMovement();
 
 			world->stepSimulation(1.0f / 30, 1, 1.0f / 30);
 			btCollisionObjectArray &colArray = world->getCollisionObjectArray();
