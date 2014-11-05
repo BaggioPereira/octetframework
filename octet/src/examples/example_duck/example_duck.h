@@ -21,7 +21,7 @@ namespace octet {
       app_scene =  new visual_scene();
 
       resource_dict dict;
-      if (!loader.load_xml("assets/redball.dae")) {
+      if (!loader.load_xml("assets/shipMat.dae")) {
         // failed to load file
         return;
       }
@@ -31,11 +31,11 @@ namespace octet {
       dict.find_all(meshes, atom_mesh);
 
       if (meshes.size()) {
-        material *mat = new material(new image("assets/duckCM.gif"));
+        material *mat = new material(new image("assets/ShipUV2.gif"));
         mesh *duck = meshes[0]->get_mesh();
         scene_node *node = new scene_node();
         node->translate(vec3(-50, -50, 0));
-		node->scale(vec3(10));
+		node->scale(0.1f);
         app_scene->add_child(node);
         app_scene->add_mesh_instance(new mesh_instance(node, duck, mat));
 

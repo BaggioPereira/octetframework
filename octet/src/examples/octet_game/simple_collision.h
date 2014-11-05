@@ -138,7 +138,6 @@ namespace octet {
 
 			modelToWorld.rotate(45, 1, 0, 0);*/
 
-			add_shape(modelToWorld, new mesh_box(vec3(2000.0f, 0.0f, 2000.0f)), new material(vec4(1, 0, 0, 1)), false);
 			/*modelToWorld.translate(0,250,-10);
 			add_shape(modelToWorld, new mesh_sphere(vec3(2), 2), ball, true);
 			rigid_bodies[214]->setMassProps(2.0f, btVector3(0, 0, 0));
