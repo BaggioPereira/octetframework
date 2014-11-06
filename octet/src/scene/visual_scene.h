@@ -196,6 +196,9 @@ namespace octet { namespace scene {
 
       for (unsigned mesh_index = 0; mesh_index != mesh_instances.size(); ++mesh_index) {
         mesh_instance *mi = mesh_instances[mesh_index];
+
+        if (!mi->get_node()->calcEnabled()) continue;
+
         mesh *msh = mi->get_mesh();
         skin *skn = msh->get_skin();
         skeleton *skel = mi->get_skeleton();
@@ -318,6 +321,13 @@ namespace octet { namespace scene {
       v.visit(light_instances, atom_light_instances);
     }
 
+    /// reset the scene.
+    void reset() {
+      mesh_instances.reset();
+      animation_instances.reset();
+      camera_instances.reset();
+      light_instances.reset();
+    }
 
     /// set up OpenGL state
     void begin_render(int vx, int vy, vec4_in clear_color=vec4(0.5f, 0.5f, 0.5f, 1.0f)) {
@@ -427,6 +437,22 @@ namespace octet { namespace scene {
     light_instance *add_light_instance(light_instance *inst) {
       light_instances.push_back(inst);
       return inst;
+    }
+
+    void delete_mesh_instance(mesh_instance *inst) {
+      mesh_instances.erase_by_value(inst);
+    }
+
+    void delete_animation_instance(animation_instance *inst) {
+      animation_instances.erase_by_value(inst);
+    }
+
+    void delete_camera_instance(camera_instance *inst) {
+      camera_instances.erase_by_value(inst);
+    }
+
+    void delete_light_instance(light_instance *inst) {
+      light_instances.erase_by_value(inst);
     }
 
     /// how many mesh instances do we have?
