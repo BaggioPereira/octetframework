@@ -436,6 +436,9 @@
     <ClInclude Include="breakout.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="octet_demo.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\resources\mesh_builder.inl">

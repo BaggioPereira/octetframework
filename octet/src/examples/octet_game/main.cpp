@@ -9,7 +9,7 @@
 #define OCTET_BULLET 1
 #include "../../octet.h"
 
-#include "octet_game.h"
+#include "breakout.h"
 
 /// Create a box with octet
 int main(int argc, char **argv) {
@@ -17,7 +17,7 @@ int main(int argc, char **argv) {
   octet::app::init_all(argc, argv);
 
   // our application.
-  octet::octet_game app(argc, argv);
+  octet::breakout app(argc, argv);
   app.init();
 
   // open windows

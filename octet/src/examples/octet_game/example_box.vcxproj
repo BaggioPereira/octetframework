@@ -221,6 +221,7 @@
     <ClInclude Include="..\..\shaders\shaders.h" />
     <ClInclude Include="..\..\shaders\texture_shader.h" />
     <ClInclude Include="breakout.h" />
+    <ClInclude Include="octet_demo.h" />
     <ClInclude Include="octet_game.h" />
     <ClInclude Include="simple_collision.h" />
   </ItemGroup>

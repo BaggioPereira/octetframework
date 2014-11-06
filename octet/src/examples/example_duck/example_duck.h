@@ -34,7 +34,7 @@ namespace octet {
         material *mat = new material(new image("assets/ShipUV2.gif"));
         mesh *duck = meshes[0]->get_mesh();
         scene_node *node = new scene_node();
-        node->translate(vec3(-50, -50, 0));
+        node->translate(vec3(0, 0, 0));
 		node->scale(0.1f);
         app_scene->add_child(node);
         app_scene->add_mesh_instance(new mesh_instance(node, duck, mat));

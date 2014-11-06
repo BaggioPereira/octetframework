@@ -51,21 +51,25 @@ namespace octet
 			}
 		}
 
+
 		void worldRotation()
 		{
+			int i = 0;
+
 			scene_node *cam = app_scene->get_camera_instance(0)->get_node();
 
-			scene->translate(vec3(0, -0.005f, 0));
+			scene->translate(vec3(0, -0.02f, 0));
+			cam->rotate(30, vec3(1, 0, 0));
+			cam->translate(vec3(0, 0, -0.2f));
+			cam->rotate(30, vec3(-1, 0, 0));
 
-			cam->translate(vec3(0, 0, -0.1f));
-
-			rigid_bodies[0]->translate(btVector3(0, 0, -0.1f));
-			rigid_bodies[1]->translate(btVector3(0, 0, -0.1f));
+			//rigid_bodies[0]->translate(btVector3(0, 0, -0.2f));
+			rigid_bodies[1]->translate(btVector3(0, 0, -0.2f));
 		}
 
 		void  playerMovement()
 		{
-			if (is_key_going_down(key_up))
+			/*if (is_key_going_down(key_up))
 			{
 				rigid_bodies[1]->translate(btVector3(0, 1.0f, 0));
 			}
@@ -73,20 +77,20 @@ namespace octet
 			else if (is_key_down(key_down))
 			{
 				rigid_bodies[1]->translate(btVector3(0, -1.0f, 0));
-			}
+			}*/
 
 			if (is_key_down(key_right))
 			{
-				rigid_bodies[1]->translate(btVector3(0.1f, 0, 0));
+				rigid_bodies[1]->translate(btVector3(0.2f, 0, 0));
 			}
 
 			else if (is_key_down(key_left))
 			{
-				rigid_bodies[1]->translate(btVector3(-0.1f, 0, 0));
+				rigid_bodies[1]->translate(btVector3(-0.2f, 0, 0));
 			}
-			else if (is_key_going_down(key_space))
+			else if (is_key_down(key_space))
 			{
-				rigid_bodies[1]->applyCentralForce(btVector3(0.0f, 150.0f, 0.0f));
+				rigid_bodies[1]->applyCentralImpulse(btVector3(0.0f, 0.5f, 0.0f));
 			}
 		}
 
@@ -96,14 +100,14 @@ namespace octet
 			if (enemyNum == 1)
 			{	
 				enemy.translate(-5, -5, -10);
-				add_shape(enemy, leftObstacle, blocks, true);
+				add_shape(enemy, leftObstacle, blocks, false);
 				enemy.translate(5, 5, 10);
 			}
 
 			else if (enemyNum == 2)
 			{
 				enemy.translate(5, -5, -10);
-				add_shape(enemy, rightObstacle, blocks, true);
+				add_shape(enemy, rightObstacle, blocks, false);
 				enemy.translate(-5, 5, 10);
 			}
 
@@ -140,7 +144,8 @@ namespace octet
 			app_scene->create_default_camera_and_lights();
 			app_scene->get_camera_instance(0)->set_near_plane(1);
 			app_scene->get_camera_instance(0)->set_far_plane(200);
-			app_scene->get_camera_instance(0)->get_node()->translate(vec3(0, 0, -10));
+			app_scene->get_camera_instance(0)->get_node()->translate(vec3(0, 10, -10));
+			app_scene->get_camera_instance(0)->get_node()->rotate(30, vec3(-1, 0, 0));
 
 			rand.set_seed(time(NULL));
 
@@ -152,8 +157,8 @@ namespace octet
 			mesh_box *wallMesh = new mesh_box(vec3(10.0f, 0.0f, 1000.0f));
 			mesh_box *player = new mesh_box(1.0f);
 
-			leftObstacle = new mesh_box(vec3(5.0f, 5.0f, 0.1f));
-			rightObstacle = new mesh_box(vec3(5.0f, 5.0f, 0.1f));
+			leftObstacle = new mesh_box(vec3(5.0f, 2.5f, 0.1f));
+			rightObstacle = new mesh_box(vec3(5.0f, 2.5f, 0.1f));
 			bar = new mesh_box(vec3(10.0f, 0.5f, 1.0f));
 			modelToWorld.translate(vec3(0, -7.5f, 0));
 			add_shape(modelToWorld, wallMesh, wall, false);
@@ -184,7 +189,7 @@ namespace octet
 
 
 
-			world->stepSimulation(1.0f / 30, 1, 1.0f / 30);
+			world->stepSimulation(1.0f/30);
 			btCollisionObjectArray &colArray = world->getCollisionObjectArray();
 			for (unsigned i = 0; i != colArray.size(); ++i)
 			{
@@ -197,11 +202,11 @@ namespace octet
 				}
 			}
 
-			app_scene->update(1.0f / 30);
+			app_scene->update(1.0f / 1);
 			app_scene->render((float)vx / vy);
 
 			int enemyNum;
-			enemyNum = rand.get(1, 4);
+			enemyNum = rand.get(1, 5);
 			printf("enemy number is %d\n", enemyNum);
 
 			enemies(enemyNum);
