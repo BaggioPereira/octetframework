@@ -260,7 +260,7 @@ namespace octet {
 			colour_shader_.init();
 			texture_shader_.init();
 			cameraToWorld.loadIdentity();
-			cameraToWorld.translate(0, -2.5, 5);
+			cameraToWorld.translate(0, -2.5f, 5);
 			cameraToWorld.rotate(15, 1, 0,0);
 
 

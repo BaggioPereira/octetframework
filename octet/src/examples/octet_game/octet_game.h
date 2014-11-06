@@ -88,9 +88,10 @@ namespace octet
 			{
 				rigid_bodies[1]->translate(btVector3(-0.2f, 0, 0));
 			}
-			else if (is_key_down(key_space))
+			else if (is_key_going_down(key_space))
 			{
-				rigid_bodies[1]->applyCentralImpulse(btVector3(0.0f, 0.5f, 0.0f));
+				
+				rigid_bodies[1]->applyCentralImpulse(btVector3(0.0f, 5.0f, 0.0f));
 			}
 		}
 
@@ -113,13 +114,15 @@ namespace octet
 
 			else if (enemyNum == 3)
 			{
-				enemy.translate(0, 2.5, -10);
-				add_shape(enemy, bar, blocks, true);
-				enemy.translate(0, -2.5, 10);
+				enemy.translate(0, -7.5, -10);
+				add_shape(enemy, bar, blocks, false);
+				enemy.translate(0, 7.5, 10);
 			}
 		}
 
 	public:
+
+		int count = 0;
 		octet_game(int argc, char**argv) :app(argc, argv)
 		{
 			dispatcher = new btCollisionDispatcher(&config);
@@ -208,6 +211,7 @@ namespace octet
 			int enemyNum;
 			enemyNum = rand.get(1, 5);
 			printf("enemy number is %d\n", enemyNum);
+			
 
 			enemies(enemyNum);
 		}

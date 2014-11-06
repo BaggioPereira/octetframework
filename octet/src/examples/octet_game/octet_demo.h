@@ -76,35 +76,38 @@ namespace octet
 			mesh_box *cubeWall = new mesh_box(vec3(10.0f, 0.0f, 10.0f));
 			mesh_sphere *sphere = new mesh_sphere(vec3(0, 0, 0), 0.5f);
 			mesh_sphere *smallSphere = new mesh_sphere(vec3(0, 0, 0), 0.25f);
-			worldCoord.translate(vec3(0, -10, 0));
-			add_shape(worldCoord, cubeWall, transparent, false);
-			worldCoord.translate(vec3(0, 10, 0));
-			worldCoord.translate(vec3(0, 10, 0));
-			add_shape(worldCoord, cubeWall, transparent, false);
-			worldCoord.translate(vec3(0, -10, 0));
-			worldCoord.translate(vec3(10, 0, 0));
-			worldCoord.rotateZ(-90);
-			add_shape(worldCoord, cubeWall, transparent, false);
-			worldCoord.rotateZ90();
-			worldCoord.translate(vec3(-10, 0, 0));
-			worldCoord.translate(vec3(-10, 0, 0));
-			worldCoord.rotateZ(-90);
-			add_shape(worldCoord, cubeWall, transparent, false);
-			worldCoord.rotateZ90();
-			worldCoord.translate(vec3(10, 0, 0));
-			worldCoord.translate(vec3(0, 0, -10));
-			worldCoord.rotateX90();
-			add_shape(worldCoord, cubeWall, transparent, false);
-			worldCoord.rotateX(-90);
-			worldCoord.translate(vec3(0, 0, 10));
-			worldCoord.translate(vec3(0, 0, 10));
-			worldCoord.rotateX90();
-			add_shape(worldCoord, cubeWall, transparent, false);
-			worldCoord.rotateX(-90);
-			worldCoord.translate(vec3(0, 0, -10));
 
-			add_shape(worldCoord, new mesh_sphere(vec3(0, 0, 0), 1.0f), new material(vec4(1, 0, 0, 1)), true);
-			
+			worldCoord.translate(vec3(0, -10, 0));
+			add_shape(worldCoord, cubeWall, transparent, false);
+			worldCoord.loadIdentity();
+
+			worldCoord.translate(vec3(0, 10, 0));
+			add_shape(worldCoord, cubeWall, transparent, false);
+			worldCoord.translate(vec3(0, -10, 0));
+
+			worldCoord.translate(vec3(10, 0, 0));
+			worldCoord.rotateZ(-90);
+			add_shape(worldCoord, cubeWall, transparent, false);
+			worldCoord.rotateZ90();
+			worldCoord.translate(vec3(-10, 0, 0));
+
+			worldCoord.translate(vec3(-10, 0, 0));
+			worldCoord.rotateZ(-90);
+			add_shape(worldCoord, cubeWall, transparent, false);
+			worldCoord.rotateZ90();
+			worldCoord.translate(vec3(10, 0, 0));
+
+			worldCoord.translate(vec3(0, 0, -10));
+			worldCoord.rotateX90();
+			add_shape(worldCoord, cubeWall, transparent, false);
+			worldCoord.rotateX(-90);
+			worldCoord.translate(vec3(0, 0, 10));
+
+			worldCoord.translate(vec3(0, 0, 10));
+			worldCoord.rotateX90();
+			add_shape(worldCoord, cubeWall, transparent, false);
+			worldCoord.rotateX(-90);
+			worldCoord.translate(vec3(0, 0, -10));			
 		}
 
 		void draw_world(int x, int y, int w, int h)
@@ -124,12 +127,8 @@ namespace octet
 					colObj->getWorldTransform().getOpenGLMatrix(modelToWorld.get());
 				}
 			}
-			rigid_bodies.back()->setMassProps(0.5f, btVector3(0, 0, 0));
-			rigid_bodies.back()->setFriction(-0.1);
-			app_scene->update(1.0 / 30);
+			app_scene->update(1.0f / 30);
 			app_scene->render((float)vx / vy);
-
-			worldCoord.rotate(1, 1, 1, 0);
 		}
 	};
 }
