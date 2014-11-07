@@ -48,13 +48,13 @@ namespace octet
 
 		void addBalls()
 		{
-			if (is_key_down('A'))
+			if (is_key_going_down('A'))
 			{
 				add_shape(worldCoord, smallSphere, ballMat, true);
 				rigid_bodies.back()->setFriction(-0.5);
 				rigid_bodies.back()->setRestitution(1);
 			}
-			else if (is_key_down('S'))
+			else if (is_key_going_down('S'))
 			{
 				add_shape(worldCoord, sphere, ballMat, true);
 				rigid_bodies.back()->setFriction(-0.5);
