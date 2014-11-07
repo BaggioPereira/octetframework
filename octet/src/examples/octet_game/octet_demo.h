@@ -48,17 +48,49 @@ namespace octet
 
 		void addBalls()
 		{
-			if (is_key_going_down('A'))
+			if (is_key_down('A'))
 			{
 				add_shape(worldCoord, smallSphere, ballMat, true);
 				rigid_bodies.back()->setFriction(-0.5);
 				rigid_bodies.back()->setRestitution(1);
 			}
-			else if (is_key_going_down('S'))
+			else if (is_key_down('S'))
 			{
 				add_shape(worldCoord, sphere, ballMat, true);
 				rigid_bodies.back()->setFriction(-0.5);
 				rigid_bodies.back()->setRestitution(1);
+			}
+		}
+
+		void applyForce()
+		{
+			if (is_key_going_down(key_up))
+			{
+				for (int i = 0; i != rigid_bodies.size(); ++i)
+				{
+					rigid_bodies[i]->applyCentralForce(btVector3(0.0f, 150.0f, 0.0f));
+				}
+			}
+			else if (is_key_going_down(key_down))
+			{
+				for (int i = 0; i != rigid_bodies.size(); ++i)
+				{
+					rigid_bodies[i]->applyCentralForce(btVector3(0.0f, -150.0f, 0.0f));
+				}
+			}
+			else if (is_key_going_down(key_left))
+			{
+				for (int i = 0; i != rigid_bodies.size(); ++i)
+				{
+					rigid_bodies[i]->applyCentralForce(btVector3(-150.0f, 0.0f, 0.0f));
+				}
+			}
+			else if (is_key_going_down(key_right))
+			{
+				for (int i = 0; i != rigid_bodies.size(); ++i)
+				{
+					rigid_bodies[i]->applyCentralForce(btVector3(150.0f, 0.0f, 0.0f));
+				}
 			}
 		}
 
@@ -69,7 +101,6 @@ namespace octet
 			broadphase = new btDbvtBroadphase();
 			solver = new btSequentialImpulseConstraintSolver();
 			world = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, &config);
-			//world->setGravity(btVector3(0, -10, 0));
 		}
 
 		~octet_demo()
@@ -124,6 +155,13 @@ namespace octet
 			worldCoord.rotateX90();
 			add_shape(worldCoord, cubeWall, transparent, false);
 			worldCoord.loadIdentity();
+
+			printf("Press A to add a small ball\n");
+			printf("Press S to add a bigger ball\n");
+			printf("Press Up to add apply a upward force on the balls\n");
+			printf("Press Down to add apply a downward force on the balls\n");
+			printf("Press Left to add apply a left force on the balls\n");
+			printf("Press Right to add apply a right force on the balls\n");
 		}
 
 		void draw_world(int x, int y, int w, int h)
@@ -133,6 +171,8 @@ namespace octet
 			app_scene->begin_render(vx, vy);
 			
 			addBalls();
+			applyForce();
+
 			world->stepSimulation(1.0f / 30, 1, 1.0f / 30);
 			btCollisionObjectArray &colArray = world->getCollisionObjectArray();
 			for (unsigned i = 0; i != colArray.size(); ++i)

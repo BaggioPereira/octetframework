@@ -427,15 +427,6 @@
     <ClInclude Include="..\..\helpers\text_overlay.h">
       <Filter>helpers</Filter>
     </ClInclude>
-    <ClInclude Include="simple_collision.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="octet_game.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="breakout.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="octet_demo.h">
       <Filter>Source Files</Filter>
     </ClInclude>
