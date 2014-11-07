@@ -12,6 +12,9 @@ namespace octet
 		mat4t worldCoord;
 
 		dynarray<btRigidBody*> rigid_bodies;
+		material *ballMat;
+		mesh_sphere *smallSphere;
+		mesh_sphere *sphere;
 
 
 		void add_shape(mat4t_in mat, mesh *msh, material *mtl, bool is_dynamic)
@@ -30,7 +33,7 @@ namespace octet
 				btTransform transform(matrix, pos);
 
 				btDefaultMotionState *motionState = new btDefaultMotionState(transform);
-				btScalar mass = is_dynamic ? 1.0f : 0.0f;
+				btScalar mass = is_dynamic ? 0.5f : 0.0f;
 				btVector3 inertiaTensor;
 
 				shape->calculateLocalInertia(mass, inertiaTensor);
@@ -43,6 +46,22 @@ namespace octet
 			}
 		}
 
+		void addBalls()
+		{
+			if (is_key_going_down('A'))
+			{
+				add_shape(worldCoord, smallSphere, ballMat, true);
+				rigid_bodies.back()->setFriction(-0.5);
+				rigid_bodies.back()->setRestitution(1);
+			}
+			else if (is_key_going_down('S'))
+			{
+				add_shape(worldCoord, sphere, ballMat, true);
+				rigid_bodies.back()->setFriction(-0.5);
+				rigid_bodies.back()->setRestitution(1);
+			}
+		}
+
 	public:
 		octet_demo(int argc, char**argv) : app(argc, argv)
 		{
@@ -50,7 +69,7 @@ namespace octet
 			broadphase = new btDbvtBroadphase();
 			solver = new btSequentialImpulseConstraintSolver();
 			world = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, &config);
-			world->setGravity(btVector3(0, -10, 0));
+			//world->setGravity(btVector3(0, -10, 0));
 		}
 
 		~octet_demo()
@@ -74,8 +93,9 @@ namespace octet
 			transparent->add_sampler(1, app_utils::get_atom("transparentmask"), transparentmask, new sampler());
 
 			mesh_box *cubeWall = new mesh_box(vec3(10.0f, 0.0f, 10.0f));
-			mesh_sphere *sphere = new mesh_sphere(vec3(0, 0, 0), 0.5f);
-			mesh_sphere *smallSphere = new mesh_sphere(vec3(0, 0, 0), 0.25f);
+			sphere = new mesh_sphere(vec3(0, 0, 0), 1.0f);
+			smallSphere = new mesh_sphere(vec3(0, 0, 0), 0.5f);
+			ballMat = new material(vec4(0, 0, 1, 1));
 
 			worldCoord.translate(vec3(0, -10, 0));
 			add_shape(worldCoord, cubeWall, transparent, false);
@@ -83,31 +103,27 @@ namespace octet
 
 			worldCoord.translate(vec3(0, 10, 0));
 			add_shape(worldCoord, cubeWall, transparent, false);
-			worldCoord.translate(vec3(0, -10, 0));
+			worldCoord.loadIdentity();
 
 			worldCoord.translate(vec3(10, 0, 0));
 			worldCoord.rotateZ(-90);
 			add_shape(worldCoord, cubeWall, transparent, false);
-			worldCoord.rotateZ90();
-			worldCoord.translate(vec3(-10, 0, 0));
+			worldCoord.loadIdentity();
 
 			worldCoord.translate(vec3(-10, 0, 0));
 			worldCoord.rotateZ(-90);
 			add_shape(worldCoord, cubeWall, transparent, false);
-			worldCoord.rotateZ90();
-			worldCoord.translate(vec3(10, 0, 0));
+			worldCoord.loadIdentity();
 
 			worldCoord.translate(vec3(0, 0, -10));
 			worldCoord.rotateX90();
 			add_shape(worldCoord, cubeWall, transparent, false);
-			worldCoord.rotateX(-90);
-			worldCoord.translate(vec3(0, 0, 10));
+			worldCoord.loadIdentity();
 
 			worldCoord.translate(vec3(0, 0, 10));
 			worldCoord.rotateX90();
 			add_shape(worldCoord, cubeWall, transparent, false);
-			worldCoord.rotateX(-90);
-			worldCoord.translate(vec3(0, 0, -10));			
+			worldCoord.loadIdentity();
 		}
 
 		void draw_world(int x, int y, int w, int h)
@@ -115,6 +131,8 @@ namespace octet
 			int vx = 0, vy = 0;
 			get_viewport_size(vx, vy);
 			app_scene->begin_render(vx, vy);
+			
+			addBalls();
 			world->stepSimulation(1.0f / 30, 1, 1.0f / 30);
 			btCollisionObjectArray &colArray = world->getCollisionObjectArray();
 			for (unsigned i = 0; i != colArray.size(); ++i)
@@ -127,6 +145,8 @@ namespace octet
 					colObj->getWorldTransform().getOpenGLMatrix(modelToWorld.get());
 				}
 			}
+
+			
 			app_scene->update(1.0f / 30);
 			app_scene->render((float)vx / vy);
 		}
