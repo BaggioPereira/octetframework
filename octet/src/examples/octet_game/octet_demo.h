@@ -143,18 +143,21 @@ namespace octet
 			ballMat = new material(vec4(0, 0, 1, 1)); //set the material of the ball
 
 			//creates a box with transparent material and adds friction and restitution
+			//bottom wall
 			worldCoord.translate(vec3(0, -10, 0));
 			add_shape(worldCoord, cubeWall, transparent, false);
 			rigid_bodies.back()->setFriction(-0.5);
 			rigid_bodies.back()->setRestitution(1);
 			worldCoord.loadIdentity();
 
+			//top wall
 			worldCoord.translate(vec3(0, 10, 0));
 			add_shape(worldCoord, cubeWall, transparent, false);
 			rigid_bodies.back()->setFriction(-0.5);
 			rigid_bodies.back()->setRestitution(1);
 			worldCoord.loadIdentity();
 
+			//right wall
 			worldCoord.translate(vec3(10, 0, 0));
 			worldCoord.rotateZ(-90);
 			add_shape(worldCoord, cubeWall, transparent, false);
@@ -162,6 +165,7 @@ namespace octet
 			rigid_bodies.back()->setRestitution(1);
 			worldCoord.loadIdentity();
 
+			//left wall
 			worldCoord.translate(vec3(-10, 0, 0));
 			worldCoord.rotateZ(-90);
 			add_shape(worldCoord, cubeWall, transparent, false);
@@ -169,6 +173,7 @@ namespace octet
 			rigid_bodies.back()->setRestitution(1);
 			worldCoord.loadIdentity();
 
+			//back wall
 			worldCoord.translate(vec3(0, 0, -10));
 			worldCoord.rotateX90();
 			add_shape(worldCoord, cubeWall, transparent, false);
@@ -176,6 +181,7 @@ namespace octet
 			rigid_bodies.back()->setRestitution(1);
 			worldCoord.loadIdentity();
 
+			//front wall
 			worldCoord.translate(vec3(0, 0, 10));
 			worldCoord.rotateX90();
 			add_shape(worldCoord, cubeWall, transparent, false);
