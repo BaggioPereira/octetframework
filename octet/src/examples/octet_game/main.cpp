@@ -9,7 +9,7 @@
 #define OCTET_BULLET 1
 #include "../../octet.h"
 
-#include "octet_demo.h"
+#include "pool.h"
 
 /// Create a box with octet
 int main(int argc, char **argv) {
@@ -17,7 +17,7 @@ int main(int argc, char **argv) {
   octet::app::init_all(argc, argv);
 
   // our application.
-  octet::octet_demo app(argc, argv);
+  octet::pool app(argc, argv);
   app.init();
 
   // open windows
