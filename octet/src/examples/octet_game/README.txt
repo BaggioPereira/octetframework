@@ -1,5 +1,7 @@
 Instructions for the demo
 
+Note: this folder must be in the examples folder
+
 Left mouse click to add a small ball inside the cube.
 Right mouse click to add a large ball inside the cube.
 Press up key to apply an upward force to the balls.
