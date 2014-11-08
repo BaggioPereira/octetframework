@@ -9,10 +9,11 @@ namespace octet
 		btSequentialImpulseConstraintSolver *solver; //handler for resolve collisions
 		btDiscreteDynamicsWorld *world; //the physics world, with rigid bodies
 
-		mat4t worldCoord;
+		mat4t worldCoord; //matrix for the world coordinates
 
 		dynarray<btRigidBody*> rigid_bodies; //dynamic array for rigid bodies
 		material *ballMat; //material for the balls
+		mesh_box *cubeWall; //mesh for the cube wall
 		mesh_sphere *smallSphere; //mesh for a small ball
 		mesh_sphere *sphere; //mesh for a large ball
 		random r; //random number generator
@@ -43,7 +44,6 @@ namespace octet
 				world->addRigidBody(rigid_body);
 				rigid_bodies.push_back(rigid_body);
 				rigid_body->setUserPointer(node);
-
 			}
 		}
 
@@ -137,7 +137,7 @@ namespace octet
 			transparent->add_sampler(0, app_utils::get_atom("transparentImg"), transparentImg, new sampler());
 			transparent->add_sampler(1, app_utils::get_atom("transparentmask"), transparentmask, new sampler());
 
-			mesh_box *cubeWall = new mesh_box(vec3(10.0f, 0.0f, 10.0f)); //create a flat mesh box
+			cubeWall = new mesh_box(vec3(10.0f, 0.0f, 10.0f)); //set the size of a flat mesh box
 			sphere = new mesh_sphere(vec3(0, 0, 0), 1.0f); //set the size of the large ball
 			smallSphere = new mesh_sphere(vec3(0, 0, 0), 0.5f); //set the size of the small ball
 			ballMat = new material(vec4(0, 0, 1, 1)); //set the material of the ball
