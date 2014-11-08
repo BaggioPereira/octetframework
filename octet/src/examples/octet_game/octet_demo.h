@@ -15,6 +15,7 @@ namespace octet
 		material *ballMat;
 		mesh_sphere *smallSphere;
 		mesh_sphere *sphere;
+		random r;
 
 		void add_shape(mat4t_in mat, mesh *msh, material *mtl, bool is_dynamic)
 		{
@@ -47,18 +48,24 @@ namespace octet
 
 		void addBalls()
 		{
-			if (is_key_going_down('A'))
+			int x = 0, y = 0, z = 0;
+			x = r.get(-9, 9);
+			y = r.get(-9, 9);
+			z = r.get(-9, 9);
+			worldCoord.translate(vec3(x, y, z));
+			if (is_key_down('A'))
 			{
 				add_shape(worldCoord, smallSphere, ballMat, true);
 				rigid_bodies.back()->setFriction(-0.5);
 				rigid_bodies.back()->setRestitution(1);
 			}
-			else if (is_key_going_down('S'))
+			else if (is_key_down('S'))
 			{
 				add_shape(worldCoord, sphere, ballMat, true);
 				rigid_bodies.back()->setFriction(-0.5);
 				rigid_bodies.back()->setRestitution(1);
 			}
+			worldCoord.loadIdentity();
 		}
 
 		void applyForce()
@@ -112,6 +119,7 @@ namespace octet
 
 		void app_init()
 		{
+			r.set_seed(time(NULL));
 			app_scene = new visual_scene();
 			app_scene->create_default_camera_and_lights();
 			
@@ -184,7 +192,7 @@ namespace octet
 			addBalls();
 			applyForce();
 
-			world->stepSimulation(1.0f / 30, 1, 1.0f / 30);
+			world->stepSimulation(1.0f / 30, 1.0f / 30, 1.0f / 30);
 			btCollisionObjectArray &colArray = world->getCollisionObjectArray();
 			for (unsigned i = 0; i != colArray.size(); ++i)
 			{
