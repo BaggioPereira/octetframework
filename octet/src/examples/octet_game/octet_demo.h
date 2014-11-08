@@ -16,7 +16,6 @@ namespace octet
 		mesh_sphere *smallSphere;
 		mesh_sphere *sphere;
 
-
 		void add_shape(mat4t_in mat, mesh *msh, material *mtl, bool is_dynamic)
 		{
 			scene_node *node = new scene_node();
@@ -130,30 +129,42 @@ namespace octet
 
 			worldCoord.translate(vec3(0, -10, 0));
 			add_shape(worldCoord, cubeWall, transparent, false);
+			rigid_bodies.back()->setFriction(-0.5);
+			rigid_bodies.back()->setRestitution(1);
 			worldCoord.loadIdentity();
 
 			worldCoord.translate(vec3(0, 10, 0));
 			add_shape(worldCoord, cubeWall, transparent, false);
+			rigid_bodies.back()->setFriction(-0.5);
+			rigid_bodies.back()->setRestitution(1);
 			worldCoord.loadIdentity();
 
 			worldCoord.translate(vec3(10, 0, 0));
 			worldCoord.rotateZ(-90);
 			add_shape(worldCoord, cubeWall, transparent, false);
+			rigid_bodies.back()->setFriction(-0.5);
+			rigid_bodies.back()->setRestitution(1);
 			worldCoord.loadIdentity();
 
 			worldCoord.translate(vec3(-10, 0, 0));
 			worldCoord.rotateZ(-90);
 			add_shape(worldCoord, cubeWall, transparent, false);
+			rigid_bodies.back()->setFriction(-0.5);
+			rigid_bodies.back()->setRestitution(1);
 			worldCoord.loadIdentity();
 
 			worldCoord.translate(vec3(0, 0, -10));
 			worldCoord.rotateX90();
 			add_shape(worldCoord, cubeWall, transparent, false);
+			rigid_bodies.back()->setFriction(-0.5);
+			rigid_bodies.back()->setRestitution(1);
 			worldCoord.loadIdentity();
 
 			worldCoord.translate(vec3(0, 0, 10));
 			worldCoord.rotateX90();
 			add_shape(worldCoord, cubeWall, transparent, false);
+			rigid_bodies.back()->setFriction(-0.5);
+			rigid_bodies.back()->setRestitution(1);
 			worldCoord.loadIdentity();
 
 			printf("Press A to add a small ball\n");
