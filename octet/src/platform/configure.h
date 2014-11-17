@@ -32,6 +32,7 @@
 #endif
 
 #if OCTET_MAC
+  #define OCTET_SSE 1
   #define GL_UNIFORM_BUFFER 0
 #endif
 
@@ -45,6 +46,8 @@
 #include <math.h>
 #include <assert.h>
 #include <string>
+#include <vector>
+#include <algorithm>
 
 #if defined(WIN32)
   #include <direct.h>

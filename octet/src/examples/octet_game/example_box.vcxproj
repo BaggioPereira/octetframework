@@ -14,7 +14,7 @@
     <ProjectGuid>{6722CC8F-3FC9-4B11-B7AE-918054DD5ACA}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>example_box</RootNamespace>
-    <ProjectName>octet_game</ProjectName>
+    <ProjectName>octet_demo</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
