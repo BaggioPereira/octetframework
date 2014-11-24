@@ -108,10 +108,24 @@ namespace octet { namespace scene {
 
     // calculate whether this node is enabled (recursively)
     bool calcEnabled() {
-      for (scene_node *p = parent; p != NULL; p = p->parent) {
+      for (scene_node *p = this; p != NULL; p = p->parent) {
         if (!p->enabled) return false;
       }
       return true;
+    }
+
+    /// transform a point from model space to world space
+    vec3 transform(vec3_in world_pos) {
+      mat4t model_to_world = calcModelToWorld();
+      return world_pos * model_to_world;
+    }
+
+    /// transform a point from world space to model space
+    vec3 inverse_transform(vec3_in world_pos) {
+      mat4t model_to_world = calcModelToWorld();
+      // this can be done more efficiently
+      mat4t world_to_model = model_to_world.inverse3x4();
+      return world_pos * world_to_model;
     }
 
     /// read the node to parent transform matrix
@@ -122,6 +136,26 @@ namespace octet { namespace scene {
     /// access the node to parent transform matrix for writing.
     mat4t &access_nodeToParent() {
       return nodeToParent;
+    }
+
+    /// get the x axis (left, right) of the node
+    vec3 get_x() {
+      return calcModelToWorld().x().xyz();
+    }
+
+    /// get the y axis (up, down) of the node
+    vec3 get_y() {
+      return calcModelToWorld().y().xyz();
+    }
+
+    /// get the z axis (forward, back) of the node
+    vec3 get_z() {
+      return calcModelToWorld().z().xyz();
+    }
+
+    /// get the position of the node in world space
+    vec3 get_position() {
+      return calcModelToWorld().w().xyz();
     }
 
     /// get enabled state
@@ -210,13 +244,50 @@ namespace octet { namespace scene {
       }
 
       /// apply a force at a position local to the object
-      void apply_model_force(vec3_in value, vec3_in model_pos) {
+      void apply_model_space_force(vec3_in value, vec3_in model_pos) {
         rigid_body->applyForce(get_btVector3(value), get_btVector3(model_pos));
       }
 
       /// apply a torque to the object
       void apply_torque(vec3_in value) {
         rigid_body->applyTorque(get_btVector3(value));
+      }
+
+      void set_angular_velocity(vec3_in value) {
+        rigid_body->setAngularVelocity(get_btVector3(value));
+      }
+
+      void set_friction(float value) {
+        rigid_body->setFriction(value);
+      }
+
+      void set_rolling_friction(float value) {
+        rigid_body->setRollingFriction(value);
+      }
+
+      void set_resitution(float value) {
+        rigid_body->setRestitution(value);
+      }
+
+      /// brute force tranform set: warning, this may break something!
+      void set_transform(mat4t_in value) {
+        btTransform trans;// = rigid_body->getWorldTransform();
+        trans.setFromOpenGLMatrix(value.get());
+        rigid_body->setWorldTransform(trans);
+      }
+
+      /// brute force tranform set: warning, this may break something!
+      void set_position(vec3_in value) {
+        btTransform trans = rigid_body->getWorldTransform();
+        trans.setOrigin(get_btVector3(value));
+        rigid_body->setWorldTransform(trans);
+      }
+
+      /// brute force tranform set: warning, this may break something!
+      void set_rotation(mat4t_in value) {
+        btTransform trans = rigid_body->getWorldTransform();
+        trans.setBasis(get_btMatrix3x3(value));
+        rigid_body->setWorldTransform(trans);
       }
     #endif
   };
