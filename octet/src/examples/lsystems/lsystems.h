@@ -14,17 +14,24 @@ namespace octet
 		{
 			app_scene = new visual_scene();
 			app_scene->create_default_camera_and_lights();
+			std::ifstream myfile ("lsystems.txt");
 			std::string line;
-			std::ifstream myfile ("src\examples\lsystems\lsystems.txt");
 			if (myfile.is_open())
 			{
+				printf("file opened \n");
 				while (std::getline(myfile, line))
 				{
-					printf("", line, '\n');
-				}
-				myfile.close();
-			}
 
+					printf("string is %s \n", line.c_str());
+				}
+				
+				myfile.close();
+				printf("file closed \n");
+			}
+			else
+			{
+				printf("Cannot open file \n");
+			}
 		}
 
 
@@ -38,6 +45,7 @@ namespace octet
 			app_scene->update(1.0f / 30);
 
 			app_scene->render((float)vx / vy);
+			
 		}
 
 	};
