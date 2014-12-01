@@ -59,7 +59,7 @@ namespace octet {
         // make a box-shaped tetra mesh.
         int num_segments = 10;
         float total_mass = 1.0f;
-        float inv_mass = ( num_segments + 1 ) * 4 / total_mass;
+        float inv_mass = ( num_segments + 1 ) * 8 / total_mass;
         vec3 v0 = vec3(-num_segments/2.0f, 0, 0);
         vec3 v1 = vec3(-num_segments/2.0f, 1, 0);
         vec3 v2 = vec3(-num_segments/2.0f, 0, 1);

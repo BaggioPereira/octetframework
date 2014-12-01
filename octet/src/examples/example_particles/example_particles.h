@@ -12,6 +12,7 @@ namespace octet {
 
     // particle system
     ref<mesh_particle_system> system;
+	ref<image> particle;
 
     random r;
   public:
@@ -24,7 +25,10 @@ namespace octet {
       app_scene =  new visual_scene();
       app_scene->create_default_camera_and_lights();
 
-      material *sprites = new material(new image("assets/particles.gif"));
+	  particle = new image("assets/particles.jpg");
+	  param_shader *shader = new param_shader("shaders/default.vs", "shaders/multitexture.fs");
+      material *sprites = new material(vec4(1,1,1,1),shader);
+	  sprites->add_sampler(0, app_utils::get_atom("particle"), particle, new sampler());
       system = new mesh_particle_system();
 
       scene_node *node = new scene_node();

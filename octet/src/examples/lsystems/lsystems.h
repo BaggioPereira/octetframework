@@ -2,11 +2,11 @@
 
 namespace octet
 {
-	class l_systems : public app{
+	class lsystems : public app{
 		ref<visual_scene> app_scene;
 
 	public:
-		l_systems(int argc, char **argv) : app(argc, argv)
+		lsystems(int argc, char **argv) : app(argc, argv)
 		{
 		}
 
@@ -14,6 +14,17 @@ namespace octet
 		{
 			app_scene = new visual_scene();
 			app_scene->create_default_camera_and_lights();
+			std::string line;
+			std::ifstream myfile ("src\examples\lsystems\lsystems.txt");
+			if (myfile.is_open())
+			{
+				while (std::getline(myfile, line))
+				{
+					printf("", line, '\n');
+				}
+				myfile.close();
+			}
+
 		}
 
 
