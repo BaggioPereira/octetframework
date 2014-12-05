@@ -4,18 +4,21 @@ angle25.7;
 ruleF=F[+F]F[-F]F;
 iterations5;
 };1
+
 tree2{
 axiomF
 angle20
 ruleF=F[+F]F[-F][F]
 iterations5
 };2
+
 tree3{
 axiomF
 angle22.5
 ruleF=FF-[-F+F+F]+[+F-F-F]
 iterations4
 };3
+
 tree4{
 axiomX
 angle20
@@ -23,6 +26,7 @@ ruleX=F[+X]F[-F]+X
 ruleF=FF
 iterations7
 };4
+
 tree5{
 axiomX
 angle25.7
@@ -30,6 +34,7 @@ ruleX=F[+X][-X]FX
 ruleF=FF
 iterations7
 };5
+
 tree6{
 axiomX
 angle22.5

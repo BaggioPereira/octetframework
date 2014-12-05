@@ -24,7 +24,7 @@ namespace octet {
       app_scene =  new visual_scene();
       app_scene->create_default_camera_and_lights();
 
-      param_shader *shader = new param_shader("shaders/default.vs", "shaders/raycast_meta.fs");
+      param_shader *shader = new param_shader("shaders/default.vs", "shaders/raycast.fs");
       custom_mat = new material(vec4(1, 1, 1, 1), shader);
       atom_t atom_camera_pos = app_utils::get_atom("camera_pos");
       vec3 val(0, 0, 0);
