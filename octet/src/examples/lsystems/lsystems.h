@@ -224,6 +224,10 @@ namespace octet
 					}
 				}
 			}
+			getAxiom();
+			getAngle();
+			getIterations();
+			getRules();
 		}
 
 		void getAxiom()
@@ -337,6 +341,7 @@ namespace octet
 			}
 			max_iters = atoi(iters.data());
 			printf("max iterations is %d\n", max_iters);
+			iteration = max_iters;
 		}
 
 		void rewrite()
@@ -344,8 +349,8 @@ namespace octet
 			input.clear();
 			output.clear();
 			input = axiom.data();
-			printf("input is %s\n", input.data());
-			for (int i = 0; i < 2; ++i)
+			//printf("input is %s\n", input.data());
+			for (int i = 0; i < iteration; ++i)
 			{
 				for (int j = 0; j < input.length(); ++j)
 				{
@@ -360,7 +365,7 @@ namespace octet
 				input = output;
 				output = "";
 			}
-			printf("new string is %s\n", input.data());
+			//printf("new string is %s\n", input.data());
 		}
 
 		lsystems(int argc, char **argv) : app(argc, argv)
@@ -376,12 +381,13 @@ namespace octet
 			angles.reset();
 			read.reset();
 			rules.reset();
-			angle = 0.f;
+			angle = 0.0f;
 			iteration = 0;
 			max_iters = 0;
 			output = "";
 			input = "";
 			loadFile();
+			getTree(1);
 		}
 
 		void draw_world(int x, int y, int w, int h)
@@ -398,51 +404,77 @@ namespace octet
 			{
 				getTree(1);
 				//printf("%s\n", tree.data());
-				getAxiom();
-				getAngle();
-				getIterations();
-				getRules();
-				rewrite();
 			}
 
 			else if (is_key_going_down('2') || is_key_going_down(VK_NUMPAD2))
 			{
 				getTree(2);
 				//printf("%s\n", tree.data());
-				getAxiom();
 			}
 
 			else if (is_key_going_down('3') || is_key_going_down(VK_NUMPAD3))
 			{
 				getTree(3);
 				//printf("%s\n", tree.data());
-				getAxiom();
 			}
 
 			else if (is_key_going_down('4') || is_key_going_down(VK_NUMPAD4))
 			{
 				getTree(4);
 				//printf("%s\n", tree.data());
-				getAxiom();
-				getAngle();
-				getIterations();
-				getRules();
-				rewrite();
 			}
 
 			else if (is_key_going_down('5') || is_key_going_down(VK_NUMPAD5))
 			{
 				getTree(5);
 				//printf("%s\n", tree.data());
-				getAxiom();
 			}
 
 			else if (is_key_going_down('6') || is_key_going_down(VK_NUMPAD6))
 			{
 				getTree(6);
 				//printf("%s\n", tree.data());
-				getAxiom();
 			}
+
+			if (is_key_down(key_left))
+			{
+				angle -= 0.1f;
+				printf("angle is %f\n ", angle);
+			}
+
+			else if (is_key_down(key_right))
+			{
+				angle += 0.1f;
+				printf("angle is %f\n", angle);
+			}
+
+			if (is_key_going_down(key_up))
+			{
+				if (iteration < max_iters)
+				{
+					iteration += 1;
+				}
+				else
+				{
+					iteration = max_iters;
+				}
+				printf("iteration is %d\n", iteration);
+			}
+
+			else if (is_key_going_down(key_down))
+			{
+				if (iteration > 0)
+				{
+					iteration -= 1;
+				}
+				else
+				{
+					iteration = 0;
+				}
+				printf("iteration is %d\n", iteration);
+			}
+
+			rewrite();
 		}
 
 	};
