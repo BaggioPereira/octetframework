@@ -9,6 +9,7 @@ namespace octet
 		dynarray<char> tree;
 		dynarray<char> axiom;
 		dynarray<char> angles;
+		dynarray<char> iters;
 
 		struct rule {
 			char head;
@@ -69,7 +70,7 @@ namespace octet
 				}
 
 				startLoc += 7;
-				int endLoc = str.find("};1");
+				int endLoc = str.find(";1");
 				if (endLoc == -1)
 				{
 					printf("Not found end of tree");
@@ -96,7 +97,7 @@ namespace octet
 				}
 
 				startLoc += 7;
-				int endLoc = str.find("};2");
+				int endLoc = str.find(";2");
 				if (endLoc == -1)
 				{
 					printf("Not found end of tree");
@@ -123,7 +124,7 @@ namespace octet
 				}
 
 				startLoc += 7;
-				int endLoc = str.find("};3");
+				int endLoc = str.find(";3");
 				if (endLoc == -1)
 				{
 					printf("Not found end of tree");
@@ -150,7 +151,7 @@ namespace octet
 				}
 
 				startLoc += 7;
-				int endLoc = str.find("};4");
+				int endLoc = str.find(";4");
 				if (endLoc == -1)
 				{
 					printf("Not found end of tree");
@@ -176,8 +177,8 @@ namespace octet
 					printf("Not found start of tree");
 				}
 
-				startLoc += 7;
-				int endLoc = str.find("};5");
+				startLoc += 6;
+				int endLoc = str.find(";5");
 				if (endLoc == -1)
 				{
 					printf("Not found end of tree");
@@ -203,8 +204,8 @@ namespace octet
 					printf("Not found start of tree");
 				}
 
-				startLoc += 7;
-				int endLoc = str.find("};6");
+				startLoc += 6;
+				int endLoc = str.find(";6");
 				if (endLoc == -1)
 				{
 					printf("Not found end of tree");
@@ -262,7 +263,20 @@ namespace octet
 		}
 
 		void getIterations()
-		{}
+		{
+			iters.reset();
+			string str(tree.data(), tree.size());
+			int startLoc = str.find("iterations");
+			startLoc += 10;
+			int endLoc = str.find("}");
+			endLoc -= 1;
+			for (int i = startLoc; i < endLoc; ++i)
+			{
+				iters.push_back(tree[i]);
+			}
+			max_iters = atoi(iters.data());
+			printf("max iterations is %d", max_iters);
+		}
 
 		void rewrite()
 		{
@@ -284,7 +298,7 @@ namespace octet
 			rules.reset();
 			angle = 0.f;
 			iteration = 0;
-			max_iters = 0;
+			//max_iters = 0;
 			loadFile();
 		}
 
@@ -304,6 +318,7 @@ namespace octet
 				//printf("%s\n", tree.data());
 				getAxiom();
 				getAngle();
+				getIterations();
 			}
 
 			else if (is_key_going_down('2') || is_key_going_down(VK_NUMPAD2))
