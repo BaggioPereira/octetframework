@@ -13,6 +13,16 @@ namespace octet
 		dynarray<char> rule1;
 		dynarray<char> rule2;
 
+		struct rule{
+			char head;
+			std::string body;
+		};
+
+		dynarray<rule>rules;
+
+		std::string input;
+		std::string output;
+
 		float angle; 
 		int iteration;
 		int max_iters;
@@ -237,27 +247,50 @@ namespace octet
 
 		void getRules()
 		{
+			rule r;
+			r.head = '[';
+			r.body = '[';
+			rules.push_back(r);
+
+			r.head = ']';
+			r.body = ']';
+			rules.push_back(r);
+
+			r.head = '+';
+			r.body = '+';
+			rules.push_back(r);
+
+			r.head = '-';
+			r.body = '-';
+			rules.push_back(r);
+
+			r.body = "";
+
 			rule1.reset();
 			rule2.reset();
 			string str(tree.data(), tree.size());
 			int startLoc = str.find("rule1");
 			startLoc += 5;
+			r.head = tree[startLoc];
 			int endLoc = str.find("rule2");
 			if (endLoc == -1)
 			{
 				endLoc = str.find("iterations");
 				endLoc -= 1;
 			}
-			for (int i = startLoc; i < endLoc; ++i)
+			for (int i = startLoc+2; i < endLoc; ++i)
 			{
-				rule1.push_back(tree[i]);
+				r.body.push_back(tree[i]);
+				rules.push_back(r);
+				r.body = "";
 			}
-			printf("rule1 is %s\n", rule1.data());
-
-			startLoc = str.find("rule2");
+			
+			printf("rule1 is %s\n", rules.data());
+			
+			/*startLoc = str.find("rule2");
 			if (startLoc == -1)
 			{
-				printf("Does not contain rule 2");
+				printf("Does not contain rule 2\n");
 			}
 			else if (startLoc > -1)
 			{
@@ -269,7 +302,7 @@ namespace octet
 					rule2.push_back(tree[i]);
 				}
 				printf("rule2 is %s\n", rule2.data());
-			}
+			}*/
 		}
 
 		void getAngle()
@@ -309,7 +342,24 @@ namespace octet
 
 		void rewrite()
 		{
-
+			input = axiom.data();
+			printf("input is %s\n", input.data());
+			for (int i = 0; i < 2; ++i)
+			{
+				for (int j = 0; j < input.length(); ++j)
+				{
+					for (int k = 0; k < rules.size(); ++k)
+					{
+						if (input[j] == rules[k].head)
+						{
+							output.insert(output.length(), rules[k].body);
+						}
+					}
+				}
+				input = output;
+				output = "";
+			}
+			printf("new string is %s\n", input.data());
 		}
 
 		lsystems(int argc, char **argv) : app(argc, argv)
@@ -329,6 +379,8 @@ namespace octet
 			angle = 0.f;
 			iteration = 0;
 			max_iters = 0;
+			output = "";
+			input = "";
 			loadFile();
 		}
 
@@ -350,6 +402,7 @@ namespace octet
 				getAngle();
 				getIterations();
 				getRules();
+				rewrite();
 			}
 
 			else if (is_key_going_down('2') || is_key_going_down(VK_NUMPAD2))
