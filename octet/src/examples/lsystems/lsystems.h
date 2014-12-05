@@ -8,6 +8,7 @@ namespace octet
 		dynarray<char> read;
 		dynarray<char> tree;
 		dynarray<char> axiom;
+		dynarray<char> angles;
 
 		struct rule {
 			char head;
@@ -242,7 +243,23 @@ namespace octet
 		{}
 
 		void getAngle()
-		{}
+		{
+			angles.reset();
+			string str(tree.data(), tree.size());
+			int startLoc = str.find("angle");
+			startLoc += 5;
+			printf("%d\n", startLoc);
+			int endLoc = str.find("rule");
+			endLoc -= 1;
+			printf("%d\n", endLoc);
+			for (int i = startLoc; i < endLoc; ++i)
+			{
+				angles.push_back(tree[i]);
+			}
+			printf("angle is %s\n", angles.data());
+			angle = atof(angles.data());
+			printf("%f\n", angle);
+		}
 
 		void getIterations()
 		{}
@@ -262,8 +279,12 @@ namespace octet
 			app_scene->create_default_camera_and_lights();
 			tree.reset();
 			axiom.reset();
+			angles.reset();
 			read.reset();
 			rules.reset();
+			angle = 0.f;
+			iteration = 0;
+			max_iters = 0;
 			loadFile();
 		}
 
@@ -282,10 +303,11 @@ namespace octet
 				getTree(1);
 				//printf("%s\n", tree.data());
 				getAxiom();
+				getAngle();
 			}
 
 			else if (is_key_going_down('2') || is_key_going_down(VK_NUMPAD2))
-			{]
+			{
 				getTree(2);
 				//printf("%s\n", tree.data());
 				getAxiom();
