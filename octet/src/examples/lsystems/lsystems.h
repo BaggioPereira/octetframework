@@ -10,8 +10,6 @@ namespace octet
 		dynarray<char> axiom;
 		dynarray<char> angles;
 		dynarray<char> iters;
-		dynarray<char> rule1;
-		dynarray<char> rule2;
 
 		struct rule{
 			char head;
@@ -248,6 +246,7 @@ namespace octet
 		void getRules()
 		{
 			rule r;
+			rules.reset();
 			r.head = '[';
 			r.body = '[';
 			rules.push_back(r);
@@ -265,9 +264,6 @@ namespace octet
 			rules.push_back(r);
 
 			r.body = "";
-
-			rule1.reset();
-			rule2.reset();
 			string str(tree.data(), tree.size());
 			int startLoc = str.find("rule1");
 			startLoc += 5;
@@ -287,7 +283,7 @@ namespace octet
 			
 			printf("rule1 is %s\n", rules.data());
 			
-			/*startLoc = str.find("rule2");
+			startLoc = str.find("rule2");
 			if (startLoc == -1)
 			{
 				printf("Does not contain rule 2\n");
@@ -296,13 +292,16 @@ namespace octet
 			{
 				startLoc += 5;
 				endLoc = str.find("iterations");
+				r.head = tree[startLoc];
 				endLoc -= 1;
-				for (int i = startLoc; i < endLoc; ++i)
+				for (int i = startLoc+2; i < endLoc; ++i)
 				{
-					rule2.push_back(tree[i]);
+					r.body.push_back(tree[i]);
+					rules.push_back(r);
+					r.body = "";
 				}
-				printf("rule2 is %s\n", rule2.data());
-			}*/
+				printf("rule2 is %s\n", rules.data());
+			}
 		}
 
 		void getAngle()
@@ -342,6 +341,8 @@ namespace octet
 
 		void rewrite()
 		{
+			input.clear();
+			output.clear();
 			input = axiom.data();
 			printf("input is %s\n", input.data());
 			for (int i = 0; i < 2; ++i)
@@ -374,8 +375,7 @@ namespace octet
 			axiom.reset();
 			angles.reset();
 			read.reset();
-			rule1.reset();
-			rule2.reset();
+			rules.reset();
 			angle = 0.f;
 			iteration = 0;
 			max_iters = 0;
@@ -427,6 +427,7 @@ namespace octet
 				getAngle();
 				getIterations();
 				getRules();
+				rewrite();
 			}
 
 			else if (is_key_going_down('5') || is_key_going_down(VK_NUMPAD5))
