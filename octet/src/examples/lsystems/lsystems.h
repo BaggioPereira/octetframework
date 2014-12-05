@@ -10,13 +10,8 @@ namespace octet
 		dynarray<char> axiom;
 		dynarray<char> angles;
 		dynarray<char> iters;
-
-		struct rule {
-			char head;
-			string body;
-		};
-
-		dynarray<rule> rules;
+		dynarray<char> rule1;
+		dynarray<char> rule2;
 
 		float angle; 
 		int iteration;
@@ -240,8 +235,42 @@ namespace octet
 			printf("axiom is %s\n", axiom.data());
 		}
 
-		void getRule()
-		{}
+		void getRules()
+		{
+			rule1.reset();
+			rule2.reset();
+			string str(tree.data(), tree.size());
+			int startLoc = str.find("rule1");
+			startLoc += 5;
+			int endLoc = str.find("rule2");
+			if (endLoc == -1)
+			{
+				endLoc = str.find("iterations");
+				endLoc -= 1;
+			}
+			for (int i = startLoc; i < endLoc; ++i)
+			{
+				rule1.push_back(tree[i]);
+			}
+			printf("rule1 is %s\n", rule1.data());
+
+			startLoc = str.find("rule2");
+			if (startLoc == -1)
+			{
+				printf("Does not contain rule 2");
+			}
+			else if (startLoc > -1)
+			{
+				startLoc += 5;
+				endLoc = str.find("iterations");
+				endLoc -= 1;
+				for (int i = startLoc; i < endLoc; ++i)
+				{
+					rule2.push_back(tree[i]);
+				}
+				printf("rule2 is %s\n", rule2.data());
+			}
+		}
 
 		void getAngle()
 		{
@@ -275,7 +304,7 @@ namespace octet
 				iters.push_back(tree[i]);
 			}
 			max_iters = atoi(iters.data());
-			printf("max iterations is %d", max_iters);
+			printf("max iterations is %d\n", max_iters);
 		}
 
 		void rewrite()
@@ -295,10 +324,11 @@ namespace octet
 			axiom.reset();
 			angles.reset();
 			read.reset();
-			rules.reset();
+			rule1.reset();
+			rule2.reset();
 			angle = 0.f;
 			iteration = 0;
-			//max_iters = 0;
+			max_iters = 0;
 			loadFile();
 		}
 
@@ -319,6 +349,7 @@ namespace octet
 				getAxiom();
 				getAngle();
 				getIterations();
+				getRules();
 			}
 
 			else if (is_key_going_down('2') || is_key_going_down(VK_NUMPAD2))
@@ -340,6 +371,9 @@ namespace octet
 				getTree(4);
 				//printf("%s\n", tree.data());
 				getAxiom();
+				getAngle();
+				getIterations();
+				getRules();
 			}
 
 			else if (is_key_going_down('5') || is_key_going_down(VK_NUMPAD5))
