@@ -24,6 +24,7 @@ namespace octet
 		float angle; 
 		int iteration;
 		int max_iters;
+		int doRewrite = 0;
 
 	public:
 		void loadFile()
@@ -365,7 +366,8 @@ namespace octet
 				input = output;
 				output = "";
 			}
-			//printf("new string is %s\n", input.data());
+			printf("new string is %s\n", input.data());
+			doRewrite = 0;
 		}
 
 		lsystems(int argc, char **argv) : app(argc, argv)
@@ -388,6 +390,7 @@ namespace octet
 			input = "";
 			loadFile();
 			getTree(1);
+			doRewrite = 1;
 		}
 
 		void draw_world(int x, int y, int w, int h)
@@ -404,48 +407,56 @@ namespace octet
 			{
 				getTree(1);
 				//printf("%s\n", tree.data());
+				doRewrite = 1;
 			}
 
 			else if (is_key_going_down('2') || is_key_going_down(VK_NUMPAD2))
 			{
 				getTree(2);
 				//printf("%s\n", tree.data());
+				doRewrite = 1;
 			}
 
 			else if (is_key_going_down('3') || is_key_going_down(VK_NUMPAD3))
 			{
 				getTree(3);
-				//printf("%s\n", tree.data());
+				//printf("%s\n", tree.data());#
+				doRewrite = 1;
 			}
 
 			else if (is_key_going_down('4') || is_key_going_down(VK_NUMPAD4))
 			{
 				getTree(4);
 				//printf("%s\n", tree.data());
+				doRewrite = 1;
 			}
 
 			else if (is_key_going_down('5') || is_key_going_down(VK_NUMPAD5))
 			{
 				getTree(5);
 				//printf("%s\n", tree.data());
+				doRewrite = 1;
 			}
 
 			else if (is_key_going_down('6') || is_key_going_down(VK_NUMPAD6))
 			{
 				getTree(6);
 				//printf("%s\n", tree.data());
+				doRewrite = 1;
 			}
 
 			if (is_key_down(key_left))
 			{
-				angle -= 0.1f;
+				angle -= .1f;
 				printf("angle is %f\n ", angle);
+				doRewrite = 1;
 			}
 
 			else if (is_key_down(key_right))
 			{
-				angle += 0.1f;
+				angle += .1f;
 				printf("angle is %f\n", angle);
+				doRewrite = 1;
 			}
 
 			if (is_key_going_down(key_up))
@@ -453,10 +464,12 @@ namespace octet
 				if (iteration < max_iters)
 				{
 					iteration += 1;
+					doRewrite = 1;
 				}
 				else
 				{
 					iteration = max_iters;
+					doRewrite = 1;
 				}
 				printf("iteration is %d\n", iteration);
 			}
@@ -466,15 +479,21 @@ namespace octet
 				if (iteration > 0)
 				{
 					iteration -= 1;
+					doRewrite = 1;
 				}
 				else
 				{
 					iteration = 0;
+					doRewrite = 1;
 				}
 				printf("iteration is %d\n", iteration);
 			}
 
-			rewrite();
+			if (doRewrite)
+			{
+				rewrite();
+			}
+
 		}
 
 	};
