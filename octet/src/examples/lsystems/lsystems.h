@@ -1,4 +1,5 @@
 #include <fstream>
+#include <sstream>
 
 namespace octet
 {
@@ -18,13 +19,13 @@ namespace octet
 
 		dynarray<rule>rules;
 
-		std::string input;
-		std::string output;
+		std::string startTree;
+		std::string endTree;
 
 		float angle; 
 		int iteration;
 		int max_iters;
-		int doRewrite = 0;
+		int doRewrite = 1;
 
 	public:
 		void loadFile()
@@ -59,170 +60,41 @@ namespace octet
 			//printf("Text file contains \n%s", read.data());
 		}
 
-		void getTree(int treeNum)
+		void getTree(int num)
 		{
 			string str(read.data(), read.size());
+			std::stringstream treeNum, treeEnd;
 			tree.reset();
+			treeNum.clear();
+			treeEnd.clear();
+			treeNum << "tree" << num;
+			treeEnd << ";" << num;
+			std::string treeStr = treeNum.str();
+			std::string treeStp = treeEnd.str();
+			printf("%s\n", treeStr.c_str());
+
 			//printf("String contains \n%s", string.c_str());
-			if (treeNum == 1)
+			int startLoc = str.find(treeStr.c_str());
+			printf("%d\n", startLoc);
+			if (startLoc == -1)
 			{
-				int startLoc = str.find("tree1");
-				printf("%d\n", startLoc);
-				if (startLoc == -1)
-				{
-					printf("Not found start of tree");
-				}
-
-				startLoc += 7;
-				int endLoc = str.find(";1");
-				if (endLoc == -1)
-				{
-					printf("Not found end of tree");
-				}
-
-				for (int i = startLoc; i < endLoc; ++i)
-				{
-					int treeStr = str.find("axiom");
-					treeStr += 5;
-					if (read[i] != ';')
-					{
-						tree.push_back(read[i]);
-					}
-				}
+				printf("Not found start of tree");
 			}
 
-			if (treeNum == 2)
+			startLoc += 7;
+			int endLoc = str.find(treeStp.c_str());
+			if (endLoc == -1)
 			{
-				int startLoc = str.find("tree2");
-				printf("%d\n", startLoc);
-				if (startLoc == -1)
-				{
-					printf("Not found start of tree");
-				}
-
-				startLoc += 7;
-				int endLoc = str.find(";2");
-				if (endLoc == -1)
-				{
-					printf("Not found end of tree");
-				}
-
-				for (int i = startLoc; i < endLoc; ++i)
-				{
-					int treeStr = str.find("tree");
-					treeStr += 5;
-					if (read[i] != ';')
-					{
-						tree.push_back(read[i]);
-					}
-				}
+				printf("Not found end of tree");
 			}
 
-			if (treeNum == 3)
+			for (int i = startLoc; i < endLoc; ++i)
 			{
-				int startLoc = str.find("tree3");
-				printf("%d\n", startLoc);
-				if (startLoc == -1)
+				int treeStr = str.find("axiom");
+				treeStr += 5;
+				if (read[i] != ';')
 				{
-					printf("Not found start of tree");
-				}
-
-				startLoc += 7;
-				int endLoc = str.find(";3");
-				if (endLoc == -1)
-				{
-					printf("Not found end of tree");
-				}
-
-				for (int i = startLoc; i < endLoc; ++i)
-				{
-					int treeStr = str.find("tree");
-					treeStr += 5;
-					if (read[i] != ';')
-					{
-						tree.push_back(read[i]);
-					}
-				}
-			}
-
-			if (treeNum == 4)
-			{
-				int startLoc = str.find("tree4");
-				printf("%d\n", startLoc);
-				if (startLoc == -1)
-				{
-					printf("Not found start of tree");
-				}
-
-				startLoc += 7;
-				int endLoc = str.find(";4");
-				if (endLoc == -1)
-				{
-					printf("Not found end of tree");
-				}
-
-				for (int i = startLoc; i < endLoc; ++i)
-				{
-					int treeStr = str.find("tree");
-					treeStr += 5;
-					if (read[i] != ';')
-					{
-						tree.push_back(read[i]);
-					}
-				}
-			}
-
-			if (treeNum == 5)
-			{
-				int startLoc = str.find("tree5");
-				printf("%d\n", startLoc);
-				if (startLoc == -1)
-				{
-					printf("Not found start of tree");
-				}
-
-				startLoc += 6;
-				int endLoc = str.find(";5");
-				if (endLoc == -1)
-				{
-					printf("Not found end of tree");
-				}
-
-				for (int i = startLoc; i < endLoc; ++i)
-				{
-					int treeStr = str.find("tree");
-					treeStr += 5;
-					if (read[i] != ';')
-					{
-						tree.push_back(read[i]);
-					}
-				}
-			}
-
-			if (treeNum == 6)
-			{
-				int startLoc = str.find("tree6");
-				printf("%d\n", startLoc);
-				if (startLoc == -1)
-				{
-					printf("Not found start of tree");
-				}
-
-				startLoc += 6;
-				int endLoc = str.find(";6");
-				if (endLoc == -1)
-				{
-					printf("Not found end of tree");
-				}
-
-				for (int i = startLoc; i < endLoc; ++i)
-				{
-					int treeStr = str.find("tree");
-					treeStr += 5;
-					if (read[i] != ';')
-					{
-						tree.push_back(read[i]);
-					}
+					tree.push_back(read[i]);
 				}
 			}
 			getAxiom();
@@ -347,26 +219,26 @@ namespace octet
 
 		void rewrite()
 		{
-			input.clear();
-			output.clear();
-			input = axiom.data();
+			startTree.clear();
+			endTree.clear();
+			startTree = axiom.data();
 			//printf("input is %s\n", input.data());
 			for (int i = 0; i < iteration; ++i)
 			{
-				for (int j = 0; j < input.length(); ++j)
+				for (int j = 0; j < startTree.length(); ++j)
 				{
 					for (int k = 0; k < rules.size(); ++k)
 					{
-						if (input[j] == rules[k].head)
+						if (startTree[j] == rules[k].head)
 						{
-							output.insert(output.length(), rules[k].body);
+							endTree.insert(endTree.length(), rules[k].body);
 						}
 					}
 				}
-				input = output;
-				output = "";
+				startTree = endTree;
+				endTree = "";
 			}
-			printf("new string is %s\n", input.data());
+			//printf("new string is %s\n", startTree.data());
 			doRewrite = 0;
 		}
 
@@ -386,11 +258,8 @@ namespace octet
 			angle = 0.0f;
 			iteration = 0;
 			max_iters = 0;
-			output = "";
-			input = "";
 			loadFile();
 			getTree(1);
-			doRewrite = 1;
 		}
 
 		void draw_world(int x, int y, int w, int h)
