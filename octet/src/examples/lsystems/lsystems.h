@@ -3,6 +3,39 @@
 
 namespace octet
 {
+	class line {
+		mat4t modelToWorld;
+
+		vec4 colour;
+
+		float lineLength;
+
+	public:
+		void init(mat4t model, vec4 linCol, float size)
+		{
+			modelToWorld = model;
+			colour = linCol;
+			lineLength = size;
+		}
+
+		void render(color_shader &shader, mat4t &cameraToWorld)
+		{
+			mat4t modelToProjection = mat4t::build_projection_matrix(modelToWorld, cameraToWorld);
+
+			shader.render(modelToProjection, colour);
+
+			float points[] = {
+				0, 0, 0,
+				0, lineLength, 0,
+			};
+
+			glVertexAttribPointer(attribute_pos, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)points);
+			glEnableVertexAttribArray(attribute_pos);
+
+			glDrawArrays(GL_LINES, 0, 2);
+		}
+	};
+
 	class lsystems : public app{
 		ref<visual_scene> app_scene;
 
@@ -22,7 +55,14 @@ namespace octet
 		std::string startTree;
 		std::string endTree;
 
+		mat4t modelToWorld;
+		mat4t cameraToWorld;
+		dynarray<mat4t> modelToWorlds;
+		dynarray<line>lines;
+		color_shader shader;
+		
 		float angle; 
+		float lineLength;
 		int iteration;
 		int max_iters;
 		int doRewrite = 1;
@@ -197,7 +237,7 @@ namespace octet
 			}
 			printf("angle is %s\n", angles.data());
 			angle = atof(angles.data());
-			printf("%f\n", angle);
+			printf("%g\n", angle);
 		}
 
 		void getIterations()
@@ -216,9 +256,10 @@ namespace octet
 			printf("max iterations is %d\n", max_iters);
 			iteration = max_iters;
 		}
-
+	
 		void rewrite()
 		{
+		
 			startTree.clear();
 			endTree.clear();
 			startTree = axiom.data();
@@ -238,8 +279,49 @@ namespace octet
 				startTree = endTree;
 				endTree = "";
 			}
-			//printf("new string is %s\n", startTree.data());
+			printf("new string is %s\n", startTree.data());
 			doRewrite = 0;
+		}
+
+		void forward(vec4 colour)
+		{
+			line theLine;
+			theLine.init(modelToWorld, colour, lineLength);
+			lines.push_back(theLine);
+			modelToWorld.translate(0, lineLength, 0);
+		}
+
+		void buildTree()
+		{
+			modelToWorld.loadIdentity();
+			modelToWorlds.reset();
+			lines.reset();
+			for (int i = 0; i < startTree.length(); i++)
+			{
+				switch (startTree[i])
+				{
+				case 'F': forward(vec4(0, 1, 0, 1));
+					break;
+				case'[': modelToWorlds.push_back(modelToWorld);
+					break;
+				case']': modelToWorld = modelToWorlds[modelToWorlds.size() - 1];
+					modelToWorlds.pop_back();
+					break;
+				case '+': modelToWorld.rotateZ(angle);
+					break;
+				case '-': modelToWorld.rotateZ(-angle);
+					break;
+				default: break;
+				}
+			}
+		}
+
+		void drawTree()
+		{
+			for (int i = 0; i < lines.size(); ++i)
+			{
+				lines[i].render(shader, cameraToWorld);
+			}
 		}
 
 		lsystems(int argc, char **argv) : app(argc, argv)
@@ -248,8 +330,6 @@ namespace octet
 
 		void app_init()
 		{
-			app_scene = new visual_scene();
-			app_scene->create_default_camera_and_lights();
 			tree.reset();
 			axiom.reset();
 			angles.reset();
@@ -258,19 +338,22 @@ namespace octet
 			angle = 0.0f;
 			iteration = 0;
 			max_iters = 0;
+			lineLength = 1.f;
+			shader.init();
+
+			cameraToWorld.loadIdentity();
+			cameraToWorld.translate(0, 250, 300);
 			loadFile();
 			getTree(1);
 		}
 
 		void draw_world(int x, int y, int w, int h)
 		{
-			int vx = 0, vy = 0;
-			get_viewport_size(vx, vy);
-			app_scene->begin_render(vx, vy);
+			glViewport(x, y, w, h);
 
-			app_scene->update(1.0f / 30);
+			glClearColor(0, 0, 0, 1);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-			app_scene->render((float)vx / vy);
 
 			if (is_key_going_down('1') || is_key_going_down(VK_NUMPAD1))
 			{
@@ -317,14 +400,14 @@ namespace octet
 			if (is_key_down(key_left))
 			{
 				angle -= .1f;
-				printf("angle is %f\n ", angle);
+				printf("angle is %g\n ", angle);
 				doRewrite = 1;
 			}
 
 			else if (is_key_down(key_right))
 			{
 				angle += .1f;
-				printf("angle is %f\n", angle);
+				printf("angle is %g\n", angle);
 				doRewrite = 1;
 			}
 
@@ -354,16 +437,31 @@ namespace octet
 				{
 					iteration = 0;
 					doRewrite = 1;
+
 				}
 				printf("iteration is %d\n", iteration);
+			}
+
+			if (is_key_down('w'))
+			{
+				lineLength += .1f;
+				doRewrite = 1;
+			}
+
+			else if (is_key_down('s'))
+			{
+				lineLength -= .1f;
+				doRewrite = 1;
 			}
 
 			if (doRewrite)
 			{
 				rewrite();
+				buildTree();
 			}
 
-		}
 
+			drawTree();
+		}
 	};
 }

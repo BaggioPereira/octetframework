@@ -1,8 +1,8 @@
 tree1{
-axiomF;
-angle25.7;
-rule1F=F[+F]F[-F]F;
-iterations5;
+axiomF
+angle25.7
+rule1F=F[+F]F[-F]F
+iterations5
 };1
 
 tree2{
