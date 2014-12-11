@@ -79,17 +79,17 @@ namespace octet
 			//Check if file is opened
 			if (!myfile.is_open())
 			{
-				printf("File not opened/not found \n");
+				//printf("File not opened/not found \n");
 			}
 			else
 			{
-				printf("File opened \n");
+				//printf("File opened \n");
 			}
 
 			//Get size of text file
 			myfile.seekg(0, myfile.end);
 			int length = myfile.tellg();
-			printf("length is %d \n", length);
+			//printf("length is %d \n", length);
 			myfile.seekg(0, myfile.beg);
 
 			//Resize the array
@@ -97,7 +97,7 @@ namespace octet
 			myfile.read(read.data(), length);
 
 			//Print out what text file contains
-			//printf("Text file contains \n%s", read.data());
+			////printf("Text file contains \n%s", read.data());
 		}
 
 		void getTree(int num)
@@ -111,21 +111,21 @@ namespace octet
 			treeEnd << ";" << num;
 			std::string treeStr = treeNum.str();
 			std::string treeStp = treeEnd.str();
-			printf("%s\n", treeStr.c_str());
+			//printf("%s\n", treeStr.c_str());
 
-			//printf("String contains \n%s", string.c_str());
+			////printf("String contains \n%s", string.c_str());
 			int startLoc = str.find(treeStr.c_str());
-			printf("%d\n", startLoc);
+			//printf("%d\n", startLoc);
 			if (startLoc == -1)
 			{
-				printf("Not found start of tree");
+				//printf("Not found start of tree");
 			}
 
 			startLoc += 7;
 			int endLoc = str.find(treeStp.c_str());
 			if (endLoc == -1)
 			{
-				printf("Not found end of tree");
+				//printf("Not found end of tree");
 			}
 
 			for (int i = startLoc; i < endLoc; ++i)
@@ -149,15 +149,15 @@ namespace octet
 			string str(tree.data(), tree.size());
 			int startLoc = str.find("axiom");
 			startLoc += 5;
-			printf("%d\n", startLoc);
+			//printf("%d\n", startLoc);
 			int endLoc = str.find("angle");
 			endLoc -= 1;
-			printf("%d\n", endLoc);
+			//printf("%d\n", endLoc);
 			for (int i = startLoc; i < endLoc; ++i)
 			{
 				axiom.push_back(tree[i]);
 			}
-			printf("axiom is %s\n", axiom.data());
+			//printf("axiom is %s\n", axiom.data());
 		}
 
 		void getRules()
@@ -198,12 +198,12 @@ namespace octet
 				r.body = "";
 			}
 			
-			printf("rule1 is %s\n", rules.data());
+			//printf("rule1 is %s\n", rules.data());
 			
 			startLoc = str.find("rule2");
 			if (startLoc == -1)
 			{
-				printf("Does not contain rule 2\n");
+				//printf("Does not contain rule 2\n");
 			}
 			else if (startLoc > -1)
 			{
@@ -217,7 +217,7 @@ namespace octet
 					rules.push_back(r);
 					r.body = "";
 				}
-				printf("rule2 is %s\n", rules.data());
+				//printf("rule2 is %s\n", rules.data());
 			}
 		}
 
@@ -227,17 +227,17 @@ namespace octet
 			string str(tree.data(), tree.size());
 			int startLoc = str.find("angle");
 			startLoc += 5;
-			printf("%d\n", startLoc);
+			//printf("%d\n", startLoc);
 			int endLoc = str.find("rule");
 			endLoc -= 1;
-			printf("%d\n", endLoc);
+			//printf("%d\n", endLoc);
 			for (int i = startLoc; i < endLoc; ++i)
 			{
 				angles.push_back(tree[i]);
 			}
-			printf("angle is %s\n", angles.data());
+			//printf("angle is %s\n", angles.data());
 			angle = atof(angles.data());
-			printf("%g\n", angle);
+			//printf("%g\n", angle);
 		}
 
 		void getIterations()
@@ -253,7 +253,7 @@ namespace octet
 				iters.push_back(tree[i]);
 			}
 			max_iters = atoi(iters.data());
-			printf("max iterations is %d\n", max_iters);
+			//printf("max iterations is %d\n", max_iters);
 			iteration = max_iters;
 		}
 	
@@ -263,7 +263,7 @@ namespace octet
 			startTree.clear();
 			endTree.clear();
 			startTree = axiom.data();
-			//printf("input is %s\n", input.data());
+			////printf("input is %s\n", input.data());
 			for (int i = 0; i < iteration; ++i)
 			{
 				for (int j = 0; j < startTree.length(); ++j)
@@ -279,7 +279,7 @@ namespace octet
 				startTree = endTree;
 				endTree = "";
 			}
-			printf("new string is %s\n", startTree.data());
+			//printf("new string is %s\n", startTree.data());
 			doRewrite = 0;
 		}
 
@@ -301,6 +301,10 @@ namespace octet
 				switch (startTree[i])
 				{
 				case 'F': forward(vec4(0, 1, 0, 1));
+					break;
+				case 'A': forward(vec4(0, 1, 0, 1));
+					break;
+				case 'B': forward(vec4(0, 1, 0, 1));
 					break;
 				case'[': modelToWorlds.push_back(modelToWorld);
 					break;
@@ -342,7 +346,7 @@ namespace octet
 			shader.init();
 
 			cameraToWorld.loadIdentity();
-			cameraToWorld.translate(0, 250, 300);
+			cameraToWorld.translate(0, 100, 150);
 			loadFile();
 			getTree(1);
 		}
@@ -354,59 +358,89 @@ namespace octet
 			glClearColor(0, 0, 0, 1);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-
 			if (is_key_going_down('1') || is_key_going_down(VK_NUMPAD1))
 			{
+				lineLength = 1.f;
 				getTree(1);
-				//printf("%s\n", tree.data());
+				////printf("%s\n", tree.data());
 				doRewrite = 1;
 			}
 
 			else if (is_key_going_down('2') || is_key_going_down(VK_NUMPAD2))
 			{
+				lineLength = 5.f;
 				getTree(2);
-				//printf("%s\n", tree.data());
+				////printf("%s\n", tree.data());
 				doRewrite = 1;
 			}
 
 			else if (is_key_going_down('3') || is_key_going_down(VK_NUMPAD3))
 			{
 				getTree(3);
-				//printf("%s\n", tree.data());#
+				lineLength = 5.f;
+				////printf("%s\n", tree.data());#
 				doRewrite = 1;
 			}
 
 			else if (is_key_going_down('4') || is_key_going_down(VK_NUMPAD4))
 			{
+				lineLength = 1.f;
 				getTree(4);
-				//printf("%s\n", tree.data());
+				////printf("%s\n", tree.data());
 				doRewrite = 1;
 			}
 
 			else if (is_key_going_down('5') || is_key_going_down(VK_NUMPAD5))
 			{
+				lineLength = 1.f;
 				getTree(5);
-				//printf("%s\n", tree.data());
+				////printf("%s\n", tree.data());
 				doRewrite = 1;
 			}
 
 			else if (is_key_going_down('6') || is_key_going_down(VK_NUMPAD6))
 			{
+				lineLength = 2.5
+					f;
 				getTree(6);
-				//printf("%s\n", tree.data());
+				////printf("%s\n", tree.data());
+				doRewrite = 1;
+			}
+			
+			else if (is_key_going_down('7') || is_key_going_down(VK_NUMPAD7))
+			{
+				lineLength = 1.f;
+				getTree(7);
+				////printf("%s\n", tree.data());
+				doRewrite = 1;
+			}
+
+			else if (is_key_going_down('8') || is_key_going_down(VK_NUMPAD8))
+			{
+				lineLength = 1.f;
+				getTree(8);
+				////printf("%s\n", tree.data());
 				doRewrite = 1;
 			}
 
 			if (is_key_down(key_left))
 			{
-				angle -= .1f;
+				if (angle <= 0.0f)
+				{
+					angle += 360.0f;
+				}
+				angle -= 1.f;
 				printf("angle is %g\n ", angle);
 				doRewrite = 1;
 			}
 
 			else if (is_key_down(key_right))
 			{
-				angle += .1f;
+				if (angle >= 360.0f)
+				{
+					angle -= 360.0f;
+				}
+				angle += 1.f;
 				printf("angle is %g\n", angle);
 				doRewrite = 1;
 			}
@@ -442,13 +476,13 @@ namespace octet
 				printf("iteration is %d\n", iteration);
 			}
 
-			if (is_key_down('w'))
+			if (is_key_down('W'))
 			{
 				lineLength += .1f;
 				doRewrite = 1;
 			}
 
-			else if (is_key_down('s'))
+			else if (is_key_down('S'))
 			{
 				lineLength -= .1f;
 				doRewrite = 1;
@@ -459,7 +493,6 @@ namespace octet
 				rewrite();
 				buildTree();
 			}
-
 
 			drawTree();
 		}
