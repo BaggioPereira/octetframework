@@ -87,25 +87,22 @@ namespace octet
 			//Check if file is opened
 			if (!myfile.is_open())
 			{
-				//printf("File not opened/not found \n");
+				printf("File not opened/not found \n");
 			}
 			else
 			{
-				//printf("File opened \n");
+				printf("File opened \n");
 			}
 
 			//Get size of text file
 			myfile.seekg(0, myfile.end);
 			int length = myfile.tellg();
-			//printf("length is %d \n", length);
 			myfile.seekg(0, myfile.beg);
 
 			//Resize the array
 			read.resize(length);
 			myfile.read(read.data(), length);
-
-			//Print out what text file contains
-			////printf("Text file contains \n%s", read.data());
+			myfile.close();
 		}
 
 		//used to get a tree depending on which number is pressed
@@ -122,7 +119,6 @@ namespace octet
 			std::string treeStp = treeEnd.str();	//finds the end of the tree
 
 			int startLoc = str.find(treeStr.c_str()); //find the start location of the tree
-			//printf("%d\n", startLoc);
 
 			//checks to see if the tree is found
 			if (startLoc == -1)
@@ -149,6 +145,7 @@ namespace octet
 					tree.push_back(read[i]);
 				}
 			}
+			tree.push_back('\0');
 
 			getAxiom();			//call to get the axiom of the tree
 			getAngle();			//call to get the inital angle of the tree
@@ -252,17 +249,13 @@ namespace octet
 			string str(tree.data(), tree.size());
 			int startLoc = str.find("angle");
 			startLoc += 5;
-			//printf("%d\n", startLoc);
 			int endLoc = str.find("rule");
 			endLoc -= 1;
-			//printf("%d\n", endLoc);
 			for (int i = startLoc; i < endLoc; ++i)
 			{
 				angles.push_back(tree[i]);
 			}
-			//printf("angle is %s\n", angles.data());
 			angle = atof(angles.data());
-			//printf("%g\n", angle);
 		}
 
 		//used to the max iterations for the tree
@@ -279,7 +272,6 @@ namespace octet
 				iters.push_back(tree[i]);
 			}
 			max_iters = atoi(iters.data());
-			//printf("max iterations is %d\n", max_iters);
 			iteration = max_iters;
 		}
 	
@@ -290,7 +282,6 @@ namespace octet
 			startTree.clear();
 			endTree.clear();
 			startTree = axiom.data();
-			////printf("input is %s\n", input.data());
 			for (int i = 0; i < iteration; ++i)
 			{
 				for (int j = 0; j < startTree.length(); ++j)
@@ -306,12 +297,11 @@ namespace octet
 				startTree = endTree;
 				endTree = "";
 			}
-			//printf("new string is %s\n", startTree.data());
 			doRewrite = 0;
 		}
 
 		//The following functions handle the drawing of the tree to the screen
-		//used to create a line 
+		//used to create a line and add it to the end of array of lines, sets location of the next line
 		void forward(vec4 colour)
 		{
 			line theLine;
@@ -388,7 +378,7 @@ namespace octet
 		{
 			glViewport(x, y, w, h);												//set the size of the viewport
 
-			glClearColor(1, 1, 1, 1);											//clear the viewport
+			glClearColor(0, 0, 0, 1);											//clear the viewport
 
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);					//clear the colour and depth buffers
 
@@ -437,15 +427,22 @@ namespace octet
 			
 			else if (is_key_going_down('7') || is_key_going_down(VK_NUMPAD7))
 			{
-				lineLength = 1.f;
+				lineLength = 1.5f;
 				getTree(7);
 				doRewrite = 1;
 			}
 
 			else if (is_key_going_down('8') || is_key_going_down(VK_NUMPAD8))
 			{
-				lineLength = 1.f;
+				lineLength = 2.5f;
 				getTree(8);
+				doRewrite = 1;
+			}
+
+			else if (is_key_going_down('9') || is_key_going_down(VK_NUMPAD9))
+			{
+				lineLength = 0.1f;
+				getTree(9);
 				doRewrite = 1;
 			}
 
@@ -457,7 +454,6 @@ namespace octet
 					angle += 360.0f;
 				}
 				angle -= 1.f;
-				printf("angle is %g\n ", angle);
 				doRewrite = 1;
 			}
 
@@ -468,7 +464,6 @@ namespace octet
 					angle -= 360.0f;
 				}
 				angle += 1.f;
-				printf("angle is %g\n", angle);
 				doRewrite = 1;
 			}
 
@@ -515,6 +510,36 @@ namespace octet
 			{
 				lineLength -= .1f;
 				doRewrite = 1;
+			}
+
+			if (is_key_down('I'))
+			{
+				cameraToWorld.translate(vec3(0, 1, 0));
+			}
+
+			if (is_key_down('K'))
+			{
+				cameraToWorld.translate(vec3(0, -1, 0));
+			}
+
+			if (is_key_down('J'))
+			{
+				cameraToWorld.translate(vec3(-1, 0, 0));
+			}
+
+			if (is_key_down('L'))
+			{
+				cameraToWorld.translate(vec3(1, 0, 0));
+			}
+
+			if (is_key_down('U'))
+			{
+				cameraToWorld.translate(vec3(0, 0, -1));
+			}
+
+			if (is_key_down('O'))
+			{
+				cameraToWorld.translate(vec3(0, 0, 1));
 			}
 
 			//if statement for rewriting a new tree but only once
