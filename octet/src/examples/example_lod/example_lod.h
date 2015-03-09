@@ -41,8 +41,8 @@ namespace octet {
       static const float distances[] = {
         //-1e37f, 3, 6, 18, 1e37f   // high performance, low quality
         //-1e37f, 3, 6, 18, 1e37f   // high performance, low quality
-        //-1e37f, 5, 15, 45, 1e37f  // medium performance and quality
-        -1e37f, 5, 25, 125, 1e37f // low performance, high quality
+        -1e37f, 5, 15, 45, 1e37f  // medium performance and quality
+        //-1e37f, 5, 25, 125, 1e37f // low performance, high quality
       };
 
       // materials for LODs (it is common to have simpler shaders for further objects).
@@ -77,7 +77,7 @@ namespace octet {
       scene_node *cam_node = app_scene->get_camera_instance(0)->get_node();
       cam_node->loadIdentity();
       cam_node->translate(cam_pos);
-      cam_pos += vec3(0, 0, 0.3f);
+      cam_pos += vec3(0, 0, -0.3f);
 
       app_scene->begin_render(vx, vy);
 
