@@ -1,0 +1,4 @@
+wavelength:1;
+amplitude:2;
+speed:2.5;
+steepness:7;

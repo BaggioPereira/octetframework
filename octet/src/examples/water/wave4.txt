@@ -1,0 +1,4 @@
+wavelength:3.24;
+amplitude:20;
+speed:10.1;
+steepness:12.59;
