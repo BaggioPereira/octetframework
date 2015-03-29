@@ -427,7 +427,7 @@
     <ClInclude Include="..\..\containers\string.h">
       <Filter>containers</Filter>
     </ClInclude>
-    <ClInclude Include="water.h" />
+    <ClInclude Include="water_simulation.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\resources\mesh_builder.inl">

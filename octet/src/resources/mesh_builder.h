@@ -138,6 +138,11 @@ namespace octet { namespace resources {
       indices.push_back(index);
     }
 
+	void deleteVertices()
+	{
+		vertices.reset();
+	}
+
     // add a cube to the model at the current matrix location
     // as in glutSolidCube
     void add_cube(float size) {

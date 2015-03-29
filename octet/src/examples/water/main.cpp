@@ -9,7 +9,7 @@
 
 #include "../../octet.h"
 
-#include "water.h"
+#include "water_simulation.h"
 
 /// Create a box with octet
 int main(int argc, char **argv) {
@@ -17,7 +17,7 @@ int main(int argc, char **argv) {
   octet::app::init_all(argc, argv);
 
   // our application.
-  octet::water app(argc, argv);
+  octet::water_simulation app(argc, argv);
   app.init();
 
   // open windows
