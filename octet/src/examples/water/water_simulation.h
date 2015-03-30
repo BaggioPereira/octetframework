@@ -12,6 +12,14 @@
 namespace octet {
 	/// Scene containing a box with octet.
 	class water_simulation : public app {
+
+		#define TWOPI  6.283185
+		#define PI 3.141592
+		#define HEIGHT 40
+		#define WIDTH 40
+		#define PADDEDHEIGHT HEIGHT+2
+		#define PADDEDWIDTH WIDTH+2
+
 		// scene for drawing box
 		ref<visual_scene> app_scene;
 		ref<mesh> mWater;
@@ -25,21 +33,13 @@ namespace octet {
 		dynarray<char> speedStr;
 		dynarray<char> steepStr;
 
-		float wavelength, amplitude, speed, steepness;
+		float wavelength, amplitude, speed, steepness, frequency;
 		float frame = 1;
 
 		int num = 1;
-		int n = 48;
 
 		bool wire = false;
 		bool startup = true;
-
-		enum res {
-			WIDTH = 40,
-			HEIGHT = 40,
-			PADDEDWIDTH = WIDTH + 2,
-			PADDEDHEIGHT = HEIGHT + 2,
-		};
 
 		float MESHHEIGHT[WIDTH][HEIGHT], U[WIDTH][HEIGHT], V[WIDTH][HEIGHT];
 
@@ -90,10 +90,9 @@ namespace octet {
 				getSteepness();
 				read.push_back('\0');
 			}
-
 		}
 
-		//get the wave length
+		//get the wavelength and frequency
 		void getWaveLength()
 		{
 			waveLengthStr.reset();
@@ -111,9 +110,10 @@ namespace octet {
 
 			wavelength = atof(waveLengthStr.data());
 			printf("%f\n", wavelength);
+			frequency = TWOPI / wavelength;
 		}
 
-		//get the amplitude
+		//get the amplitude and normalized between 0 and 1
 		void getAmplitude()
 		{
 			amplitudeStr.reset();
@@ -130,7 +130,9 @@ namespace octet {
 			}
 
 			amplitude = atof(amplitudeStr.data());
-			printf("%f\n", amplitude);
+			
+			amplitude = ((amplitude - 0) / (100 - 0));
+			printf("%g\n", amplitude);
 		}
 
 		//get the steepness
@@ -149,6 +151,7 @@ namespace octet {
 			}
 
 			steepness = atof(steepStr.data());
+
 			printf("%f\n", steepness);
 		}
 
@@ -169,7 +172,8 @@ namespace octet {
 			}
 
 			speed = atof(speedStr.data());
-			printf("%f\n", speed);
+			speed = TWOPI / wavelength;
+			printf("%g\n", speed);
 		}
 
 		//generate a plane and used to update the plane
@@ -232,20 +236,11 @@ namespace octet {
 
 		//TODO
 		//calculate the sine wave
-		void sineWave()
+		void sineWave(int x, int z)
 		{
-			for (int z = 0; z < PADDEDWIDTH; z++)
-			{
-				for (int x = 0; x < PADDEDHEIGHT; x++)
-				{
-					float k, sine;
-					k = 2 * 3.14 / wavelength;
-					sine = 0.1f * sin(k * MESHHEIGHT[x][z] + (frame * 0));
-					MESHHEIGHT[x][z] = sine;
-					//printf("%g ", sine);
-					frame++;
-				}
-			}
+			float sine;
+			sine = amplitude * sin(frequency * MESHHEIGHT[x][z] + frame * speed);
+			MESHHEIGHT[x][z] = sine;
 		}
 
 		//skybox
@@ -287,8 +282,16 @@ namespace octet {
 			glEnable(GL_DEPTH_TEST);
 
 			meshGeneration(startup);
-			sineWave();
-			//frame++;
+
+			for (int z = 0; z < PADDEDWIDTH; z++)
+			{
+				for (int x = 0; x < PADDEDHEIGHT; x++)
+				{
+					sineWave(x, z);
+					//printf("%g ", sine);
+					frame++;
+				}
+			}
 
 
 			//Key input for wireframe

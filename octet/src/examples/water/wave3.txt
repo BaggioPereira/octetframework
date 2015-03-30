@@ -1,4 +1,4 @@
-wavelength:3.28;
+wavelength:3.24;
 amplitude:100;
 speed:3.06;
 steepness:24.6;
