@@ -1,0 +1,4 @@
+wavelength:35.0;
+amplitude:0.2;
+speed:3.0;
+end

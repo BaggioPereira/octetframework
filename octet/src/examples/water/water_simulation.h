@@ -32,8 +32,9 @@ namespace octet {
 		dynarray<char> amplitudeStr;
 		dynarray<char> speedStr;
 
-		float wavelength, amplitude, speed, frequency;
-		vec3 direction;
+
+		float wavelength[8], amplitude[8], speed[8], frequency[8];
+		vec3 direction[8];
 		float frame = 1;
 
 		int num = 1;
@@ -60,7 +61,7 @@ namespace octet {
 			read.reset();
 			waveStr.clear();
 			waveFile.clear();
-			waveStr << "wave" << num << ".txt";
+			waveStr << "wave" << waveNum << ".txt";
 			waveFile = waveStr.str();
 			myFile.open(waveFile, std::ios::in);
 
@@ -76,6 +77,7 @@ namespace octet {
 			myFile.seekg(0, myFile.end);
 			unsigned int length = myFile.tellg();
 			myFile.seekg(0, myFile.beg);
+			waveNum -= 1;
 
 			if (length == -1)
 			{
@@ -87,16 +89,16 @@ namespace octet {
 				read.resize(length);
 				myFile.read(read.data(), length);
 				myFile.close();
-				getWaveLength();
-				getAmplitude();
-				getSpeed();
-				getDirection();
+				getWaveLength(waveNum);
+				getAmplitude(waveNum);
+				getSpeed(waveNum);
+				getDirection(waveNum);
 				read.push_back('\0');
 			}
 		}
 
 		//get the wavelength and frequency
-		void getWaveLength()
+		void getWaveLength(int i)
 		{
 			waveLengthStr.reset();
 			string str(read.data(), read.size());
@@ -111,13 +113,13 @@ namespace octet {
 				//read[i] = NULL;
 			}
 
-			wavelength = atof(waveLengthStr.data());
-			frequency = TWOPI / wavelength;
-			printf("%g\n", wavelength);
+			wavelength[i] = atof(waveLengthStr.data());
+			frequency[i] = TWOPI / wavelength[i];
+			printf("%g\n", wavelength[i]);
 		}
 
 		//get the amplitude and normalized between 0 and 1
-		void getAmplitude()
+		void getAmplitude(int i)
 		{
 			amplitudeStr.reset();
 			string str(read.data(), read.size());
@@ -132,12 +134,12 @@ namespace octet {
 				//read[i] = NULL;
 			}
 
-			amplitude = atof(amplitudeStr.data());
-			printf("%g\n", amplitude);
+			amplitude[i] = atof(amplitudeStr.data());
+			printf("%g\n", amplitude[i]);
 		}
 
 		//get the speed
-		void getSpeed()
+		void getSpeed(int i)
 		{
 			speedStr.reset();
 			string str(read.data(), read.size());
@@ -152,15 +154,15 @@ namespace octet {
 				//read[i] = NULL;
 			}
 
-			speed = atof(speedStr.data());
-			speed = speed / wavelength;
-			printf("%g\n", speed);
+			speed[i] = atof(speedStr.data());
+			speed[i] = speed[i] / wavelength[i];
+			printf("%g\n", speed[i]);
 		}
 
 		//get the direction
-		void getDirection()
+		void getDirection(int i)
 		{
-			direction = vec3(rand.get(-1.0f, 1.0f), rand.get(-1.0f, 1.0f), 0.0f);
+			direction[i] = vec3(rand.get(-1.0f, 1.0f), 0.0f, rand.get(-1.0f, 1.0f));
 		}
 
 		//generate a plane and used to update the plane
@@ -229,8 +231,17 @@ namespace octet {
 		//calculate the sine wave
 		void sineWave(int x, int z)
 		{
-			float sine = amplitude * sin(frequency * MESHHEIGHT[x][z] + frame * speed);
-			MESHHEIGHT[x][z] = sine;
+			float height = 0.0f;
+			for (int i = 1; i < numWaves-1; i++)
+			{
+				float xOff = x - direction[i].x();
+				float zOff = z - direction[i].z();
+				float theta = sqrt(xOff*xOff + zOff*zOff);
+				float sine = amplitude[i]* sin(frequency[i] * theta + frame * speed[i] *0.5f);
+				height += sine;
+				//printf("%g\n", height);
+			}
+			MESHHEIGHT[x][z] = height;
 		}
 
 		//rocks
@@ -241,6 +252,8 @@ namespace octet {
 		
 		/// this is called once OpenGL is initialized
 		void app_init() {
+
+
 			app_scene = new visual_scene();
 			app_scene->create_default_camera_and_lights();
 			scene_node *water_node = app_scene->add_scene_node();
@@ -255,7 +268,10 @@ namespace octet {
 			cam->translate(vec3(20, 45, 30));
 			cam->rotate(-45, vec3(1, 0, 0));
 			app_scene->get_camera_instance(0)->set_far_plane(1000);
-			loadWave(num);
+			for (int i = 0; i < numWaves; i++)
+			{
+				loadWave(i);
+			}
 		}
 
 		/// this is called to draw the world
@@ -273,9 +289,9 @@ namespace octet {
 				for (int x = 0; x < PADDEDHEIGHT; x++)
 				{
 					sineWave(x, z);
-					frame++;
 				}
 			}
+			frame++;
 
 			//Key input for wireframe
 			if (is_key_going_down(key_space))
@@ -317,12 +333,13 @@ namespace octet {
 			//increase and decrease the water bed
 			/*if (is_key_going_down('Q'))
 			{
-				
+				amplitude += 0.1f;
 			}
 
 			if (is_key_going_down('A'))
 			{
-				
+
+				amplitude -=0.1f;
 			}*/
 
 			waterMesh.get_mesh(*mWater);
