@@ -1,5 +1,4 @@
 wavelength:10.1;
-amplitude:20;
+amplitude:0.02;
 speed:3.06;
-steepness:12.59;
 end

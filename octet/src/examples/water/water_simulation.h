@@ -25,21 +25,24 @@ namespace octet {
 		ref<mesh> mWater;
 		mesh_builder waterMesh;
 		scene_node *cam;
-		time_t timer;
 
 		dynarray<char> read;
 		dynarray<char> waveLengthStr;
 		dynarray<char> amplitudeStr;
 		dynarray<char> speedStr;
-		dynarray<char> steepStr;
 
-		float wavelength, amplitude, speed, steepness, frequency;
+		float wavelength, amplitude, speed;
+		vec3 direction;
 		float frame = 1;
 
 		int num = 1;
+		int numWaves = 8;
+		int rotate = 0, local = 15;
 
 		bool wire = false;
 		bool startup = true;
+
+		random rand;
 
 		float MESHHEIGHT[WIDTH][HEIGHT], U[WIDTH][HEIGHT], V[WIDTH][HEIGHT];
 
@@ -87,7 +90,7 @@ namespace octet {
 				getWaveLength();
 				getAmplitude();
 				getSpeed();
-				getSteepness();
+				getDirection();
 				read.push_back('\0');
 			}
 		}
@@ -109,8 +112,7 @@ namespace octet {
 			}
 
 			wavelength = atof(waveLengthStr.data());
-			printf("%f\n", wavelength);
-			frequency = TWOPI / wavelength;
+			printf("%g\n", wavelength);
 		}
 
 		//get the amplitude and normalized between 0 and 1
@@ -130,29 +132,7 @@ namespace octet {
 			}
 
 			amplitude = atof(amplitudeStr.data());
-			
-			amplitude = ((amplitude - 0) / (100 - 0));
 			printf("%g\n", amplitude);
-		}
-
-		//get the steepness
-		void getSteepness()
-		{
-			steepStr.reset();
-			string str(read.data(), read.size());
-			int startLoc = str.find("steepness:");
-			startLoc += 10;
-			int endLoc = str.find("end");
-			endLoc -= 2;
-
-			for (int i = startLoc; i < endLoc; ++i)
-			{
-				steepStr.push_back(read[i]);
-			}
-
-			steepness = atof(steepStr.data());
-
-			printf("%f\n", steepness);
 		}
 
 		//get the speed
@@ -162,7 +142,7 @@ namespace octet {
 			string str(read.data(), read.size());
 			int startLoc = str.find("speed:");
 			startLoc += 6;
-			int endLoc = str.find("steepness:");
+			int endLoc = str.find("end");
 			endLoc -= 2;
 
 			for (int i = startLoc; i < endLoc; ++i)
@@ -172,8 +152,13 @@ namespace octet {
 			}
 
 			speed = atof(speedStr.data());
-			speed = TWOPI / wavelength;
 			printf("%g\n", speed);
+		}
+
+		//get the direction
+		void getDirection()
+		{
+			direction = vec3(rand.get(-1.0f, 1.0f), rand.get(-1.0f, 1.0f), 0.0f);
 		}
 
 		//generate a plane and used to update the plane
@@ -183,11 +168,13 @@ namespace octet {
 			vec3 normals[4];
 			int vertexNum;
 
+			//delete the vertices for redrawing a new wave
 			if (!first)
 			{
 				waterMesh.deleteVertices();
 			}
 
+			//on startup set the height of the wave to 0
 			if (first)
 			{
 				vertexNum = 0;
@@ -200,9 +187,10 @@ namespace octet {
 				}
 			}
 
-			for (int z = 0; z < 40; z++)
+			//go through each (x,z) coordinate and set the vertices.
+			for (int z = 0; z < WIDTH; z++)
 			{
-				for (int x = 0; x < 40; x++)
+				for (int x = 0; x < HEIGHT; x++)
 				{
 					vertices[0] = vec3(x*1.0f, MESHHEIGHT[x][z], z*1.0f);
 					vertices[1] = vec3(x*1.0 + 1.0f, MESHHEIGHT[x + 1][z], z*1.0f);
@@ -231,16 +219,15 @@ namespace octet {
 					}
 				}
 			}
+
 			startup = false;
 		}
 
 		//TODO
-		//calculate the sine wave
+		/*//calculate the sine wave
 		void sineWave(int x, int z)
 		{
-			float sine;
-			sine = amplitude * sin(frequency * MESHHEIGHT[x][z] + frame * speed);
-			MESHHEIGHT[x][z] = sine;
+
 		}
 
 		//skybox
@@ -253,9 +240,8 @@ namespace octet {
 		void rocks()
 		{
 
-		}
-
-
+		}*/
+		
 		/// this is called once OpenGL is initialized
 		void app_init() {
 			app_scene = new visual_scene();
@@ -269,7 +255,8 @@ namespace octet {
 			mWater->set_mode(GL_TRIANGLES);
 			app_scene->add_mesh_instance(new mesh_instance(water_node, mWater, blue));
 			cam = app_scene->get_camera_instance(0)->get_node();
-			cam->translate(vec3(20, 10, 40));
+			cam->translate(vec3(20, 45, 35));
+			cam->rotate(-45, vec3(1, 0, 0));
 			loadWave(num);
 		}
 
@@ -283,30 +270,19 @@ namespace octet {
 
 			meshGeneration(startup);
 
-			for (int z = 0; z < PADDEDWIDTH; z++)
-			{
-				for (int x = 0; x < PADDEDHEIGHT; x++)
-				{
-					sineWave(x, z);
-					//printf("%g ", sine);
-					frame++;
-				}
-			}
-
-
 			//Key input for wireframe
 			if (is_key_going_down(key_space))
 			{
-				if (wire)
+				if (!wire)
 				{
 					glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-					wire = false;
+					wire = !wire;
 				}
 
 				else
 				{
 					glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-					wire = true;
+					wire = !wire;
 				}
 			}
 
@@ -330,28 +306,17 @@ namespace octet {
 				loadWave(num);
 			}
 
+			//TODO
 			//increase and decrease the water bed
-			if (is_key_going_down('Q'))
+			/*if (is_key_going_down('Q'))
 			{
-				for (int i = 50; i < 75; i++)
-				{
-					for (int j = 2; j < 50; j++)
-					{
-						MESHHEIGHT[i][j] += 0.1f;
-					}
-				}
+				
 			}
 
 			if (is_key_going_down('A'))
 			{
-				for (int i = 30; i < 60; i++)
-				{
-					for (int j = 0; j < 80; j++)
-					{
-						MESHHEIGHT[i][j] -= 0.1f;
-					}
-				}
-			}
+				
+			}*/
 
 			waterMesh.get_mesh(*mWater);
 
