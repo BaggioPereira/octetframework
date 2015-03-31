@@ -8,6 +8,7 @@
 #include <fstream>
 #include <sstream>
 #include <time.h>
+#include "sky_box.h"
 
 namespace octet {
 	/// Scene containing a box with octet.
@@ -31,13 +32,12 @@ namespace octet {
 		dynarray<char> amplitudeStr;
 		dynarray<char> speedStr;
 
-		float wavelength, amplitude, speed;
+		float wavelength, amplitude, speed, frequency;
 		vec3 direction;
 		float frame = 1;
 
 		int num = 1;
 		int numWaves = 8;
-		int rotate = 0, local = 15;
 
 		bool wire = false;
 		bool startup = true;
@@ -112,6 +112,7 @@ namespace octet {
 			}
 
 			wavelength = atof(waveLengthStr.data());
+			frequency = TWOPI / wavelength;
 			printf("%g\n", wavelength);
 		}
 
@@ -152,6 +153,7 @@ namespace octet {
 			}
 
 			speed = atof(speedStr.data());
+			speed = speed / wavelength;
 			printf("%g\n", speed);
 		}
 
@@ -224,20 +226,15 @@ namespace octet {
 		}
 
 		//TODO
-		/*//calculate the sine wave
+		//calculate the sine wave
 		void sineWave(int x, int z)
 		{
-
-		}
-
-		//skybox
-		void skybox()
-		{
-
+			float sine = amplitude * sin(frequency * MESHHEIGHT[x][z] + frame * speed);
+			MESHHEIGHT[x][z] = sine;
 		}
 
 		//rocks
-		void rocks()
+		/*void rocks()
 		{
 
 		}*/
@@ -255,8 +252,9 @@ namespace octet {
 			mWater->set_mode(GL_TRIANGLES);
 			app_scene->add_mesh_instance(new mesh_instance(water_node, mWater, blue));
 			cam = app_scene->get_camera_instance(0)->get_node();
-			cam->translate(vec3(20, 45, 35));
+			cam->translate(vec3(20, 45, 30));
 			cam->rotate(-45, vec3(1, 0, 0));
+			app_scene->get_camera_instance(0)->set_far_plane(1000);
 			loadWave(num);
 		}
 
@@ -269,6 +267,15 @@ namespace octet {
 			glEnable(GL_DEPTH_TEST);
 
 			meshGeneration(startup);
+
+			for (int z = 0; z < PADDEDWIDTH; z++)
+			{
+				for (int x = 0; x < PADDEDHEIGHT; x++)
+				{
+					sineWave(x, z);
+					frame++;
+				}
+			}
 
 			//Key input for wireframe
 			if (is_key_going_down(key_space))

@@ -1,4 +1,4 @@
 wavelength:18.56;
-amplitude:0.02;
+amplitude:0.2;
 speed:3.06;
 end

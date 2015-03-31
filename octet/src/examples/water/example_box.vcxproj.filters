@@ -428,6 +428,9 @@
       <Filter>containers</Filter>
     </ClInclude>
     <ClInclude Include="water_simulation.h" />
+    <ClInclude Include="sky_box.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\resources\mesh_builder.inl">
