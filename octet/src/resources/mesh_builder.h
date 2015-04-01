@@ -138,6 +138,7 @@ namespace octet { namespace resources {
       indices.push_back(index);
     }
 
+	// delete the vertices
 	void deleteVertices()
 	{
 		vertices.reset();

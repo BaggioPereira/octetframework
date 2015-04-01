@@ -7,7 +7,6 @@
 
 #include <fstream>
 #include <sstream>
-#include <time.h>
 #include "sky_box.h"
 
 namespace octet {
@@ -36,16 +35,17 @@ namespace octet {
 		float wavelength[8], amplitude[8], speed[8], frequency[8];
 		vec3 direction[8];
 		float frame = 1;
-
-		int num = 1;
+		float totalSteep = 0.5f;
 		int numWaves = 8;
+		float amplitudeAdd = 0.0f;
 
 		bool wire = false;
 		bool startup = true;
 
 		random rand;
 
-		float MESHHEIGHT[WIDTH][HEIGHT], U[WIDTH][HEIGHT], V[WIDTH][HEIGHT];
+		float MESHHEIGHT[WIDTH][HEIGHT];
+		vec3 MESHNORMALS[WIDTH][HEIGHT];
 
 	public:
 		/// this is called when we construct the class before everything is initialised.
@@ -118,7 +118,7 @@ namespace octet {
 			printf("%g\n", wavelength[i]);
 		}
 
-		//get the amplitude and normalized between 0 and 1
+		//get the amplitude
 		void getAmplitude(int i)
 		{
 			amplitudeStr.reset();
@@ -170,6 +170,7 @@ namespace octet {
 		{
 			vec3 vertices[4];
 			vec3 normals[4];
+			vec2 uv[4];
 			int vertexNum;
 
 			//delete the vertices for redrawing a new wave
@@ -201,13 +202,23 @@ namespace octet {
 					vertices[2] = vec3(x*1.0f + 1.0f, MESHHEIGHT[x + 1][z + 1], z*1.0f + 1.0f);
 					vertices[3] = vec3(x*1.0f, MESHHEIGHT[x][z + 1], z*1.0f + 1.0f);
 
-					normals[0] = cross((vertices[1] - vertices[0]), (vertices[3] - vertices[0]));
+					normals[0] = MESHNORMALS[x][z];
+					normals[1] = MESHNORMALS[x + 1][z];
+					normals[2] = MESHNORMALS[x + 1][z + 1];
+					normals[3] = MESHNORMALS[x][z + 1];
+
+					/*normals[0] = cross((vertices[1] - vertices[0]), (vertices[3] - vertices[0]));
 					normals[1] = cross((vertices[2] - vertices[1]), (vertices[0] - vertices[1]));
 					normals[2] = cross((vertices[3] - vertices[2]), (vertices[1] - vertices[2]));
-					normals[3] = cross((vertices[0] - vertices[3]), (vertices[2] - vertices[3]));
+					normals[3] = cross((vertices[0] - vertices[3]), (vertices[2] - vertices[3]));*/
+
+					uv[0] = vec2(x*(1.0f / 40), z*(1.0f / 40));
+					uv[1] = vec2(x *(1.0f / 40) + (1.0f / 40), z*(1.0f / 40));
+					uv[2] = vec2(x *(1.0f / 40)+(1.0f / 40), z *(1.0f / 40) + (1.0f / 40));
+					uv[3] = vec2(x*(1.0f / 40), z *(1.0f / 40)+(1.0f / 40));
 
 					for (size_t i = 0; i < 4; ++i) {
-						waterMesh.add_vertex(vec4(vertices[i].x(), vertices[i].y(), vertices[i].z(), 1), vec4(normals[i].x(), normals[i].y(), normals[i].z(), 1), 1, 1);
+						waterMesh.add_vertex(vec4(vertices[i].x(), vertices[i].y(), vertices[i].z(), 1), vec4(normals[i].x(), normals[i].y(), normals[i].z(), 1), uv[i].x(), uv[i].y());
 					}
 
 					if (startup)
@@ -234,14 +245,34 @@ namespace octet {
 			float height = 0.0f;
 			for (int i = 1; i < numWaves-1; i++)
 			{
-				float xOff = x - direction[i].x();
+				/*float xOff = x - direction[i].x();
 				float zOff = z - direction[i].z();
 				float theta = sqrt(xOff*xOff + zOff*zOff);
-				float sine = amplitude[i]* sin(frequency[i] * theta + frame * speed[i] *0.5f);
-				height += sine;
+				float sine = (amplitude[i] + amplitudeAdd)* sin(frequency[i] * theta - frame * speed[i] *0.5f);*/
+				float steep = totalSteep / (frequency[i] * amplitude[i] * numWaves);
+				float radians = frequency[i] * direction[i].dot(vec3(x, 0.0f, z)) +  frame * speed[i];
+				float yPos = steep * direction[i].z() * cosf(radians);
+				height += yPos;
 				//printf("%g\n", height);
 			}
 			MESHHEIGHT[x][z] = height;
+		}
+
+		void getNormals(int x, int z)
+		{
+			vec3 normals = vec3(0.0f, 0.0f, 1.0f);
+			for (int i = 0; i < numWaves - 1; i++)
+			{
+				//float heightTerm =  speed [i] * amplitude[i];
+				float steep = totalSteep / (frequency[i] * amplitude[i] * numWaves);
+				float radians = frequency[i] * direction[i].dot(MESHHEIGHT[x][z]) + frame* speed[i];
+				float xPos = -direction[i].x()*amplitude[i]*frequency[i]*cosf(radians);
+				float yPos = -direction[i].z()*amplitude[i] * frequency[i] * cosf(radians);
+				float zPos = 1 - steep * amplitude[i] * frequency[i] * sinf(radians);
+				normals += vec3(xPos, yPos, zPos);
+			}
+			MESHNORMALS[x][z] = normals;
+			//printf("%g, %g, %g\n", normals.x(), normals.y(), normals.z());
 		}
 
 		//rocks
@@ -252,11 +283,11 @@ namespace octet {
 		
 		/// this is called once OpenGL is initialized
 		void app_init() {
-
-
 			app_scene = new visual_scene();
 			app_scene->create_default_camera_and_lights();
 			scene_node *water_node = app_scene->add_scene_node();
+			image *img = new image("src/examples/water/water.gif");
+			//material *blue = new material(img);
 			material *blue = new material(vec4(0, 0, 1, 1));
 			waterMesh.init();
 			meshGeneration(startup);
@@ -265,7 +296,7 @@ namespace octet {
 			mWater->set_mode(GL_TRIANGLES);
 			app_scene->add_mesh_instance(new mesh_instance(water_node, mWater, blue));
 			cam = app_scene->get_camera_instance(0)->get_node();
-			cam->translate(vec3(20, 45, 30));
+			cam->translate(vec3(20, 40, 30));
 			cam->rotate(-45, vec3(1, 0, 0));
 			app_scene->get_camera_instance(0)->set_far_plane(1000);
 			for (int i = 0; i < numWaves; i++)
@@ -289,6 +320,7 @@ namespace octet {
 				for (int x = 0; x < PADDEDHEIGHT; x++)
 				{
 					sineWave(x, z);
+					getNormals(x, z);
 				}
 			}
 			frame++;
@@ -309,38 +341,17 @@ namespace octet {
 				}
 			}
 
-			//change the wave file
-			if (is_key_going_down(key_left))
-			{
-				if (num > 1)
-				{
-					num--;
-					loadWave(num);
-				}
-				else
-				{
-					printf("No more waves\n");
-				}
-			}
-
-			if (is_key_going_down(key_right))
-			{
-				num++;
-				loadWave(num);
-			}
-
 			//TODO
 			//increase and decrease the water bed
-			/*if (is_key_going_down('Q'))
+			if (is_key_going_down('Q'))
 			{
-				amplitude += 0.1f;
+				amplitudeAdd += 0.01f;
 			}
 
 			if (is_key_going_down('A'))
 			{
-
-				amplitude -=0.1f;
-			}*/
+				amplitudeAdd -= 0.01f;	
+			}
 
 			waterMesh.get_mesh(*mWater);
 
