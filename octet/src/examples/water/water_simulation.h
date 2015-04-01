@@ -1,5 +1,6 @@
 #include <fstream>
 #include <sstream>
+#include <time.h>
 #include "sky_box.h"
 
 namespace octet{
@@ -40,6 +41,13 @@ namespace octet{
 		dynarray<char> speedStr;
 		dynarray<vertexNormal> norms;
 
+		//array of floats and vec3 for sine wave parameters
+		float wavelength[8], amplitude[8], speed[8], frequency[8];
+		vec3 direction[8];
+
+		//random number generator
+		random rand;
+
 		//array for vertex
 		float MESHHEIGHT[WIDTH][HEIGHT];
 
@@ -52,6 +60,119 @@ namespace octet{
 
 		}
 
+		//load the wave file
+		void loadWave(int waveNum)
+		{
+			std::fstream myFile;
+			std::stringstream waveStr;
+			std::string waveFile;
+			read.reset();
+			waveStr.clear();
+			waveFile.clear();
+			waveStr << "wave" << waveNum << ".txt";
+			waveFile = waveStr.str();
+			myFile.open(waveFile, std::ios::in);
+
+			if (!myFile.is_open())
+			{
+				printf("File is not found/opened\n");
+			}
+			else
+			{
+				printf("File found/opened\n");
+			}
+
+			myFile.seekg(0, myFile.end);
+			unsigned int length = myFile.tellg();
+			myFile.seekg(0, myFile.beg);
+			waveNum -= 1;
+
+			if (length == -1)
+			{
+				length = 0;
+			}
+
+			if (length != 0)
+			{
+				read.resize(length);
+				myFile.read(read.data(), length);
+				myFile.close();
+				getWaveLength(waveNum);
+				getAmplitude(waveNum);
+				getSpeed(waveNum);
+				getDirection(waveNum);
+				read.push_back('\0');
+			}
+		}
+
+		//get the wavelength and frequency
+		void getWaveLength(int i)
+		{
+			waveLengthStr.reset();
+			string str(read.data(), read.size());
+			int startLoc = str.find("wavelength:");
+			startLoc += 11;
+			int endLoc = str.find("amplitude:");
+			endLoc -= 2;
+
+			for (int i = startLoc; i < endLoc; ++i)
+			{
+				waveLengthStr.push_back(read[i]);
+				//read[i] = NULL;
+			}
+
+			wavelength[i] = atof(waveLengthStr.data());
+			frequency[i] = TWOPI / wavelength[i];
+			printf("%g\n", wavelength[i]);
+		}
+
+		//get the amplitude
+		void getAmplitude(int i)
+		{
+			amplitudeStr.reset();
+			string str(read.data(), read.size());
+			int startLoc = str.find("amplitude:");
+			startLoc += 10;
+			int endLoc = str.find("speed:");
+			endLoc -= 2;
+
+			for (int i = startLoc; i < endLoc; ++i)
+			{
+				amplitudeStr.push_back(read[i]);
+				//read[i] = NULL;
+			}
+
+			amplitude[i] = atof(amplitudeStr.data());
+			printf("%g\n", amplitude[i]);
+		}
+
+		//get the speed
+		void getSpeed(int i)
+		{
+			speedStr.reset();
+			string str(read.data(), read.size());
+			int startLoc = str.find("speed:");
+			startLoc += 6;
+			int endLoc = str.find("end");
+			endLoc -= 2;
+
+			for (int i = startLoc; i < endLoc; ++i)
+			{
+				speedStr.push_back(read[i]);
+				//read[i] = NULL;
+			}
+
+			speed[i] = atof(speedStr.data());
+			printf("%g\n", speed[i]);
+		}
+
+		//get the direction
+		void getDirection(int i)
+		{
+			direction[i] = vec3(rand.get(-1.0f, 1.0f), rand.get(-1.0f, 1.0f), 0.0f);
+		}
+
+		//generate the mesh
 		void meshGeneration(bool first)
 		{
 			vec3 vertices[4];
@@ -133,11 +254,13 @@ namespace octet{
 			start = false;
 		}
 
+		//this is called once OpenGL is initalized
 		void app_init()
 		{
 			app_scene = new visual_scene;
 			app_scene->create_default_camera_and_lights();
 			scene_node *water_node = app_scene->add_scene_node();
+			rand.set_seed(time(0));
 			material *blue = new material(vec4(0, 0, 1, 1));
 			waterMesh.init();
 			meshGeneration(start);
@@ -149,8 +272,13 @@ namespace octet{
 			cam->translate(vec3(32, 64, 70));
 			cam->rotate(-45, vec3(1, 0, 0));
 			app_scene->get_camera_instance(0)->set_far_plane(100);
+			for (int i = 0; i < 8; ++i)
+			{
+				loadWave(i);
+			}
 		}
 
+		//this is called to draw the world
 		void draw_world(int x, int y, int w, int h)
 		{
 			int vx = 0, vy = 0;
