@@ -1,18 +1,19 @@
 #include <fstream>
 #include <sstream>
-#include <time.h>
+#include <ctime>
 #include "sky_box.h"
 
 namespace octet{
-
-#define TWOPI  6.283185
-#define PI 3.141592
-#define HEIGHT 64
-#define WIDTH 64
-#define PADDEDHEIGHT HEIGHT+2
-#define PADDEDWIDTH WIDTH+2
-
 	class water_simulation : public app {
+		
+		//defines
+		#define TWOPI  6.283185
+		#define PI 3.141592
+		#define HEIGHT 64
+		#define WIDTH 64
+		#define PADDEDHEIGHT HEIGHT+2
+		#define PADDEDWIDTH WIDTH+2
+
 		ref<visual_scene> app_scene;
 		ref<mesh> mWater;
 		mesh_builder waterMesh;
@@ -42,17 +43,26 @@ namespace octet{
 		dynarray<vertexNormal> norms;
 
 		//array of floats and vec3 for sine wave parameters
-		float wavelength[8], amplitude[8], speed[8], frequency[8];
+		float wavelength[8], amplitude[8], speed[8], frequency[8], phase[8];
 		vec3 direction[8];
 
 		//random number generator
 		random rand;
+
+		//number of sine waves
+		int numWaves = 8;
+
+		//steepness of a wave
+		float steep = 0.5f;
 
 		//array for vertex
 		float MESHHEIGHT[WIDTH][HEIGHT];
 
 		//boolean for inital run
 		bool start = true;
+		bool wire = false;
+		//frame counter
+		int frame = 1;
 
 	public:
 		water_simulation(int argc, char **argv) : app(argc, argv) 
@@ -163,6 +173,8 @@ namespace octet{
 			}
 
 			speed[i] = atof(speedStr.data());
+			speed[i] = speed[i] * 0.1f;
+			phase[i] = speed[i] * TWOPI / wavelength[i];
 			printf("%g\n", speed[i]);
 		}
 
@@ -200,9 +212,9 @@ namespace octet{
 				}
 			}
 
-			for (int z = 0; z < WIDTH; z++)
+			for (int z = 0; z < HEIGHT; z++)
 			{
-				for (int x = 0; x < HEIGHT; x++)
+				for (int x = 0; x < WIDTH; x++)
 				{
 					//setup vertices
 					vertices[0] = vec3(x*1.0f, MESHHEIGHT[x][z], z*1.0f);
@@ -211,27 +223,27 @@ namespace octet{
 					vertices[3] = vec3(x*1.0f, MESHHEIGHT[x][z + 1], z*1.0f + 1.0f);
 
 					//normals at first run
-					if (start)
-					{
+					//if (start)
+					//{
 						normals[0] = cross((vertices[1] - vertices[0]), (vertices[3] - vertices[0]));
 						normals[1] = cross((vertices[2] - vertices[1]), (vertices[0] - vertices[1]));
 						normals[2] = cross((vertices[3] - vertices[2]), (vertices[1] - vertices[2]));
 						normals[3] = cross((vertices[0] - vertices[3]), (vertices[2] - vertices[3]));
-					}
+					//}
 
 					//updated normals
-					else
+					/*else
 					{
 						normals[0] = vec3(norms[x].x, norms[x].y,norms[x].z);
 						normals[1] = vec3(norms[x+1].x, norms[x].y, norms[x].z);
 						normals[2] = vec3(norms[x+66].x, norms[x].y, norms[x].z);
 						normals[3] = vec3(norms[x+67].x, norms[x].y, norms[x].z);
-					}
+					}*/
 					
 					//add vertex to mesh
 					for (size_t i = 0; i < 4; i++)
 					{
-						waterMesh.add_vertex(vec4(vertices[i], 1.0f), vec4(normals[i], 1.0f), 1, 1);
+						waterMesh.add_vertex(vec4(vertices[i].x(), vertices[i].y(), vertices[i].z(), 1.0f), vec4(normals[i].x(), normals[i].y(), normals[i].z(), 1.0f), 1, 1);
 					}
 
 					//create the triangles
@@ -254,6 +266,25 @@ namespace octet{
 			start = false;
 		}
 
+		//TODO NEEDS FIXING
+		void gerstnerWaves(int x, int z)
+		{
+			float yCoord = 0.0f;
+			for (int i = 0; i < numWaves -1; i++)
+			{
+				float steepness = steep / frequency[i] * amplitude[i] * numWaves;
+				float angle = frequency[i] * direction[i].dot(vec3(x,MESHHEIGHT[x][z],0.0f)) + frame * phase[i];
+				float yPos = steepness *amplitude[i] * direction[i].y() * cosf(angle);
+				yCoord += yPos;
+			}
+			MESHHEIGHT[x][z] = yCoord;
+		}
+
+		void calculateNormals()
+		{
+
+		}
+
 		//this is called once OpenGL is initalized
 		void app_init()
 		{
@@ -272,7 +303,7 @@ namespace octet{
 			cam->translate(vec3(32, 64, 70));
 			cam->rotate(-45, vec3(1, 0, 0));
 			app_scene->get_camera_instance(0)->set_far_plane(100);
-			for (int i = 0; i < 8; ++i)
+			for (int i = 0; i < numWaves; ++i)
 			{
 				loadWave(i);
 			}
@@ -286,9 +317,35 @@ namespace octet{
 			app_scene->begin_render(vx, vy);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			glEnable(GL_DEPTH_TEST);
+			
 
 			//generate new plane with new points
 			meshGeneration(start);
+
+			for (int z = 0; z < HEIGHT; z++)
+			{
+				for (int x = 0; x < WIDTH; x++)
+				{
+					gerstnerWaves(x, z);
+				}
+			}
+
+			frame++;
+
+			if (is_key_going_down(key_space))
+			{
+				if (!wire)
+				{
+					glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+					wire = !wire;
+				}
+
+				else
+				{
+					glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+					wire = !wire;
+				}
+			}
 
 			//get the new mesh
 			waterMesh.get_mesh(*mWater);
