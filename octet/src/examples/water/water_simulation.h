@@ -59,21 +59,22 @@ namespace octet{
 			vec2 uvs[4];
 			int vertexNum;
 
+			//delete old vertices
 			if (!first) 
 			{
 				waterMesh.deleteVertices();
 			}
 
+			//for first run, set default variables for flat plane
 			if (first)
 			{
 				vertexNum = 0;
-				printf("%g\n", norms.size());
 				for (int i = 0; i < PADDEDWIDTH; i++)
 				{
 					for (int j = 0; j < PADDEDHEIGHT; j++)
 					{
 						MESHHEIGHT[i][j] = 0.0f;
-						norms.push_back(vertexNormal(0.0f, 1.0f, 0.0f));
+						norms.push_back(vertexNormal(0.0f, -1.0f, 0.0f));
 					}
 				}
 			}
@@ -82,21 +83,40 @@ namespace octet{
 			{
 				for (int x = 0; x < HEIGHT; x++)
 				{
+					//setup vertices
 					vertices[0] = vec3(x*1.0f, MESHHEIGHT[x][z], z*1.0f);
 					vertices[1] = vec3(x*1.0 + 1.0f, MESHHEIGHT[x + 1][z], z*1.0f);
 					vertices[2] = vec3(x*1.0f + 1.0f, MESHHEIGHT[x + 1][z + 1], z*1.0f + 1.0f);
 					vertices[3] = vec3(x*1.0f, MESHHEIGHT[x][z + 1], z*1.0f + 1.0f);
 
-					normals[0] = cross((vertices[1] - vertices[0]), (vertices[3] - vertices[0]));
-					normals[0] = cross((vertices[1] - vertices[0]), (vertices[3] - vertices[0]));
-					normals[0] = cross((vertices[1] - vertices[0]), (vertices[3] - vertices[0]));
-					normals[0] = cross((vertices[1] - vertices[0]), (vertices[3] - vertices[0]));
+					//normals at first run
+					if (start)
+					{
+						normals[0] = cross((vertices[1] - vertices[0]), (vertices[3] - vertices[0]));
+						normals[1] = cross((vertices[2] - vertices[1]), (vertices[0] - vertices[1]));
+						normals[2] = cross((vertices[3] - vertices[2]), (vertices[1] - vertices[2]));
+						normals[3] = cross((vertices[0] - vertices[3]), (vertices[2] - vertices[3]));
+					}
 
+					//updated normals
+					else
+					{
+						normals[0] = vec3(norms[x].x, norms[x].y,norms[x].z);
+						normals[1] = vec3(norms[x+1].x, norms[x].y, norms[x].z);
+						normals[2] = vec3(norms[x+66].x, norms[x].y, norms[x].z);
+						normals[3] = vec3(norms[x+67].x, norms[x].y, norms[x].z);
+					}
+					
+					//add vertex to mesh
 					for (size_t i = 0; i < 4; i++)
 					{
 						waterMesh.add_vertex(vec4(vertices[i], 1.0f), vec4(normals[i], 1.0f), 1, 1);
 					}
 
+					//create the triangles
+					// 0--1
+					// | \|
+					// 3--2
 					if (first)
 					{
 						waterMesh.add_index(vertexNum);
@@ -109,6 +129,7 @@ namespace octet{
 					}
 				}
 			}
+			//set false once first run is complete
 			start = false;
 		}
 
@@ -138,9 +159,10 @@ namespace octet{
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			glEnable(GL_DEPTH_TEST);
 
+			//generate new plane with new points
 			meshGeneration(start);
 
-
+			//get the new mesh
 			waterMesh.get_mesh(*mWater);
 
 			// update matrices. assume 30 fps.
