@@ -17,30 +17,14 @@ namespace octet{
 		ref<visual_scene> app_scene;
 		ref<mesh> mWater;
 		mesh_builder waterMesh;
-		scene_node *cam;
-
-		//struct for normals
-		struct vertexNormal{
-			float x; 
-			float y; 
-			float z;
-
-			vertexNormal() = default;
-
-			vertexNormal(float xIn, float yIn, float zIn)
-			{
-				x = xIn;
-				y = yIn;
-				z = zIn;
-			}
-		};
+		scene_node *cam, *water_node;
+		material *blue, *waterMat;
 
 		//dynarray for txt files and normals
 		dynarray<char> read;
 		dynarray<char> waveLengthStr;
 		dynarray<char> amplitudeStr;
 		dynarray<char> speedStr;
-		dynarray<vertexNormal> norms;
 
 		//array of floats and vec3 for sine wave parameters
 		float wavelength[8], amplitude[8], speed[8], frequency[8], phase[8];
@@ -60,7 +44,12 @@ namespace octet{
 
 		//boolean for inital run
 		bool start = true;
+
+		//boolean for wireframe mode
 		bool wire = false;
+
+		bool solid = false;
+
 		//frame counter
 		int frame = 1;
 
@@ -207,7 +196,6 @@ namespace octet{
 					for (int j = 0; j < PADDEDHEIGHT; j++)
 					{
 						MESHHEIGHT[i][j] = 0.0f;
-						norms.push_back(vertexNormal(0.0f, -1.0f, 0.0f));
 					}
 				}
 			}
@@ -222,28 +210,21 @@ namespace octet{
 					vertices[2] = vec3(x*1.0f + 1.0f, MESHHEIGHT[x + 1][z + 1], z*1.0f + 1.0f);
 					vertices[3] = vec3(x*1.0f, MESHHEIGHT[x][z + 1], z*1.0f + 1.0f);
 
-					//normals at first run
-					//if (start)
-					//{
-						normals[0] = cross((vertices[1] - vertices[0]), (vertices[3] - vertices[0]));
-						normals[1] = cross((vertices[2] - vertices[1]), (vertices[0] - vertices[1]));
-						normals[2] = cross((vertices[3] - vertices[2]), (vertices[1] - vertices[2]));
-						normals[3] = cross((vertices[0] - vertices[3]), (vertices[2] - vertices[3]));
-					//}
+					//calculate the normals
+					normals[0] = cross((vertices[1] - vertices[0]), (vertices[3] - vertices[0]));
+					normals[1] = cross((vertices[2] - vertices[1]), (vertices[0] - vertices[1]));
+					normals[2] = cross((vertices[3] - vertices[2]), (vertices[1] - vertices[2]));
+					normals[3] = cross((vertices[0] - vertices[3]), (vertices[2] - vertices[3]));
 
-					//updated normals
-					/*else
-					{
-						normals[0] = vec3(norms[x].x, norms[x].y,norms[x].z);
-						normals[1] = vec3(norms[x+1].x, norms[x].y, norms[x].z);
-						normals[2] = vec3(norms[x+66].x, norms[x].y, norms[x].z);
-						normals[3] = vec3(norms[x+67].x, norms[x].y, norms[x].z);
-					}*/
+					uvs[0] = vec2(x*(1.0f / HEIGHT), z*(1.0f / WIDTH));
+					uvs[1] = vec2(x *(1.0f / HEIGHT) + (1.0f / HEIGHT), z*(1.0f / WIDTH));
+					uvs[2] = vec2(x *(1.0f / HEIGHT) + (1.0f / HEIGHT), z *(1.0f / WIDTH) + (1.0f / WIDTH));
+					uvs[3] = vec2(x*(1.0f / HEIGHT), z *(1.0f / WIDTH) + (1.0f / WIDTH));
 					
 					//add vertex to mesh
 					for (size_t i = 0; i < 4; i++)
 					{
-						waterMesh.add_vertex(vec4(vertices[i].x(), vertices[i].y(), vertices[i].z(), 1.0f), vec4(normals[i].x(), normals[i].y(), normals[i].z(), 1.0f), 1, 1);
+						waterMesh.add_vertex(vec4(vertices[i].x(), vertices[i].y(), vertices[i].z(), 1.0f), vec4(normals[i].x(), normals[i].y(), normals[i].z(), 1.0f), uvs[i].x(), uvs[i].y());
 					}
 
 					//create the triangles
@@ -266,12 +247,21 @@ namespace octet{
 			start = false;
 		}
 
-		//TODO NEEDS FIXING
+		//calculate new height for the point
 		void gerstnerWaves(int x, int z)
 		{
 			float yCoord = 0.0f;
-			for (int i = 0; i < numWaves -1; i++)
-			{
+			
+			for (int i = 0; i < numWaves; ++i)
+			{	
+				//sum sine waves
+				float xOff = x - direction[i].x();
+				float zOff = z - direction[i].y();
+				float theta = sqrt(xOff *xOff + zOff*zOff);
+				float sine = 0.1f * sin(frequency[i] * theta + frame * speed[i]);
+				yCoord += sine;
+
+				//gerstner waves
 				float steepness = steep / frequency[i] * amplitude[i] * numWaves;
 				float angle = frequency[i] * direction[i].dot(vec3(x,MESHHEIGHT[x][z],0.0f)) + frame * phase[i];
 				float yPos = steepness *amplitude[i] * direction[i].y() * cosf(angle);
@@ -280,29 +270,29 @@ namespace octet{
 			MESHHEIGHT[x][z] = yCoord;
 		}
 
-		void calculateNormals()
-		{
-
-		}
-
 		//this is called once OpenGL is initalized
 		void app_init()
 		{
 			app_scene = new visual_scene;
 			app_scene->create_default_camera_and_lights();
-			scene_node *water_node = app_scene->add_scene_node();
+			water_node = app_scene->add_scene_node();
 			rand.set_seed(time(0));
-			material *blue = new material(vec4(0, 0, 1, 1));
+			image *waterImg = new image("src/examples/water/water.gif");
+			blue = new material(vec4(0, 0, 1, 1));
+			waterMat = new material(waterImg);
 			waterMesh.init();
 			meshGeneration(start);
 			mWater = new mesh();
 			waterMesh.get_mesh(*mWater);
 			mWater->set_mode(GL_TRIANGLES);
-			app_scene->add_mesh_instance(new mesh_instance(water_node, mWater, blue));
+			//app_scene->add_mesh_instance(new mesh_instance(water_node, mWater, blue));
+			app_scene->add_mesh_instance(new mesh_instance(water_node, mWater, waterMat));
 			cam = app_scene->get_camera_instance(0)->get_node();
 			cam->translate(vec3(32, 64, 70));
 			cam->rotate(-45, vec3(1, 0, 0));
 			app_scene->get_camera_instance(0)->set_far_plane(100);
+
+			//load all the files
 			for (int i = 0; i < numWaves; ++i)
 			{
 				loadWave(i);
@@ -322,6 +312,7 @@ namespace octet{
 			//generate new plane with new points
 			meshGeneration(start);
 
+			//call to calculate new points
 			for (int z = 0; z < HEIGHT; z++)
 			{
 				for (int x = 0; x < WIDTH; x++)
@@ -330,8 +321,10 @@ namespace octet{
 				}
 			}
 
-			frame++;
+			//frame counter increment;
+			++frame;
 
+			//key input for wireframe
 			if (is_key_going_down(key_space))
 			{
 				if (!wire)
@@ -346,6 +339,23 @@ namespace octet{
 					wire = !wire;
 				}
 			}
+
+			/*if (is_key_going_down('M'))
+			{
+				if (solid)
+				{
+					app_scene->get_mesh_instance(1)->get_node()->set_enabled(false);
+					app_scene->get_mesh_instance(0)->get_node()->set_enabled(true);
+					solid = !solid;
+				}
+
+				else if (!solid)
+				{
+					app_scene->get_mesh_instance(0)->get_node()->set_enabled(false);
+					app_scene->get_mesh_instance(1)->get_node()->set_enabled(true);
+					solid = !solid;
+				}
+			}*/
 
 			//get the new mesh
 			waterMesh.get_mesh(*mWater);
