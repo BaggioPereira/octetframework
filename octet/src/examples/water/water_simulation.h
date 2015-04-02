@@ -292,8 +292,8 @@ namespace octet{
 			mWater->set_mode(GL_TRIANGLES);
 			app_scene->add_mesh_instance(new mesh_instance(water_node, mWater, blue));
 			cam = app_scene->get_camera_instance(0)->get_node();
-			cam->translate(vec3(32, 10, 64));
-			//cam->rotate(-45, vec3(1, 0, 0));
+			cam->translate(vec3(32, 64, 70));
+			cam->rotate(-45, vec3(1, 0, 0));
 			app_scene->get_camera_instance(0)->set_far_plane(1000);
 
 			//load all the files
@@ -302,6 +302,7 @@ namespace octet{
 				loadWave(i);
 			}
 
+			//for rendering the rocks
 			sea.render();
 			app_scene->add_mesh_instance(new mesh_instance(sea.seaNode, sea.seaMesh, sea.seabed));
 		}
