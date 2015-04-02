@@ -19,6 +19,7 @@ namespace octet{
 		mesh_builder waterMesh;
 		scene_node *cam, *water_node;
 		material *blue, *waterMat;
+		image *waterImg;
 
 		//dynarray for txt files and normals
 		dynarray<char> read;
@@ -48,6 +49,7 @@ namespace octet{
 		//boolean for wireframe mode
 		bool wire = false;
 
+		//boolean for solid or texture
 		bool solid = false;
 
 		//frame counter
@@ -170,7 +172,7 @@ namespace octet{
 		//get the direction
 		void getDirection(int i)
 		{
-			direction[i] = vec3(rand.get(-1.0f, 1.0f), rand.get(-1.0f, 1.0f), 0.0f);
+			direction[i] = vec3(rand.get(-1.0f, 1.0f), 0.0f, rand.get(-1.0f, 1.0f));
 		}
 
 		//generate the mesh
@@ -257,14 +259,14 @@ namespace octet{
 				//sum sine waves
 				float xOff = x - direction[i].x();
 				float zOff = z - direction[i].y();
-				float theta = sqrt(xOff *xOff + zOff*zOff);
-				float sine = 0.1f * sin(frequency[i] * theta + frame * speed[i]);
+				float angular = sqrt(pow(xOff,2)+pow(zOff,2));
+				float sine = 0.1f * sin(frequency[i] * angular + frame * phase[i]);
 				yCoord += sine;
 
 				//gerstner waves
 				float steepness = steep / frequency[i] * amplitude[i] * numWaves;
-				float angle = frequency[i] * direction[i].dot(vec3(x,MESHHEIGHT[x][z],0.0f)) + frame * phase[i];
-				float yPos = steepness *amplitude[i] * direction[i].y() * cosf(angle);
+				float angle = frequency[i] * direction[i].dot(vec3(x,MESHHEIGHT[x][z],z)) + frame * phase[i];
+				float yPos = steepness * amplitude[i] * direction[i].z() * cosf(angle);
 				yCoord += yPos;
 			}
 			MESHHEIGHT[x][z] = yCoord;
@@ -277,7 +279,7 @@ namespace octet{
 			app_scene->create_default_camera_and_lights();
 			water_node = app_scene->add_scene_node();
 			rand.set_seed(time(0));
-			image *waterImg = new image("src/examples/water/water.gif");
+			waterImg = new image("src/examples/water/water.gif");
 			blue = new material(vec4(0, 0, 1, 1));
 			waterMat = new material(waterImg);
 			waterMesh.init();
@@ -285,8 +287,7 @@ namespace octet{
 			mWater = new mesh();
 			waterMesh.get_mesh(*mWater);
 			mWater->set_mode(GL_TRIANGLES);
-			//app_scene->add_mesh_instance(new mesh_instance(water_node, mWater, blue));
-			app_scene->add_mesh_instance(new mesh_instance(water_node, mWater, waterMat));
+			app_scene->add_mesh_instance(new mesh_instance(water_node, mWater, blue));
 			cam = app_scene->get_camera_instance(0)->get_node();
 			cam->translate(vec3(32, 64, 70));
 			cam->rotate(-45, vec3(1, 0, 0));
@@ -340,22 +341,23 @@ namespace octet{
 				}
 			}
 
-			/*if (is_key_going_down('M'))
+			//key input to change between texture and solid
+			if (is_key_going_down('M'))
 			{
 				if (solid)
 				{
-					app_scene->get_mesh_instance(1)->get_node()->set_enabled(false);
-					app_scene->get_mesh_instance(0)->get_node()->set_enabled(true);
+					blue = new material(vec4(0, 0, 1, 1));
+					app_scene->get_mesh_instance(0)->set_material(blue);
 					solid = !solid;
 				}
 
-				else if (!solid)
+				else
 				{
-					app_scene->get_mesh_instance(0)->get_node()->set_enabled(false);
-					app_scene->get_mesh_instance(1)->get_node()->set_enabled(true);
+					waterMat = new material(waterImg);
+					app_scene->get_mesh_instance(0)->set_material(waterMat);
 					solid = !solid;
-				}
-			}*/
+				}	
+			}
 
 			//get the new mesh
 			waterMesh.get_mesh(*mWater);
