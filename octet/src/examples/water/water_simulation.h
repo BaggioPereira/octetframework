@@ -1,7 +1,7 @@
 #include <fstream>
 #include <sstream>
 #include <ctime>
-#include "sky_box.h"
+#include "seabedrocks.h"
 
 namespace octet{
 	class water_simulation : public app {
@@ -20,6 +20,8 @@ namespace octet{
 		scene_node *cam, *water_node;
 		material *blue, *waterMat;
 		image *waterImg;
+
+		seabed_rocks sea;
 
 		//dynarray for txt files and normals
 		dynarray<char> read;
@@ -293,15 +295,18 @@ namespace octet{
 			mWater->set_mode(GL_TRIANGLES);
 			app_scene->add_mesh_instance(new mesh_instance(water_node, mWater, blue));
 			cam = app_scene->get_camera_instance(0)->get_node();
-			cam->translate(vec3(32, 64, 70));
-			cam->rotate(-45, vec3(1, 0, 0));
-			app_scene->get_camera_instance(0)->set_far_plane(100);
+			cam->translate(vec3(32, 10, 64));
+			//cam->rotate(-45, vec3(1, 0, 0));
+			app_scene->get_camera_instance(0)->set_far_plane(1000);
 
 			//load all the files
 			for (int i = 0; i < numWaves; ++i)
 			{
 				loadWave(i);
 			}
+
+			sea.render();
+			app_scene->add_mesh_instance(new mesh_instance(sea.seaNode, sea.seaMesh, sea.seabed));
 		}
 
 		//this is called to draw the world
@@ -383,6 +388,15 @@ namespace octet{
 			else if (is_key_going_down('S'))
 			{
 				addedAmp -= 0.01f;
+			}
+
+			//key input for a different wave
+			if (is_key_going_down('N'))
+			{
+				for (int i = 0; i < numWaves; ++i)
+				{
+					loadWave(i);
+				}
 			}
 
 			//get the new mesh
