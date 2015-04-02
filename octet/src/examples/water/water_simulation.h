@@ -55,6 +55,10 @@ namespace octet{
 		//frame counter
 		int frame = 1;
 
+		//floats for additional amplitude and frequency
+		float addedAmp = 0.0f;
+		float addedFreq = 0.0f;
+
 	public:
 		water_simulation(int argc, char **argv) : app(argc, argv) 
 		{
@@ -260,13 +264,13 @@ namespace octet{
 				float xOff = x - direction[i].x();
 				float zOff = z - direction[i].y();
 				float angular = sqrt(pow(xOff,2)+pow(zOff,2));
-				float sine = 0.1f * sin(frequency[i] * angular + frame * phase[i]);
+				float sine = 0.1f * sin((frequency[i] + addedFreq) * angular + frame * phase[i]);
 				yCoord += sine;
 
 				//gerstner waves
-				float steepness = steep / frequency[i] * amplitude[i] * numWaves;
-				float angle = frequency[i] * direction[i].dot(vec3(x,MESHHEIGHT[x][z],z)) + frame * phase[i];
-				float yPos = steepness * amplitude[i] * direction[i].z() * cosf(angle);
+				float steepness = steep / (frequency[i]+addedFreq) * (amplitude[i]+addedAmp) * numWaves;
+				float angle = (frequency[i] + addedFreq) * direction[i].dot(vec3(x, MESHHEIGHT[x][z], z)) + frame * phase[i];
+				float yPos = steepness * (amplitude[i] + addedAmp) * direction[i].z() * cosf(angle);
 				yCoord += yPos;
 			}
 			MESHHEIGHT[x][z] = yCoord;
@@ -357,6 +361,28 @@ namespace octet{
 					app_scene->get_mesh_instance(0)->set_material(waterMat);
 					solid = !solid;
 				}	
+			}
+
+			//key input to alter amplitude
+			if (is_key_going_down('A'))
+			{
+				addedFreq += 0.01f;
+			}
+
+			else if (is_key_going_down('D'))
+			{
+				addedFreq -= 0.01f;
+			}
+
+			//key input to alter frequency
+			if (is_key_going_down('W'))
+			{
+				addedAmp += 0.01f;
+			}
+
+			else if (is_key_going_down('S'))
+			{
+				addedAmp -= 0.01f;
 			}
 
 			//get the new mesh
