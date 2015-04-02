@@ -54,6 +54,9 @@ namespace octet{
 		//boolean for solid or texture
 		bool solid = false;
 
+		//boolean for gerstner calculations
+		bool gerstner = true;
+
 		//frame counter
 		int frame = 1;
 
@@ -266,11 +269,14 @@ namespace octet{
 				float sine = 0.1f * sin((frequency[i] + addedFreq) * angular + frame * phase[i]);
 				yCoord += sine;
 
-				//gerstner waves
-				float steepness = steep / (frequency[i]+addedFreq) * (amplitude[i]+addedAmp) * numWaves;
-				float angle = (frequency[i] + addedFreq) * direction[i].dot(vec3(x, MESHHEIGHT[x][z], z)) + frame * phase[i];
-				float yPos = steepness * (amplitude[i] + addedAmp) * direction[i].z() * cosf(angle);
-				yCoord += yPos;
+				if (gerstner)
+				{
+					//gerstner waves
+					float steepness = steep / (frequency[i] + addedFreq) * (amplitude[i] + addedAmp) * numWaves;
+					float angle = (frequency[i] + addedFreq) * direction[i].dot(vec3(x, MESHHEIGHT[x][z], z)) + frame * phase[i];
+					float yPos = steepness * (amplitude[i] + addedAmp) * direction[i].z() * cosf(angle);
+					yCoord += yPos;
+				}
 			}
 			MESHHEIGHT[x][z] = yCoord;
 		}
@@ -397,6 +403,11 @@ namespace octet{
 				}
 			}
 
+			//key input to enable or disable gerstner waves calculations
+			if (is_key_going_down('G'))
+			{
+				gerstner = !gerstner;
+			}
 
 			//key input to raise and lower "Rocks"
 			if (is_key_going_down(key_up))
