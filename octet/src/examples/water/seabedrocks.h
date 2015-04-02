@@ -30,9 +30,19 @@ namespace octet{
 				seabed = new material(vec4(0.65, 0.16,0.16,1));
 				seaMesh = meshes[0]->get_mesh();
 				seaNode = new scene_node();
-				seaNode->translate(vec3(32, -2, 32));
-				seaNode->scale(6.4);
+				seaNode->translate(vec3(32, -10, 32));
+				seaNode->scale(0.5);
 			}
+		}
+
+		void increment()
+		{
+			seaNode->translate(vec3(0, 1, 0));
+		}
+
+		void decrement()
+		{
+			seaNode->translate(vec3(0, -1, 0));
 		}
 	};
 }

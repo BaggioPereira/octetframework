@@ -130,7 +130,6 @@ namespace octet{
 
 			wavelength[i] = atof(waveLengthStr.data());
 			frequency[i] = TWOPI / wavelength[i];
-			printf("%g\n", wavelength[i]);
 		}
 
 		//get the amplitude
@@ -150,7 +149,6 @@ namespace octet{
 			}
 
 			amplitude[i] = atof(amplitudeStr.data());
-			printf("%g\n", amplitude[i]);
 		}
 
 		//get the speed
@@ -172,7 +170,6 @@ namespace octet{
 			speed[i] = atof(speedStr.data());
 			speed[i] = speed[i] * 0.1f;
 			phase[i] = speed[i] * TWOPI / wavelength[i];
-			printf("%g\n", speed[i]);
 		}
 
 		//get the direction
@@ -300,7 +297,7 @@ namespace octet{
 			app_scene->get_camera_instance(0)->set_far_plane(1000);
 
 			//load all the files
-			for (int i = 0; i < numWaves; ++i)
+			for (int i = 1; i < numWaves; ++i)
 			{
 				loadWave(i);
 			}
@@ -397,6 +394,18 @@ namespace octet{
 				{
 					loadWave(i);
 				}
+			}
+
+
+			//key input to raise and lower "Rocks"
+			if (is_key_going_down(key_up))
+			{
+				sea.increment();
+			}
+
+			else if (is_key_going_down(key_down))
+			{
+				sea.decrement();
 			}
 
 			//get the new mesh

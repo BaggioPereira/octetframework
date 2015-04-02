@@ -428,9 +428,6 @@
       <Filter>containers</Filter>
     </ClInclude>
     <ClInclude Include="water_simulation.h" />
-    <ClInclude Include="sky_box.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="seabedrocks.h">
       <Filter>Source Files</Filter>
     </ClInclude>
