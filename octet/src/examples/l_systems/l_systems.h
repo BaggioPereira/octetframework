@@ -4,6 +4,9 @@
 //
 // Modular Framework for OpenGLES2 rendering on multiple platforms.
 //
+#include <fstream>
+#include <sstream>
+
 namespace octet 
 {
 	/// Scene containing a box with octet.
@@ -20,9 +23,17 @@ namespace octet
 
 		// scene for drawing box
 		ref<visual_scene> app_scene;
+
+		char treenum[64];
+		std::stringstream tree;
 	public:
 		/// this is called when we construct the class before everything is initialised.
 		l_systems(int argc, char **argv) : app(argc, argv) {
+		}
+
+		void loadfile()
+		{
+
 		}
 
 		/// this is called once OpenGL is initialized
@@ -44,6 +55,11 @@ namespace octet
 
 			// draw the scene
 			app_scene->render((float)vx / vy);
+
+			gets(treenum);
+			tree << "tree " << treenum;
+			printf("tree selected is %s\n", tree.str().c_str());
+
 		}
 	};
 }
