@@ -6,6 +6,7 @@
 //
 #include <fstream>
 #include <sstream>
+#include <AntTweakBar.h>
 
 namespace octet 
 {
@@ -26,6 +27,9 @@ namespace octet
 
 		char treenum[64];
 		std::stringstream tree;
+
+		//Tweakbar
+		TwBar *myBar;
 	public:
 		/// this is called when we construct the class before everything is initialised.
 		l_systems(int argc, char **argv) : app(argc, argv) {
@@ -41,6 +45,9 @@ namespace octet
 		{
 			app_scene =  new visual_scene();
 			app_scene->create_default_camera_and_lights();
+			TwInit(TW_OPENGL, NULL);
+			TwWindowSize(100, 100);
+			myBar = TwNewBar("L Systems");
 		}
 
 		/// this is called to draw the world
@@ -55,11 +62,8 @@ namespace octet
 
 			// draw the scene
 			app_scene->render((float)vx / vy);
-
-			gets(treenum);
-			tree << "tree " << treenum;
-			printf("tree selected is %s\n", tree.str().c_str());
-
+			TwDraw();
 		}
+
 	};
 }
