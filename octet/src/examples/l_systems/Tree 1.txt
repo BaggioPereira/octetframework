@@ -1,0 +1,5 @@
+alphabetF
+axiomF
+angle25.7
+rule1=F[+F]F[-F]F
+iterations5;

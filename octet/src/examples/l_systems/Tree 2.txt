@@ -1,0 +1,5 @@
+alphabetF
+axiomF+F[F]
+angle12.4
+rule1=F[+F]-F[-F][F]
+iterations4;
