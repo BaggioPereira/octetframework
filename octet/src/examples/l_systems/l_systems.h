@@ -73,7 +73,6 @@ namespace octet
 				getAxiom();
 				getAngle();
 				getIteration();
-				printf("\n");
 			}
 		}
 
@@ -89,8 +88,6 @@ namespace octet
 			{
 				alphabet.push_back(contents[i]);
 			}
-
-			printf("Alphabets are %s\n", alphabet.c_str());
 		}
 
 		void getAxiom()
@@ -105,8 +102,6 @@ namespace octet
 			{
 				axiom.push_back(contents[i]);
 			}
-
-			printf("axiom is %s\n", axiom.c_str());
 		}
 
 		void getAngle()
@@ -123,7 +118,6 @@ namespace octet
 			}
 
 			angles = atof(angle.c_str());
-			printf("Angle is %g\n", angles);
 		}
 
 		void getIteration()
@@ -139,7 +133,6 @@ namespace octet
 			}
 
 			iterations = atoi(iteration.c_str());
-			printf("Iteration is %d\n", iterations);
 		}
 
 		//Mouse input
@@ -219,6 +212,10 @@ namespace octet
 			TwWindowSize(750, 720);
 			myBar = TwNewBar("L Systems");
 			TwAddVarRW(myBar, "Tree Selected", TW_TYPE_INT32, &defaultTree, "help ='Type in the tree you would like to load'");
+			TwAddVarRO(myBar, "Alphabets", TW_TYPE_STDSTRING, &alphabet,"help = ' '");
+			TwAddVarRO(myBar, "Axiom", TW_TYPE_STDSTRING, &axiom, "help = ' '");
+			TwAddVarRO(myBar, "Angle", TW_TYPE_FLOAT, &angles, "help = ' '");
+			TwAddVarRO(myBar, "Iteration", TW_TYPE_INT32, &iterations, "help = ' '");
 		}
 
 		/// this is called to draw the world
