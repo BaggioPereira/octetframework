@@ -1,5 +1,6 @@
-alphabetF
-axiomF
-angle25.7
-rule1=F[+F]F[-F]F
-iterations5;
+AlphabetF;
+AxiomF;
+Angle25.7;
+Rules 2;
+F=F[+F]F[-F]F;
+Iterations5;

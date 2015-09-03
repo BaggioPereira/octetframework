@@ -1,1 +1,6 @@
-This is working perfectly
+AlphabetF;
+AxiomF+F[F];
+Angle12.4;
+Rules 4;
+F=F[+F]-F[-F][F];
+Iterations4;

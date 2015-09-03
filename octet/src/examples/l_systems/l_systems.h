@@ -19,13 +19,15 @@ namespace octet
 		//dynarray<float> angle;
 		//dynarray<int> interations;
 
+		//strings to hold file information
 		std::stringstream file;
 		string contents;
-		std::string alphabet, axiom, angle, iteration;
+		std::string alphabet, axiom, angle, iteration, rulesNum, rule_head, rule_body;
 
 		float angles;
-		int iterations;
+		int iterations, numberOfRules;
 
+		//hashmap to hold rules
 		hash_map<char, string> rules;
 
 		// scene for drawing box
@@ -33,7 +35,6 @@ namespace octet
 
 		int defaultTree = 1;
 		int prevTree;
-		std::stringstream treeString;
 
 		//Tweakbar
 		TwBar *myBar;
@@ -43,6 +44,20 @@ namespace octet
 		l_systems(int argc, char **argv) : app(argc, argv) {
 		}
 
+		//function to find a position with a given start position
+		int findPosition(string contents, char letter, int start)
+		{
+			for (int i = start; i < contents.size(); i++)
+			{
+				if (contents[i] == letter)
+				{
+					return i;
+				}
+			}
+			return -1;
+		}
+
+		//load file and put into memory
 		void fileLoading()
 		{
 			std::fstream myFile;
@@ -69,20 +84,35 @@ namespace octet
 
 				//printf("%s\n", contents.c_str());
 
+				checkKeywords();
+			}
+		}
+
+		//Check to see all variables are found
+		void checkKeywords()
+		{
+			if (contents.find("Alphabet") == -1 || contents.find("Axiom") == -1 || contents.find("Angle") == -1 || contents.find("Rules") == -1 || contents.find("Iterations") == -1)
+			{
+				printf("Check text file, missing keywords\n");
+			}
+
+			else
+			{
+				printf("Keywords are found\n");
 				getAlphabet();
 				getAxiom();
 				getAngle();
+				getRules();
 				getIteration();
 			}
 		}
 
+		//get the alphabets
 		void getAlphabet()
 		{
 			alphabet.clear();
-			int startLocation = contents.find("alphabet");
-			startLocation += 8;
-			int endLocation = contents.find("axiom");
-			endLocation -= 1;
+			int startLocation = contents.find("Alphabet") + 8;
+			int endLocation = findPosition(contents, ';', startLocation);
 
 			for (int i = startLocation; i < endLocation; i++)
 			{
@@ -90,13 +120,12 @@ namespace octet
 			}
 		}
 
+		//get the axiom
 		void getAxiom()
 		{
 			axiom.clear();
-			int startLocation = contents.find("axiom");
-			startLocation += 5;
-			int endLocation = contents.find("angle");
-			endLocation -= 1;
+			int startLocation = contents.find("Axiom") + 5;
+			int endLocation = findPosition(contents, ';', startLocation);
 
 			for (int i = startLocation; i < endLocation; i++)
 			{
@@ -104,13 +133,12 @@ namespace octet
 			}
 		}
 
+		//get the angle
 		void getAngle()
 		{
 			angle.clear();
-			int startLocation = contents.find("angle");
-			startLocation += 5;
-			int endLocation = contents.find("rule1");
-			endLocation -= 1;
+			int startLocation = contents.find("Angle") + 5;
+			int endLocation = findPosition(contents, ';', startLocation);
 
 			for (int i = startLocation; i < endLocation; i++)
 			{
@@ -120,12 +148,25 @@ namespace octet
 			angles = atof(angle.c_str());
 		}
 
+		//get the rules
+		void getRules()
+		{
+			rulesNum.clear();
+			int startLocation = contents.find("Rules") + 6;
+			int endLocation = findPosition(contents, ';', startLocation);
+			for (int i = startLocation; i < endLocation; i++)
+			{
+				rulesNum.push_back(contents[i]);
+			}
+			numberOfRules = atoi(rulesNum.c_str());
+		}
+
+		//get the max iteration
 		void getIteration()
 		{
 			iteration.clear();
-			int startLocation = contents.find("iterations");
-			startLocation += 10;
-			int endLocation = contents.find(";");
+			int startLocation = contents.find("Iterations") + 10;
+			int endLocation = findPosition(contents, ';', startLocation);
 
 			for (int i = startLocation; i < endLocation; i++)
 			{
@@ -201,6 +242,11 @@ namespace octet
 			{
 				TwKeyPressed(8, 0);
 			}
+
+			if (is_key_going_down(VK_OEM_PERIOD))
+			{
+				TwKeyPressed(46, 0);
+			}
 		}
 
 		/// this is called once OpenGL is initialized
@@ -208,14 +254,17 @@ namespace octet
 		{
 			app_scene =  new visual_scene();
 			app_scene->create_default_camera_and_lights();
+			fileLoading();
 			TwInit(TW_OPENGL, NULL);
 			TwWindowSize(750, 720);
 			myBar = TwNewBar("L Systems");
 			TwAddVarRW(myBar, "Tree Selected", TW_TYPE_INT32, &defaultTree, "help ='Type in the tree you would like to load'");
 			TwAddVarRO(myBar, "Alphabets", TW_TYPE_STDSTRING, &alphabet,"help = ' '");
 			TwAddVarRO(myBar, "Axiom", TW_TYPE_STDSTRING, &axiom, "help = ' '");
-			TwAddVarRO(myBar, "Angle", TW_TYPE_FLOAT, &angles, "help = ' '");
-			TwAddVarRO(myBar, "Iteration", TW_TYPE_INT32, &iterations, "help = ' '");
+			TwAddVarRW(myBar, "Angle", TW_TYPE_FLOAT, &angles, "help = ' '");
+			TwAddVarRO(myBar, "Rule 1", TW_TYPE_STDSTRING, &rules[0], "help = ' '");
+			TwAddVarRO(myBar, "Rule 2", TW_TYPE_STDSTRING, &rules[1], "help = ' '");
+			TwAddVarRW(myBar, "Iteration", TW_TYPE_INT32, &iterations, "help = ' '");
 		}
 
 		/// this is called to draw the world
