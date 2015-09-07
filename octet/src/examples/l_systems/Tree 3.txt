@@ -3,4 +3,7 @@ AxiomF+F[F];
 Angle12.4;
 Rules 4;
 F=F[+F]-F[-F][F];
+G=F[+F]-F[-F][F];
+H=F[+F]-F[-F][F];
+I=F[+F]-F[-F][F];
 Iterations4;

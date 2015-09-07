@@ -20,21 +20,22 @@ namespace octet
 		//dynarray<int> interations;
 
 		//strings to hold file information
-		std::stringstream file;
+		std::stringstream file, newrule[5];
 		string contents;
-		std::string alphabet, axiom, angle, iteration, rulesNum, rule_head, rule_body;
+		std::string alphabet, axiom, angle, iteration, rulesNum, rule_head, rule_body, rule[5], startTree, endTree;
 
 		float angles;
-		int iterations, numberOfRules;
+		int currentIteration, maxIterations, lastIter, numberOfRules;
 
 		//hashmap to hold rules
-		hash_map<char, string> rules;
+		hash_map<char, std::string> rules;
 
 		// scene for drawing box
 		ref<visual_scene> app_scene;
 
 		int defaultTree = 1;
 		int prevTree;
+		bool rulesExists = false;
 
 		//Tweakbar
 		TwBar *myBar;
@@ -152,6 +153,7 @@ namespace octet
 		void getRules()
 		{
 			rulesNum.clear();
+			rules.clear();
 			int startLocation = contents.find("Rules") + 6;
 			int endLocation = findPosition(contents, ';', startLocation);
 			for (int i = startLocation; i < endLocation; i++)
@@ -159,6 +161,46 @@ namespace octet
 				rulesNum.push_back(contents[i]);
 			}
 			numberOfRules = atoi(rulesNum.c_str());
+			startLocation = endLocation+2;
+
+			//reset the rules
+			for (int i = 0; i < 5; i++)
+			{
+				newrule[i].str(std::string());
+				newrule[i] << "No Rule";
+				rule[i] = newrule[i].str();
+			}
+
+			//set the new rules
+			for (int i = 0; i < numberOfRules; i++)
+			{
+				rule_head.clear();
+				rule_body.clear();
+				newrule[i].str(std::string());
+				rule_head.push_back(contents[startLocation]);
+
+				//printf("%s\n", rule_head.c_str());
+				startLocation += 2;
+				endLocation = findPosition(contents,';', startLocation);
+				for (int i = startLocation; i < endLocation; i++)
+				{
+					rule_body.push_back(contents[i]);
+				}
+
+				//printf("%s\n", rule_body.c_str());
+				rules[rule_head[0]] = rule_body;
+
+				//test to check the rules are being applied to the hashmap
+				//std::cout <<rules.get_key(i)<<"="<< rules.get_value(i)<<"\n";
+
+				newrule[i] << rule_head << "=" << rule_body;
+				rule[i] = newrule[i].str();
+				startLocation = endLocation + 2;
+			}
+			rules[']'] = "]";
+			rules['['] = "[";
+			rules['+'] = "+";
+			rules['-'] = "-";
 		}
 
 		//get the max iteration
@@ -173,7 +215,31 @@ namespace octet
 				iteration.push_back(contents[i]);
 			}
 
-			iterations = atoi(iteration.c_str());
+			maxIterations = atoi(iteration.c_str());
+			currentIteration = maxIterations;
+		}
+
+		void reWrite()
+		{
+			startTree.clear();
+			endTree.clear();
+			startTree = axiom;
+			for (int i = 0; i < currentIteration; i++)
+			{
+				for (int j = 0; j < startTree.length(); j++)
+				{
+					for (int k = 0; k < rules.size(); k++)
+					{
+						if (startTree[j] == rules.get_key(k))
+						{
+							endTree.insert(endTree.length(), rules.get_value(k));
+						}
+					}
+				}
+				startTree = endTree;
+				endTree = "";
+			}
+			printf("This iteration sting is %s\n", startTree.c_str());
 		}
 
 		//Mouse input
@@ -254,7 +320,7 @@ namespace octet
 		{
 			app_scene =  new visual_scene();
 			app_scene->create_default_camera_and_lights();
-			fileLoading();
+			
 			TwInit(TW_OPENGL, NULL);
 			TwWindowSize(750, 720);
 			myBar = TwNewBar("L Systems");
@@ -262,9 +328,16 @@ namespace octet
 			TwAddVarRO(myBar, "Alphabets", TW_TYPE_STDSTRING, &alphabet,"help = ' '");
 			TwAddVarRO(myBar, "Axiom", TW_TYPE_STDSTRING, &axiom, "help = ' '");
 			TwAddVarRW(myBar, "Angle", TW_TYPE_FLOAT, &angles, "help = ' '");
-			TwAddVarRO(myBar, "Rule 1", TW_TYPE_STDSTRING, &rules[0], "help = ' '");
-			TwAddVarRO(myBar, "Rule 2", TW_TYPE_STDSTRING, &rules[1], "help = ' '");
-			TwAddVarRW(myBar, "Iteration", TW_TYPE_INT32, &iterations, "help = ' '");
+			TwAddVarRO(myBar, "Rule 1", TW_TYPE_STDSTRING, &rule[0], "help = ' '"); 
+			TwAddVarRO(myBar, "Rule 2", TW_TYPE_STDSTRING, &rule[1], "help = ' '");
+			TwAddVarRO(myBar, "Rule 3", TW_TYPE_STDSTRING, &rule[2], "help = ' '");
+			TwAddVarRO(myBar, "Rule 4", TW_TYPE_STDSTRING, &rule[3], "help = ' '");
+			TwAddVarRO(myBar, "Rule 5", TW_TYPE_STDSTRING, &rule[4], "help = ' '");
+			TwAddVarRW(myBar, "Iteration", TW_TYPE_INT32, &currentIteration, "help = ' '");
+			fileLoading();
+			prevTree = defaultTree;
+			lastIter = currentIteration;
+			reWrite();
 		}
 
 		/// this is called to draw the world
@@ -286,8 +359,18 @@ namespace octet
 			if (prevTree != defaultTree)
 			{
 				printf("Tree selected %d\n", defaultTree);
-				prevTree = defaultTree;
 				fileLoading();
+				prevTree = defaultTree;
+				reWrite();
+			}
+
+			if (lastIter != currentIteration)
+			{ 
+				if (currentIteration > 0 && currentIteration <= maxIterations)
+				{
+					lastIter = currentIteration;
+					reWrite();
+				}
 			}
 		}
 	};

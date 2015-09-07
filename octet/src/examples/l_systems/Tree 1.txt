@@ -2,5 +2,6 @@ AlphabetF;
 AxiomF;
 Angle25.7;
 Rules 2;
-F=F[+F]F[-F]F;
+F=F[+F]G[-F]F;
+G=F[+G]F[-G]F;
 Iterations5;
