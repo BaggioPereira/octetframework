@@ -24,6 +24,7 @@ namespace octet
 		string contents;
 		std::string alphabet, axiom, angle, iteration, rulesNum, rule_head, rule_body, rule[5], startTree, endTree;
 
+		//ints and float
 		float angles;
 		int currentIteration, maxIterations, lastIter, numberOfRules;
 
@@ -35,10 +36,19 @@ namespace octet
 
 		int defaultTree = 1;
 		int prevTree;
-		bool rulesExists = false;
 
 		//Tweakbar
 		TwBar *myBar;
+
+		mat4t modelToWorld;
+		mat4t cameraToWorld;
+		dynarray<mat4t> modelToWorlds;
+
+		material *mat;
+		mesh_box *treePart;
+		scene_node *node;
+
+		dynarray<scene_node*> nodes;
 
 	public:
 		/// this is called when we construct the class before everything is initialised.
@@ -182,9 +192,9 @@ namespace octet
 				//printf("%s\n", rule_head.c_str());
 				startLocation += 2;
 				endLocation = findPosition(contents,';', startLocation);
-				for (int i = startLocation; i < endLocation; i++)
+				for (int j = startLocation; j < endLocation; j++)
 				{
-					rule_body.push_back(contents[i]);
+					rule_body.push_back(contents[j]);
 				}
 
 				//printf("%s\n", rule_body.c_str());
@@ -216,9 +226,10 @@ namespace octet
 			}
 
 			maxIterations = atoi(iteration.c_str());
-			currentIteration = maxIterations;
+			currentIteration = 0;
 		}
 
+		//create the tree
 		void reWrite()
 		{
 			startTree.clear();
@@ -240,6 +251,55 @@ namespace octet
 				endTree = "";
 			}
 			printf("This iteration sting is %s\n", startTree.c_str());
+		}
+
+		//draw tree to the scene
+		void drawTree()
+		{
+			modelToWorld.loadIdentity();
+			modelToWorlds.reset();
+			nodes.reset();
+			vec3 pos = vec3(0, 0, 0);
+			for (int i = 0; i < startTree.length(); i++)
+			{
+				scene_node *tempNode = new scene_node();
+				switch (startTree[i])
+				{
+				case 'F': nodes.push_back(tempNode);
+					tempNode->translate(pos);
+					pos += vec3(0, 1, 0);
+					modelToWorld.translate(vec3(0, 1, 0));
+					break;
+				case 'G': nodes.push_back(tempNode);
+					tempNode->translate(pos);
+					pos += vec3(0, 1, 0);
+					modelToWorld.translate(vec3(0, 1, 0));
+					break;
+				case '[' : modelToWorlds.push_back(modelToWorld);
+					break;
+				case ']': modelToWorld = modelToWorlds[modelToWorlds.size() - 1];
+					modelToWorlds.pop_back();
+					break;
+				case '+': modelToWorld.rotateZ(angles);
+					break;
+				case '-': modelToWorld.rotateZ(angles);
+					break;
+				default: break;
+				}
+			}
+			
+			for (int i = 0; i < nodes.size(); i++)
+			{
+				render(cameraToWorld, nodes[i]);
+			}
+
+		}
+
+		void render(mat4t camera, scene_node* newNode)
+		{
+			mat4t modelToProj = mat4t::build_projection_matrix(modelToWorld, cameraToWorld);
+			app_scene->add_child(newNode);
+			app_scene->add_mesh_instance(new mesh_instance(newNode, treePart, mat));
 		}
 
 		//Mouse input
@@ -320,7 +380,12 @@ namespace octet
 		{
 			app_scene =  new visual_scene();
 			app_scene->create_default_camera_and_lights();
-			
+			mat = new material(vec4(0, 1, 0, 1));
+			treePart = new mesh_box(vec3(0.2f, 1.0f, 0.2f));
+			node = new scene_node();
+			cameraToWorld.loadIdentity();
+			cameraToWorld.translate(0, 100, 150);
+
 			TwInit(TW_OPENGL, NULL);
 			TwWindowSize(750, 720);
 			myBar = TwNewBar("L Systems");
@@ -338,6 +403,7 @@ namespace octet
 			prevTree = defaultTree;
 			lastIter = currentIteration;
 			reWrite();
+			drawTree();
 		}
 
 		/// this is called to draw the world
@@ -362,6 +428,7 @@ namespace octet
 				fileLoading();
 				prevTree = defaultTree;
 				reWrite();
+				drawTree();
 			}
 
 			if (lastIter != currentIteration)
@@ -370,6 +437,7 @@ namespace octet
 				{
 					lastIter = currentIteration;
 					reWrite();
+					drawTree();
 				}
 			}
 		}
