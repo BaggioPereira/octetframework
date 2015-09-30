@@ -44,8 +44,8 @@
     <OutDir>$(SolutionDir)..\..\..\bin\</OutDir>
     <IntDir>$(SolutionDir)..\..\..\bin\$(ProjectName)\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_debug</TargetName>
-    <IncludePath>C:\Users\Baggio\Documents\GitHub\octetframework\octet\src\examples\l_systems\AntTweakBar\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\Baggio\Documents\GitHub\octetframework\octet\src\examples\l_systems\AntTweakBar\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\Baggio\Documents\GitHub\octetframework\octet\src\examples\l_systems v2\AntTweakBar\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\Baggio\Documents\GitHub\octetframework\octet\src\examples\l_systems v2\AntTweakBar\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
