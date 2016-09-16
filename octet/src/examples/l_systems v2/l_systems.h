@@ -259,6 +259,11 @@ namespace octet
 			modelToWorld.loadIdentity();
 			modelToWorlds.reset();
 			nodes.reset();
+			app_scene->release();
+			app_scene = new visual_scene();
+			app_scene->create_default_camera_and_lights();
+			node = new scene_node();
+			cameraToWorld.loadIdentity();
 			vec3 pos = vec3(0, 0, 0);
 			for (int i = 0; i < startTree.length(); i++)
 			{
@@ -287,11 +292,12 @@ namespace octet
 				default: break;
 				}
 			}
-			
+			printf("number of nodes: %d", nodes.size());
 			for (int i = 0; i < nodes.size(); i++)
 			{
 				render(cameraToWorld, nodes[i]);
 			}
+			printf("number of childs: %d", app_scene->get_num_children());
 
 		}
 
@@ -380,11 +386,12 @@ namespace octet
 		{
 			app_scene =  new visual_scene();
 			app_scene->create_default_camera_and_lights();
-			mat = new material(vec4(0, 1, 0, 1));
-			treePart = new mesh_box(vec3(0.2f, 1.0f, 0.2f));
 			node = new scene_node();
 			cameraToWorld.loadIdentity();
 			cameraToWorld.translate(0, 100, 150);
+			mat = new material(vec4(0, 1, 0, 1));
+			treePart = new mesh_box(vec3(0.2f, 1.0f, 0.2f));
+			
 
 			TwInit(TW_OPENGL, NULL);
 			TwWindowSize(750, 720);
